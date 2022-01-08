@@ -22,6 +22,8 @@
 #include <QFileInfo>
 #include <QDebug>
 
+//#define OUTPUT_FOUND_NAMES
+
 void PathsAnalyzer::analyze(const QStringList &paths)
 {
     m_dirs.clear();
@@ -59,7 +61,10 @@ void PathsAnalyzer::analyze(const QStringList &paths)
         itr->second << fileInfo.fileName();
     }
 
+#ifdef OUTPUT_FOUND_NAMES
     qDebug() << m_dirs << m_files;
+#endif
+
     qInfo() << QStringLiteral("PathsAnalyzer: finished analyzing.");
 }
 

@@ -25,8 +25,9 @@ PathHeaderView::PathHeaderView(QWidget *parent)
     : QHeaderView(Qt::Horizontal, parent)
 {
     setDefaultSectionSize(150);
-    setStretchLastSection(true);
+    setResizeContentsPrecision(0);
     setSortIndicatorShown(true);
+//    setStretchLastSection(true);
 
     connect(this, &QHeaderView::sectionClicked, this, [this]() {
         setSortIndicatorShown(true);

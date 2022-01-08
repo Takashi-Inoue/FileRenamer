@@ -33,12 +33,14 @@ class ApplicationLog : public QAbstractTableModel
 public:
     static ApplicationLog &instance();
 
-    // implementation for QAbstractTableModel
+public:
+    // QAbstractTableModel interface
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+public:
     void clear();
     bool isEmpty() const;
     void log(QStringView log, QStringView groupName = QStringLiteral("General"));
@@ -48,12 +50,7 @@ public:
 
 private:
     using QAbstractTableModel::QAbstractTableModel;
-
-    QString logDir() const;
-    void removeOldestLogFile() const;
-
     using SharedLogData = QSharedPointer<LogData>;
 
-    mutable QReadWriteLock m_lock;
     QList<SharedLogData> m_applicationLogs;
 };

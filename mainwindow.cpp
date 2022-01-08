@@ -63,8 +63,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->tableView->setHorizontalHeader(new PathHeaderView(ui->tableView));
     ui->tableView->setModel(m_pathModel);
-    ui->tableView->horizontalHeader()->setSectionResizeMode(int(PathModel::HSection::NewName),
-                                                            QHeaderView::ResizeToContents);
 
     setState(State::initial);
 
@@ -256,8 +254,12 @@ void MainWindow::setState(MainWindow::State state)
 
     auto header = qobject_cast<PathHeaderView *>(ui->tableView->horizontalHeader());
 
-    if (header != nullptr)
+    if (header != nullptr) {
         header->setEnableToChangeItems(isEnableToChangeSettings);
+
+        if (state == State::ready)
+            ui->tableView->resizeColumnToContents(int(PathModel::HSection::NewName));
+    }
 }
 
 void MainWindow::registerPaths(const QStringList &paths)

@@ -22,6 +22,8 @@
 #include <QDir>
 #include <QRegularExpression>
 
+//#define OUTPUT_FOUND_NAMES
+
 SearchInDirs::SearchInDirs(const Settings &settings)
     : m_settings{settings}
 {
@@ -73,7 +75,10 @@ void SearchInDirs::searchForDirs(const QDir &parentDir
 
     if (parentDir.nameFilters().isEmpty()) {
         qInfo() << QStringLiteral("%1 directory(-ies) is/are found.").arg(childrenNames.size());
+
+#ifdef OUTPUT_FOUND_NAMES
         qDebug() << childrenNames;
+#endif
 
         m_dirs << targetDirs.last();
         return;
@@ -92,7 +97,10 @@ void SearchInDirs::searchForDirs(const QDir &parentDir
         return;
 
     qInfo() << QStringLiteral("%1 directory(-ies) is/are found.").arg(childrenNames.size());
+
+#ifdef OUTPUT_FOUND_NAMES
     qDebug() << childrenNames;
+#endif
 
     m_dirs << ParentChildrenPair(addSeparator(parentDir.path()), childrenNames);
 }
@@ -102,21 +110,25 @@ void SearchInDirs::searchForFiles(const QDir &parentDir)
     if (!m_settings.isSearchFiles)
         return;
 
-    qInfo() << QStringLiteral("Search files in [%1]").arg(parentDir.absolutePath());
+//    qInfo() << QStringLiteral("Search files in [%1]").arg(parentDir.absolutePath());
 
     QStringList childrenNames = parentDir.entryList(QDir::Files | QDir::Hidden);
 
     if (childrenNames.isEmpty())
         return;
 
-    qInfo() << QStringLiteral("%1 file(s) is/are found.").arg(childrenNames.size());
+    qInfo() << QStringLiteral("%1 file(s) is/are found in %2")
+               .arg(childrenNames.size()).arg(parentDir.path());
+
+#ifdef OUTPUT_FOUND_NAMES
     qDebug() << childrenNames;
+#endif
 
     m_files << ParentChildrenPair(addSeparator(parentDir.path()), childrenNames);
 }
 
-void SearchInDirs::searchOneLayer(QList<ParentChildrenPair> &targetDirs
-                                , const QStringList &nameFilters)
+void SearchInDirs::searchOneLayer(QList<ParentChildrenPair> &targetDirs,
+                                  const QStringList &nameFilters)
 {
     for (int i = 0, count = int(targetDirs.size()); i < count; ++i) {
         const ParentChildrenPair &parentChildren = targetDirs.takeFirst();

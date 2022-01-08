@@ -25,10 +25,40 @@
 #include <QFile>
 #include <QDebug>
 
+namespace {
+Q_GLOBAL_STATIC(QReadWriteLock, rwlock)
+Q_GLOBAL_STATIC(ApplicationLog, appLog)
+
+QString logDirPath()
+{
+    return QStringLiteral("%1/logs").arg(QApplication::applicationDirPath());
+}
+
+void removeOldestLogFile()
+{
+    QDir dir{logDirPath()};
+
+    if (!dir.exists())
+        return;
+
+    QStringList fileNames = dir.entryList({QApplication::applicationName() + "*.log"},
+                                           QDir::Files, QDir::Name);
+
+    if (fileNames.size() < 10)
+        return;
+
+    QString oldestFile = dir.absoluteFilePath(fileNames.first());
+
+    QFile().remove(oldestFile)
+            ? qInfo() << QStringLiteral("Removed oldest log file. [%1]").arg(oldestFile)
+            : qInfo() << QStringLiteral("Failed to remove oldest log file. [%1]").arg(oldestFile);
+}
+
+} // anonymous
+
 ApplicationLog &ApplicationLog::instance()
 {
-    static ApplicationLog appLogInstance;
-    return appLogInstance;
+    return *appLog;
 }
 
 int ApplicationLog::rowCount(const QModelIndex &parent) const
@@ -36,7 +66,7 @@ int ApplicationLog::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    QReadLocker locker{&m_lock};
+    QReadLocker locker{rwlock};
 
     return int(m_applicationLogs.size());
 }
@@ -52,7 +82,7 @@ int ApplicationLog::columnCount(const QModelIndex &parent) const
 QVariant ApplicationLog::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation == Qt::Vertical || role != Qt::DisplayRole)
-        return QVariant();
+        return QVariant{};
 
     static const QHash<int, QString> hashData = {
         {0, QStringLiteral("Time")},
@@ -68,7 +98,7 @@ QVariant ApplicationLog::data(const QModelIndex &index, int role) const
     if (role != Qt::DisplayRole || !index.isValid())
         return QVariant{};
 
-    QReadLocker locker{&m_lock};
+    QReadLocker locker{rwlock};
 
     const SharedLogData &logData = m_applicationLogs.at(index.row());
 
@@ -82,7 +112,7 @@ QVariant ApplicationLog::data(const QModelIndex &index, int role) const
 
 void ApplicationLog::clear()
 {
-    QWriteLocker locker{&m_lock};
+    QWriteLocker locker{rwlock};
 
     m_applicationLogs.clear();
 }
@@ -94,29 +124,29 @@ bool ApplicationLog::isEmpty() const
 
 void ApplicationLog::log(QStringView log, QStringView groupName)
 {
-    m_lock.lockForRead();
+    rwlock->lockForRead();
     int row = int(m_applicationLogs.size());
-    m_lock.unlock();
+    rwlock->unlock();
 
     beginInsertRows(QModelIndex{}, row, row);
 
-    m_lock.lockForWrite();
+    rwlock->lockForWrite();
     m_applicationLogs.append(SharedLogData::create(groupName, log));
-    m_lock.unlock();
+    rwlock->unlock();
 
     endInsertRows();
 }
 
 void ApplicationLog::writeFile() const
 {
-    QReadLocker locker{&m_lock};
+    QReadLocker locker{rwlock};
 
     if (m_applicationLogs.size() == 0)
         return;
 
-    const QString logDirectory = logDir();
+    const QString logDirectory = logDirPath();
 
-    if (!QDir().mkpath(logDirectory)) {
+    if (!QDir{}.mkpath(logDirectory)) {
         qInfo() << QStringLiteral("Failed to create log directory. %1").arg(logDirectory);
         return;
     }
@@ -127,7 +157,7 @@ void ApplicationLog::writeFile() const
     QString filePathName = QStringLiteral("%1/%2 %3.log")
                           .arg(logDirectory, QApplication::applicationName(), time);
 
-    QFile file(filePathName);
+    QFile file{filePathName};
 
     if (!file.open(QIODevice::WriteOnly)) {
         qInfo() << QStringLiteral("Failed to write log to [%1]. Error: %2")
@@ -143,12 +173,12 @@ void ApplicationLog::writeFile() const
 
 void ApplicationLog::writeSpecifiedLogs(QStringView groupName) const
 {
-    QReadLocker locker(&m_lock);
+    QReadLocker locker{rwlock};
 
     if (m_applicationLogs.size() == 0)
         return;
 
-    const QString logDirectory = logDir();
+    const QString logDirectory = logDirPath();
 
     if (!QDir().mkpath(logDirectory)) {
         qInfo() << QStringLiteral("Failed to create log directory. %1").arg(logDirectory);
@@ -157,7 +187,7 @@ void ApplicationLog::writeSpecifiedLogs(QStringView groupName) const
 
     QString filePathName = QStringLiteral("%1/%2.log").arg(logDirectory, groupName);
 
-    QFile file(filePathName);
+    QFile file{filePathName};
 
     if (!file.open(QIODevice::WriteOnly)) {
         qInfo() << QStringLiteral("Failed to write log to [%1]. Error: %2")
@@ -171,29 +201,4 @@ void ApplicationLog::writeSpecifiedLogs(QStringView groupName) const
     }
 
     qInfo() << QStringLiteral("Wrote log to the file. [%1]").arg(filePathName);
-}
-
-QString ApplicationLog::logDir() const
-{
-    return QStringLiteral("%1/logs").arg(QApplication::applicationDirPath());
-}
-
-void ApplicationLog::removeOldestLogFile() const
-{
-    QDir dir{logDir()};
-
-    if (!dir.exists())
-        return;
-
-    QStringList fileNames = dir.entryList({QApplication::applicationName() + "*.log"}
-                                         , QDir::Files, QDir::Name);
-
-    if (fileNames.size() < 10)
-        return;
-
-    QString oldestFile = dir.absoluteFilePath(fileNames.first());
-
-    QFile().remove(oldestFile)
-            ? qInfo() << QStringLiteral("Removed oldest log file. [%1]").arg(oldestFile)
-            : qInfo() << QStringLiteral("Failed to remove oldest log file. [%1]").arg(oldestFile);
 }
