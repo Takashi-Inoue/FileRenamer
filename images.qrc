@@ -1,0 +1,32 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/images/reset.svg</file>
+        <file>res/images/x.svg</file>
+        <file alias="icons/folder">res/icons/folder-3.ico</file>
+        <file alias="icons/search">res/icons/system-search-6.ico</file>
+        <file alias="icons/text">res/icons/text-x-preview.ico</file>
+        <file>res/images/rename_old.svg</file>
+        <file>res/images/rename_new.svg</file>
+        <file>res/images/collision.svg</file>
+        <file>res/images/circlegreen.svg</file>
+        <file>res/images/circlegray.svg</file>
+        <file>res/images/success.svg</file>
+        <file>res/images/failure.svg</file>
+        <file>res/images/clear.svg</file>
+        <file>res/images/load.svg</file>
+        <file>res/images/save.svg</file>
+        <file>res/images/leftmost.svg</file>
+        <file>res/images/rightmost.svg</file>
+        <file>res/images/darkmode.svg</file>
+        <file>res/images/forward.svg</file>
+        <file>res/images/stop.svg</file>
+        <file>res/images/backward.svg</file>
+        <file>res/images/exit.svg</file>
+        <file>res/images/down.svg</file>
+        <file>res/images/up.svg</file>
+        <file>res/images/exec.svg</file>
+        <file>res/images/file.svg</file>
+        <file>res/images/delete_file.svg</file>
+        <file>res/images/exec_double.svg</file>
+    </qresource>
+</RCC>

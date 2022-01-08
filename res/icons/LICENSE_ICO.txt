@@ -1,0 +1,9 @@
+----------------------------------------------------------------------
+nuoveXT2 (nuovext2)
+    link: http://nuovext.pwsp.net
+    license: LGPL-2.1
+    license link: http://creativecommons.org/licenses/LGPL/2.1/
+    
+    folder-3.ico
+    system-search-6.ico
+    text-x-preview.ico
