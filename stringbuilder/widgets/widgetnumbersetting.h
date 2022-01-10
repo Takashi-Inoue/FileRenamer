@@ -33,14 +33,9 @@ class WidgetNumberSetting : public AbstractWidget
 
 public:
     explicit WidgetNumberSetting(QWidget *parent = nullptr);
+    WidgetNumberSetting(int start, int incremental, int digits, QStringView prefix,
+                        QStringView suffix, int insertPos, QWidget *parent = nullptr);
     ~WidgetNumberSetting() override;
-
-    // StringBuilder::AbstractWidget interface
-    QSharedPointer<AbstractWidget> clone() const override;
-    QString builderName() const override;
-    QString toString() const override;
-    QFont fontForDisplay() const override;
-    Qt::Alignment alignForDisplay() const override;
 
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
     void loadSettings(QSharedPointer<QSettings>) override;

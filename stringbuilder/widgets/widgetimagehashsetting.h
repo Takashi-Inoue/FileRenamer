@@ -28,13 +28,7 @@ class WidgetImageHashSetting : public WidgetOnlyPositionFixer
     Q_OBJECT
 public:
     explicit WidgetImageHashSetting(QWidget *parent = nullptr);
-
-    // StringBuilder::AbstractWidget interface
-    QSharedPointer<AbstractWidget> clone() const override;
-    QString builderName() const override;
-    QString toString() const override;
-    QFont fontForDisplay() const override;
-    Qt::Alignment alignForDisplay() const override;
+    WidgetImageHashSetting(int insertPos, QWidget *parent = nullptr);
 
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
     void loadSettings(QSharedPointer<QSettings>) override;

@@ -38,12 +38,22 @@ constexpr char settingsKeyCaseSensitive[] = "CaseSensitive";
 } // anonymous
 
 WidgetReplaceSetting::WidgetReplaceSetting(QWidget *parent)
+    : WidgetReplaceSetting(QString{}, QString{}, false, true)
+{
+}
+
+WidgetReplaceSetting::WidgetReplaceSetting(QStringView find, QStringView replace, bool isUseRegExp,
+                                           bool isCaseSensitive, QWidget *parent)
     : AbstractWidget{parent},
       ui{new Ui::WidgetReplaceSetting}
 {
     ui->setupUi(this);
 
     ui->comboxReplace->setValidator(new FileNameVlidator(this));
+    ui->comboxSearch->setCurrentText(find.toString());
+    ui->comboxReplace->setCurrentText(replace.toString());
+    ui->checkBoxUseRegex->setChecked(isUseRegExp);
+    ui->checkBoxCaseSensitive->setChecked(isCaseSensitive);
 
     connect(ui->checkBoxCaseSensitive, &QCheckBox::clicked,
             this, &AbstractWidget::changeStarted);
@@ -61,39 +71,6 @@ WidgetReplaceSetting::WidgetReplaceSetting(QWidget *parent)
 WidgetReplaceSetting::~WidgetReplaceSetting()
 {
     delete ui;
-}
-
-QSharedPointer<AbstractWidget> WidgetReplaceSetting::clone() const
-{
-    auto widget = QSharedPointer<WidgetReplaceSetting>::create();
-
-    widget->ui->comboxSearch->setCurrentText(ui->comboxSearch->currentText());
-    widget->ui->comboxReplace->setCurrentText(ui->comboxReplace->currentText());
-    widget->ui->checkBoxUseRegex->setChecked(ui->checkBoxUseRegex->isChecked());
-    widget->ui->checkBoxCaseSensitive->setChecked(ui->checkBoxCaseSensitive->isChecked());
-
-    return widget;
-}
-
-QString WidgetReplaceSetting::builderName() const
-{
-    return QStringLiteral("Replace");
-}
-
-QString WidgetReplaceSetting::toString() const
-{
-    return QStringLiteral("%1 > %2").arg(ui->comboxSearch->currentText(),
-                                         ui->comboxReplace->currentText());
-}
-
-QFont WidgetReplaceSetting::fontForDisplay() const
-{
-    return QFont{};
-}
-
-Qt::Alignment WidgetReplaceSetting::alignForDisplay() const
-{
-    return Qt::AlignCenter;
 }
 
 QSharedPointer<AbstractStringBuilder> WidgetReplaceSetting::stringBuilder() const

@@ -21,6 +21,8 @@
 
 #include "abstractstringbuilderwidget.h"
 
+#include <QCryptographicHash>
+
 namespace StringBuilder {
 
 namespace Ui {
@@ -32,15 +34,11 @@ class WidgetFileHashSetting : public AbstractWidget
     Q_OBJECT
 public:
     explicit WidgetFileHashSetting(QWidget *parent = nullptr);
+    WidgetFileHashSetting(QCryptographicHash::Algorithm algorithm, int insertPos,
+                          QWidget *parent = nullptr);
     ~WidgetFileHashSetting() override;
 
     // StringBuilder::AbstractWidget interface
-    QSharedPointer<AbstractWidget> clone() const override;
-    QString builderName() const override;
-    QString toString() const override;
-    QFont fontForDisplay() const override;
-    Qt::Alignment alignForDisplay() const override;
-
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
     void loadSettings(QSharedPointer<QSettings> qSettings) override;
     void saveSettings(QSharedPointer<QSettings> qSettings) const override;

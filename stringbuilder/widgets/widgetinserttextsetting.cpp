@@ -30,13 +30,20 @@ constexpr char settingsGroupName[] = "TextInsertion";
 constexpr char settingsKeyText[] = "Text";
 }
 
-WidgetInsertTextSetting::WidgetInsertTextSetting(QWidget *parent) :
-    AbstractWidget{parent},
-    ui{new Ui::WidgetInsertTextSetting}
+WidgetInsertTextSetting::WidgetInsertTextSetting(QWidget *parent)
+    : WidgetInsertTextSetting(QString{}, 0, parent)
+{
+}
+
+WidgetInsertTextSetting::WidgetInsertTextSetting(QStringView text, int insertPos, QWidget *parent)
+    : AbstractWidget{parent},
+      ui{new Ui::WidgetInsertTextSetting}
 {
     ui->setupUi(this);
 
     ui->combox->setValidator(new FileNameVlidator(this));
+    ui->combox->setCurrentText(text.toString());
+    ui->widgetPositionFixer->setValue(insertPos);
 
     connect(ui->widgetPositionFixer, &WidgetPositionFixer::changeStarted,
             this, &AbstractWidget::changeStarted);
@@ -48,51 +55,6 @@ WidgetInsertTextSetting::WidgetInsertTextSetting(QWidget *parent) :
 WidgetInsertTextSetting::~WidgetInsertTextSetting()
 {
     delete ui;
-}
-
-QSharedPointer<AbstractWidget> WidgetInsertTextSetting::clone() const
-{
-    auto widget = QSharedPointer<WidgetInsertTextSetting>::create();
-
-    widget->ui->combox->setCurrentText(ui->combox->currentText());
-    widget->ui->widgetPositionFixer->setValue(ui->widgetPositionFixer->value());
-
-    return widget;
-}
-
-QString WidgetInsertTextSetting::builderName() const
-{
-    return QStringLiteral("Insert Text");
-}
-
-QString WidgetInsertTextSetting::toString() const
-{
-    QString result = QStringLiteral("%1").arg(ui->combox->currentText());
-
-    if (ui->widgetPositionFixer->isLeftMost())
-        return QStringLiteral("<<%1").arg(result);
-
-    if (ui->widgetPositionFixer->isRightMost())
-        return QStringLiteral("%1>>").arg(result);
-
-    return QStringLiteral("%1 > pos:%2").arg(result).arg(ui->widgetPositionFixer->value());
-}
-
-QFont WidgetInsertTextSetting::fontForDisplay() const
-{
-    QFont font{};
-
-    font.setItalic(true);
-
-    return font;
-}
-
-Qt::Alignment WidgetInsertTextSetting::alignForDisplay() const
-{
-    if (ui->widgetPositionFixer->isRightMost())
-        return Qt::AlignRight | Qt::AlignVCenter;
-
-    return Qt::AlignLeft | Qt::AlignVCenter;
 }
 
 QSharedPointer<AbstractStringBuilder> WidgetInsertTextSetting::stringBuilder() const

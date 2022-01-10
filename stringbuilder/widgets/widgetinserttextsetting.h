@@ -33,14 +33,8 @@ class WidgetInsertTextSetting : public AbstractWidget
 
 public:
     explicit WidgetInsertTextSetting(QWidget *parent = nullptr);
+    WidgetInsertTextSetting(QStringView text, int insertPos, QWidget *parent = nullptr);
     ~WidgetInsertTextSetting() override;
-
-    // StringBuilder::AbstractWidget interface
-    QSharedPointer<AbstractWidget> clone() const override;
-    QString builderName() const override;
-    QString toString() const override;
-    QFont fontForDisplay() const override;
-    Qt::Alignment alignForDisplay() const override;
 
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
     void loadSettings(QSharedPointer<QSettings>) override;

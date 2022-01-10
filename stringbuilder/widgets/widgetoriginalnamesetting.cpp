@@ -30,47 +30,14 @@ constexpr char settingsGroupName[] = "OriginalName";
 }
 
 WidgetOriginalNameSetting::WidgetOriginalNameSetting(QWidget *parent)
-    : WidgetOnlyPositionFixer{parent}
+    : WidgetOriginalNameSetting(0, parent)
+{
+}
+
+WidgetOriginalNameSetting::WidgetOriginalNameSetting(int insertPos, QWidget *parent)
+    : WidgetOnlyPositionFixer{insertPos, parent}
 {
     setTitle(QStringLiteral("Original name"));
-}
-
-QSharedPointer<AbstractWidget> WidgetOriginalNameSetting::clone() const
-{
-    auto widget = QSharedPointer<WidgetOriginalNameSetting>::create();
-
-    widget->setPositionToInsert(positionToInsert());
-
-    return widget;
-}
-
-QString WidgetOriginalNameSetting::builderName() const
-{
-    return QStringLiteral("Original Name");
-}
-
-QString WidgetOriginalNameSetting::toString() const
-{
-    if (isLeftMost())
-        return QStringLiteral("<<Original Name");
-
-    if (isRightMost())
-        return QStringLiteral("Original Name>>");
-
-    return QStringLiteral("__%1 Original Name").arg(positionToInsert());
-}
-
-QFont WidgetOriginalNameSetting::fontForDisplay() const
-{
-    return QFont{};
-}
-
-Qt::Alignment WidgetOriginalNameSetting::alignForDisplay() const
-{
-    if (isRightMost())
-        return Qt::AlignRight | Qt::AlignVCenter;
-
-    return Qt::AlignLeft | Qt::AlignVCenter;
 }
 
 QSharedPointer<AbstractStringBuilder> WidgetOriginalNameSetting::stringBuilder() const

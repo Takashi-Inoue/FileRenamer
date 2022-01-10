@@ -23,12 +23,18 @@
 namespace StringBuilder {
 
 WidgetOnlyPositionFixer::WidgetOnlyPositionFixer(QWidget *parent)
+    : WidgetOnlyPositionFixer(0, parent)
+{
+}
+
+WidgetOnlyPositionFixer::WidgetOnlyPositionFixer(int insertPos, QWidget *parent)
     : AbstractWidget{parent},
       ui{new Ui::WidgetOnlyPositionFixer}
 {
     ui->setupUi(this);
 
     ui->labelTitle->setText(windowTitle());
+    ui->widgetPositionFixer->setValue(insertPos);
 
     connect(ui->widgetPositionFixer, &WidgetPositionFixer::changeStarted,
             this, &AbstractWidget::changeStarted);

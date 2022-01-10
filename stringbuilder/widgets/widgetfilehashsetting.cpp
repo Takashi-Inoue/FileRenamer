@@ -30,10 +30,18 @@ constexpr char settingsKeyAlgorithm[] = "Algorithm";
 }
 
 WidgetFileHashSetting::WidgetFileHashSetting(QWidget *parent)
+    : WidgetFileHashSetting(QCryptographicHash::Algorithm::Md5, 0, parent)
+{
+}
+
+WidgetFileHashSetting::WidgetFileHashSetting(QCryptographicHash::Algorithm algorithm, int insertPos,
+                                             QWidget *parent)
     : AbstractWidget(parent),
       ui(new Ui::WidgetFileHashSetting)
 {
     ui->setupUi(this);
+
+    ui->widgetPositionFixer->setValue(insertPos);
 
     using Algorithm = QCryptographicHash::Algorithm;
 
@@ -46,6 +54,11 @@ WidgetFileHashSetting::WidgetFileHashSetting(QWidget *parent)
     ui->comboBoxHashType->addItem(QStringLiteral("MD5"), Algorithm::Md5);
     ui->comboBoxHashType->addItem(QStringLiteral("SHA1"), Algorithm::Sha1);
 
+    int index = ui->comboBoxHashType->findData(algorithm);
+
+    if (index != -1)
+        ui->comboBoxHashType->setCurrentIndex(index);
+
     connect(ui->comboBoxHashType, &QComboBox::currentIndexChanged,
             this, &AbstractWidget::changeStarted);
 
@@ -56,40 +69,6 @@ WidgetFileHashSetting::WidgetFileHashSetting(QWidget *parent)
 WidgetFileHashSetting::~WidgetFileHashSetting()
 {
     delete ui;
-}
-
-QSharedPointer<AbstractWidget> WidgetFileHashSetting::clone() const
-{
-    auto widget = QSharedPointer<WidgetFileHashSetting>::create();
-
-    widget->ui->comboBoxHashType->setCurrentIndex(ui->comboBoxHashType->currentIndex());
-    widget->ui->widgetPositionFixer->setValue(ui->widgetPositionFixer->value());
-
-    return widget;
-}
-
-QString WidgetFileHashSetting::builderName() const
-{
-    return QStringLiteral("File Hash");
-}
-
-QString WidgetFileHashSetting::toString() const
-{
-    return QStringLiteral("File Hash %1 > pos:%2").arg(ui->comboBoxHashType->currentText())
-            .arg(ui->widgetPositionFixer->value());
-}
-
-QFont WidgetFileHashSetting::fontForDisplay() const
-{
-    return QFont{};
-}
-
-Qt::Alignment WidgetFileHashSetting::alignForDisplay() const
-{
-    if (ui->widgetPositionFixer->isRightMost())
-        return Qt::AlignRight | Qt::AlignVCenter;
-
-    return Qt::AlignLeft | Qt::AlignVCenter;
 }
 
 QSharedPointer<AbstractStringBuilder> WidgetFileHashSetting::stringBuilder() const

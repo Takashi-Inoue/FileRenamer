@@ -33,14 +33,9 @@ class WidgetReplaceSetting : public AbstractWidget
 
 public:
     explicit WidgetReplaceSetting(QWidget *parent = nullptr);
+    WidgetReplaceSetting(QStringView find, QStringView replace, bool isUseRegExp,
+                         bool isCaseSensitive, QWidget *parent = nullptr);
     ~WidgetReplaceSetting() override;
-
-    // StringBuilder::AbstractWidget interface
-    QSharedPointer<AbstractWidget> clone() const override;
-    QString builderName() const override;
-    QString toString() const override;
-    QFont fontForDisplay() const override;
-    Qt::Alignment alignForDisplay() const override;
 
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
     void loadSettings(QSharedPointer<QSettings>) override;

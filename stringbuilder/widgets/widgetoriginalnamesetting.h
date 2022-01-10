@@ -28,13 +28,7 @@ class WidgetOriginalNameSetting : public WidgetOnlyPositionFixer
     Q_OBJECT
 public:
     explicit WidgetOriginalNameSetting(QWidget *parent = nullptr);
-
-    // StringBuilder::AbstractWidget interface
-    QSharedPointer<AbstractWidget> clone() const override;
-    QString builderName() const override;
-    QString toString() const override;
-    QFont fontForDisplay() const override;
-    Qt::Alignment alignForDisplay() const override;
+    WidgetOriginalNameSetting(int insertPos, QWidget *parent = nullptr);
 
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
     void loadSettings(QSharedPointer<QSettings>) override;

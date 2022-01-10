@@ -34,12 +34,6 @@ class AbstractWidget : public QWidget
 public:
     using QWidget::QWidget;
 
-    virtual QSharedPointer<AbstractWidget> clone() const = 0;
-    virtual QString builderName() const = 0;
-    virtual QString toString() const = 0;
-    virtual QFont fontForDisplay() const = 0;
-    virtual Qt::Alignment alignForDisplay() const = 0;
-
     virtual QSharedPointer<AbstractStringBuilder> stringBuilder() const = 0;
     virtual void loadSettings(QSharedPointer<QSettings>) = 0;
     virtual void saveSettings(QSharedPointer<QSettings>) const = 0;

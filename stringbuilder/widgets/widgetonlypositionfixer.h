@@ -32,6 +32,7 @@ class WidgetOnlyPositionFixer : public AbstractWidget
     Q_OBJECT
 public:
     explicit WidgetOnlyPositionFixer(QWidget *parent = nullptr);
+    WidgetOnlyPositionFixer(int insertPos, QWidget *parent = nullptr);
     ~WidgetOnlyPositionFixer() override;
 
     void loadSettings(QSharedPointer<QSettings>) override;

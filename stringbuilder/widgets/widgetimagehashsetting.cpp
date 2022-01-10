@@ -30,41 +30,14 @@ constexpr char settingsGroupName[] = "ImageHash";
 }
 
 WidgetImageHashSetting::WidgetImageHashSetting(QWidget *parent)
-    : WidgetOnlyPositionFixer(parent)
+    : WidgetImageHashSetting(0, parent)
+{
+}
+
+WidgetImageHashSetting::WidgetImageHashSetting(int insertPos, QWidget *parent)
+    : WidgetOnlyPositionFixer(insertPos, parent)
 {
     setTitle(QStringLiteral("Image Hash"));
-}
-
-QSharedPointer<AbstractWidget> WidgetImageHashSetting::clone() const
-{
-    auto widget = QSharedPointer<WidgetImageHashSetting>::create();
-
-    widget->setPositionToInsert(positionToInsert());
-
-    return widget;
-}
-
-QString WidgetImageHashSetting::builderName() const
-{
-    return QStringLiteral("Image Hash");
-}
-
-QString WidgetImageHashSetting::toString() const
-{
-    return QStringLiteral("Image Hash > pos:%1").arg(positionToInsert());
-}
-
-QFont WidgetImageHashSetting::fontForDisplay() const
-{
-    return QFont{};
-}
-
-Qt::Alignment WidgetImageHashSetting::alignForDisplay() const
-{
-    if (isRightMost())
-        return Qt::AlignRight | Qt::AlignVCenter;
-
-    return Qt::AlignLeft | Qt::AlignVCenter;
 }
 
 QSharedPointer<AbstractStringBuilder> WidgetImageHashSetting::stringBuilder() const

@@ -34,9 +34,16 @@ constexpr char settingsKeyPrefix[] = "Prefix";
 constexpr char settingsKeySuffix[] = "Suffix";
 } // anonymous
 
-WidgetNumberSetting::WidgetNumberSetting(QWidget *parent) :
-    AbstractWidget{parent},
-    ui{new Ui::WidgetNumberSetting}
+WidgetNumberSetting::WidgetNumberSetting(QWidget *parent)
+    : WidgetNumberSetting(0, 1, 0, QString{}, QString{}, 0, parent)
+{
+}
+
+WidgetNumberSetting::WidgetNumberSetting(int start, int incremental, int digits,
+                                         QStringView prefix, QStringView suffix, int insertPos,
+                                         QWidget *parent)
+    : AbstractWidget{parent},
+      ui{new Ui::WidgetNumberSetting}
 {
     ui->setupUi(this);
 
@@ -44,6 +51,12 @@ WidgetNumberSetting::WidgetNumberSetting(QWidget *parent) :
 
     ui->comboxPrefix->setValidator(fileNameValidator);
     ui->comboxSuffix->setValidator(fileNameValidator);
+    ui->comboxPrefix->setCurrentText(prefix.toString());
+    ui->comboxSuffix->setCurrentText(suffix.toString());
+    ui->spinBoxStart->setValue(start);
+    ui->spinBoxStep->setValue(incremental);
+    ui->spinBoxDigit->setValue(digits);
+    ui->widgetPositionFixer->setValue(insertPos);
 
     connect(ui->spinBoxStart, &QSpinBox::valueChanged,
             this, &AbstractWidget::changeStarted);
@@ -67,48 +80,6 @@ WidgetNumberSetting::WidgetNumberSetting(QWidget *parent) :
 WidgetNumberSetting::~WidgetNumberSetting()
 {
     delete ui;
-}
-
-QSharedPointer<AbstractWidget> WidgetNumberSetting::clone() const
-{
-    auto widget = QSharedPointer<WidgetNumberSetting>::create();
-
-    widget->ui->spinBoxStart->setValue(ui->spinBoxStart->value());
-    widget->ui->spinBoxStep->setValue(ui->spinBoxStep->value());
-    widget->ui->spinBoxDigit->setValue(ui->spinBoxDigit->value());
-    widget->ui->comboxPrefix->setCurrentText(ui->comboxPrefix->currentText());
-    widget->ui->comboxSuffix->setCurrentText(ui->comboxSuffix->currentText());
-    widget->ui->widgetPositionFixer->setValue(ui->widgetPositionFixer->value());
-
-    return widget;
-}
-
-QString WidgetNumberSetting::builderName() const
-{
-    return QStringLiteral("Number");
-}
-
-QString WidgetNumberSetting::toString() const
-{
-    return QStringLiteral("Number %1%2%3, inc %4 > pos:%5")
-            .arg(ui->comboxPrefix->currentText())
-            .arg(ui->spinBoxStart->value(), ui->spinBoxDigit->value(), 10, QLatin1Char('0'))
-            .arg(ui->comboxSuffix->currentText())
-            .arg(ui->spinBoxStep->value())
-            .arg(ui->widgetPositionFixer->value());
-}
-
-QFont WidgetNumberSetting::fontForDisplay() const
-{
-    return QFont{};
-}
-
-Qt::Alignment WidgetNumberSetting::alignForDisplay() const
-{
-    if (ui->widgetPositionFixer->isRightMost())
-        return Qt::AlignRight | Qt::AlignVCenter;
-
-    return Qt::AlignLeft | Qt::AlignVCenter;
 }
 
 QSharedPointer<AbstractStringBuilder> WidgetNumberSetting::stringBuilder() const
