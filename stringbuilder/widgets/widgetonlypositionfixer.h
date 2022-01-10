@@ -41,8 +41,9 @@ public:
     bool isLeftMost() const;
     bool isRightMost() const;
 
+    int insertPosition() const;
+
 protected:
-    int positionToInsert() const;
     void setPositionToInsert(int pos);
     void setTitle(QStringView title);
 

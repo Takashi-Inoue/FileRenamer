@@ -41,6 +41,11 @@ public:
     void loadSettings(QSharedPointer<QSettings>) override;
     void saveSettings(QSharedPointer<QSettings>) const override;
 
+    QString findString() const;
+    QString replaceString() const;
+    bool isUseRegExp() const;
+    bool isCaseSensitive() const;
+
 protected:
     void changeEvent(QEvent *event) override;
 

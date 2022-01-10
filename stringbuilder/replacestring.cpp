@@ -18,6 +18,7 @@
  */
 
 #include "replacestring.h"
+#include "widgets/widgetreplacesetting.h"
 
 #include <QRegularExpression>
 
@@ -56,12 +57,28 @@ void ReplaceString::build(QString &result)
 
 QString ReplaceString::toString() const
 {
-    const QString regExpOnOff{m_isUseRegExp ? QStringLiteral("On")
-                                            : QStringLiteral("Off")};
-    const QString caseSensitive{m_isCaseSensitive ? QStringLiteral("CaseSensitive")
-                                                  : QStringLiteral("CaseInsensitive")};
+    const QString regExpOnOff(m_isUseRegExp ? QStringLiteral("On")
+                                            : QStringLiteral("Off"));
+    const QString caseSensitive(m_isCaseSensitive ? QStringLiteral("CaseSensitive")
+                                                  : QStringLiteral("CaseInsensitive"));
     return QStringLiteral("%1 > %2 [RegExp:%3][%4]")
             .arg(m_before, m_after, regExpOnOff, caseSensitive);
+}
+
+AbstractWidget *ReplaceString::settingsWidget()
+{
+    auto widget = new WidgetReplaceSetting(m_before, m_after, m_isUseRegExp, m_isCaseSensitive);
+
+    connect(widget, &AbstractWidget::accepted, this, [this]() {
+        auto settingsWidget = qobject_cast<WidgetReplaceSetting *>(sender());
+
+        m_before = settingsWidget->findString();
+        m_after = settingsWidget->replaceString();
+        m_isUseRegExp = settingsWidget->isUseRegExp();
+        m_isCaseSensitive = settingsWidget->isCaseSensitive();
+    });
+
+    return widget;
 }
 
 } // StringBuilder

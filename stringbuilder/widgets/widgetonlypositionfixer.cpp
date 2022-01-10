@@ -65,7 +65,7 @@ bool WidgetOnlyPositionFixer::isRightMost() const
     return ui->widgetPositionFixer->isRightMost();
 }
 
-int WidgetOnlyPositionFixer::positionToInsert() const
+int WidgetOnlyPositionFixer::insertPosition() const
 {
     return ui->widgetPositionFixer->value();
 }
@@ -78,6 +78,7 @@ void WidgetOnlyPositionFixer::setPositionToInsert(int pos)
 void WidgetOnlyPositionFixer::setTitle(QStringView title)
 {
     ui->labelTitle->setText(title.toString());
+    setWindowTitle(title.toString());
 }
 
 } // StringBuilder

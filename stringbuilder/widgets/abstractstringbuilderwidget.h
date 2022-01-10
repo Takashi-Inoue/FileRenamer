@@ -34,11 +34,17 @@ class AbstractWidget : public QWidget
 public:
     using QWidget::QWidget;
 
+    void accept()
+    {
+        emit accepted();
+    }
+
     virtual QSharedPointer<AbstractStringBuilder> stringBuilder() const = 0;
     virtual void loadSettings(QSharedPointer<QSettings>) = 0;
     virtual void saveSettings(QSharedPointer<QSettings>) const = 0;
 
 signals:
+    void accepted();
     void changeStarted();
 };
 

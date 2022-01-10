@@ -20,6 +20,7 @@
 #include "stringbuildersettingsmodel.h"
 #include "abstractstringbuilder.h"
 #include "onfile/builderchainonfile.h"
+#include "stringbuilder/widgets/dialogbuildersettings.h"
 
 namespace StringBuilder {
 
@@ -118,6 +119,32 @@ StringBuilderList SettingsModel::builders(const QModelIndexList &indexes) const
 bool SettingsModel::isEmpty() const
 {
     return m_builders.isEmpty();
+}
+
+DialogBuilderSettings *SettingsModel::settingsDialog(QList<int> showIndexes, QWidget *parent) const
+{
+    QList<AbstractWidget *> widgets;
+
+    for (const SharedStringBuilder &builder : m_builders)
+        widgets.append(builder->settingsWidget());
+
+    auto dlg = new DialogBuilderSettings(widgets, showIndexes, parent);
+
+    dlg->deleteLater();
+
+    return dlg;
+}
+
+QList<AbstractWidget *> SettingsModel::settingsWidgets(const QModelIndexList &indexes)
+{
+    QList<AbstractWidget *> widgets;
+
+    for (const QModelIndex &index : indexes) {
+        if (index.isValid())
+            widgets.append(m_builders.at(index.row())->settingsWidget());
+    }
+
+    return widgets;
 }
 
 } // namespace StringBuilder

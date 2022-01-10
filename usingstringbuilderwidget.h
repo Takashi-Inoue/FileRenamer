@@ -22,18 +22,8 @@
 #include <QList>
 #include <QSharedPointer>
 
-namespace StringBuilder {
-
-class AbstractStringBuilder;
-class AbstractWidget;
-
-} // StringBuilder
+namespace StringBuilder { class AbstractWidget; }
 
 using StringBuilderWidget = StringBuilder::AbstractWidget;
-
-using SharedStringBuilder = QSharedPointer<StringBuilder::AbstractStringBuilder>;
 using SharedBuilderWidget = QSharedPointer<StringBuilderWidget>;
-
 using BuilderWidgetList = QList<SharedBuilderWidget>;
-
-constexpr char mimeTypeBuilderWidget[] = "mimetype.stringbuilder.widget";

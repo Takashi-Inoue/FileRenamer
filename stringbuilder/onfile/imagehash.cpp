@@ -20,6 +20,7 @@
 #include "imagehash.h"
 #include "ifileinfo.h"
 #include "imagehash/imagehashcalculator.h"
+#include "stringbuilder/widgets/widgetimagehashsetting.h"
 
 namespace StringBuilder {
 namespace OnFile {
@@ -50,6 +51,19 @@ QString ImageHash::toString() const
         return QStringLiteral("Image Hash >>");
 
     return QStringLiteral("__%1 Image Hash").arg(insertPosition());
+}
+
+AbstractWidget *ImageHash::settingsWidget()
+{
+    auto widget = new WidgetImageHashSetting(insertPosition());
+
+    connect(widget, &AbstractWidget::accepted, this, [&, this]() {
+        auto settingsWidget = qobject_cast<WidgetImageHashSetting *>(sender());
+
+        setInsertPosition(settingsWidget->insertPosition());
+    });
+
+    return widget;
 }
 
 } // OnFile

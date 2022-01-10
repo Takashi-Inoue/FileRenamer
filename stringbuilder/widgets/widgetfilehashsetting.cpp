@@ -30,9 +30,7 @@ constexpr char settingsKeyAlgorithm[] = "Algorithm";
 }
 
 WidgetFileHashSetting::WidgetFileHashSetting(QWidget *parent)
-    : WidgetFileHashSetting(QCryptographicHash::Algorithm::Md5, 0, parent)
-{
-}
+    : WidgetFileHashSetting(QCryptographicHash::Algorithm::Md5, 0, parent) {}
 
 WidgetFileHashSetting::WidgetFileHashSetting(QCryptographicHash::Algorithm algorithm, int insertPos,
                                              QWidget *parent)
@@ -40,6 +38,8 @@ WidgetFileHashSetting::WidgetFileHashSetting(QCryptographicHash::Algorithm algor
       ui(new Ui::WidgetFileHashSetting)
 {
     ui->setupUi(this);
+
+    setWindowTitle(QStringLiteral("File Hash"));
 
     ui->widgetPositionFixer->setValue(insertPos);
 
@@ -104,6 +104,16 @@ void WidgetFileHashSetting::saveSettings(QSharedPointer<QSettings> qSettings) co
     ui->widgetPositionFixer->saveSettings(qSettings);
 
     qSettings->endGroup();
+}
+
+QCryptographicHash::Algorithm WidgetFileHashSetting::algorithm() const
+{
+    return QCryptographicHash::Algorithm(ui->comboBoxHashType->currentData().toInt());
+}
+
+int WidgetFileHashSetting::insertPosition() const
+{
+    return ui->widgetPositionFixer->value();
 }
 
 } // StringBuilder

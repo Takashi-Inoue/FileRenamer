@@ -41,6 +41,13 @@ public:
     void loadSettings(QSharedPointer<QSettings>) override;
     void saveSettings(QSharedPointer<QSettings>) const override;
 
+    int startNumber() const;
+    int incrementalNumber() const;
+    int digits() const;
+    QString prefixString() const;
+    QString suffixString() const;
+    int insertPosition() const;
+
 protected:
     void changeEvent(QEvent *event) override;
 

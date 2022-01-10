@@ -20,6 +20,7 @@
 #include "framebuilderlist.h"
 #include "ui_framebuilderlist.h"
 
+#include "stringbuilder/widgets/dialogbuildersettings.h"
 #include "htmltextdelegate.h"
 #include "stringbuilder/stringbuildersettingsmodel.h"
 #include "stringbuilder/stringbuildersmodel.h"
@@ -73,13 +74,25 @@ void FrameBuilderList::appendSelectedBuildersToSettings()
     notifyStartChanging();
 }
 
-void FrameBuilderList::onSettingActivated(const QModelIndex &index)
+void FrameBuilderList::onSettingActivated(const QModelIndex &/*index*/)
 {
-}
+    QList<int> rows;
 
-void FrameBuilderList::onSettingsChangeStarted()
-{
+    for (const QModelIndex &index : ui->tableViewSettings->selectionModel()->selectedRows())
+        rows.append(index.row());
 
+    using DialogSettings = StringBuilder::DialogBuilderSettings;
+    DialogSettings *dlg = m_settingsModel->settingsDialog(rows, this);
+
+    connect(dlg, &DialogSettings::changeStarted, this, &FrameBuilderList::changeStarted);
+    connect(dlg, &DialogSettings::settingsChanged, this, &FrameBuilderList::settingsChanged);
+
+    dlg->exec();
+
+    for (const QModelIndex &index : ui->tableViewSettings->selectionModel()->selectedRows())
+        ui->tableViewSettings->update(index);
+
+    notifyStartChanging();
 }
 
 void FrameBuilderList::notifyStartChanging()

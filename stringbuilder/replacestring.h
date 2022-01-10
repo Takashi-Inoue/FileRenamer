@@ -33,12 +33,13 @@ public:
 
     void build(QString &result) override;
     QString toString() const override;
+    AbstractWidget *settingsWidget() override;
 
 private:
-    const QString m_before;
-    const QString m_after;
-    const bool m_isUseRegExp;
-    const bool m_isCaseSensitive;
+    QString m_before;
+    QString m_after;
+    bool m_isUseRegExp;
+    bool m_isCaseSensitive;
 };
 
 } // StringBuilder

@@ -71,7 +71,7 @@
       <string>Set position to leftmost.</string>
      </property>
      <property name="icon">
-      <iconset resource="../images.qrc">
+      <iconset resource="../../images.qrc">
        <normaloff>:/res/images/leftmost.svg</normaloff>:/res/images/leftmost.svg</iconset>
      </property>
      <property name="checkable">
@@ -135,7 +135,7 @@
       <string>Set position to rightmost.</string>
      </property>
      <property name="icon">
-      <iconset resource="../images.qrc">
+      <iconset resource="../../images.qrc">
        <normaloff>:/res/images/rightmost.svg</normaloff>:/res/images/rightmost.svg</iconset>
      </property>
      <property name="checkable">
@@ -149,7 +149,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="../images.qrc"/>
+  <include location="../../images.qrc"/>
  </resources>
  <connections>
   <connection>

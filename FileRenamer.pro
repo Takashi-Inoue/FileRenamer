@@ -38,6 +38,7 @@ SOURCES += \
     stringbuilder/stringbuilderfactory.cpp \
     stringbuilder/stringbuildersettingsmodel.cpp \
     stringbuilder/stringbuildersmodel.cpp \
+    stringbuilder/widgets/dialogbuildersettings.cpp \
     stringbuilder/widgets/widgetfilehashsetting.cpp \
     stringbuilder/widgets/widgetimagehashsetting.cpp \
     stringbuilder/widgets/widgetinserttextsetting.cpp \
@@ -102,6 +103,7 @@ HEADERS += \
     stringbuilder/stringbuildersettingsmodel.h \
     stringbuilder/stringbuildersmodel.h \
     stringbuilder/widgets/abstractstringbuilderwidget.h \
+    stringbuilder/widgets/dialogbuildersettings.h \
     stringbuilder/widgets/stringbuilderallwidgets.h \
     stringbuilder/widgets/widgetfilehashsetting.h \
     stringbuilder/widgets/widgetimagehashsetting.h \
@@ -131,6 +133,7 @@ HEADERS += \
 
 FORMS += \
     mainwindow.ui \
+    stringbuilder/widgets/dialogbuildersettings.ui \
     stringbuilder/widgets/widgetfilehashsetting.ui \
     stringbuilder/widgets/widgetinserttextsetting.ui \
     stringbuilder/widgets/widgetnumbersetting.ui \

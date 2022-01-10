@@ -42,7 +42,7 @@ WidgetOriginalNameSetting::WidgetOriginalNameSetting(int insertPos, QWidget *par
 
 QSharedPointer<AbstractStringBuilder> WidgetOriginalNameSetting::stringBuilder() const
 {
-    return QSharedPointer<OnFile::OriginalName>::create(positionToInsert());
+    return QSharedPointer<OnFile::OriginalName>::create(insertPosition());
 }
 
 void WidgetOriginalNameSetting::loadSettings(QSharedPointer<QSettings> qSettings)

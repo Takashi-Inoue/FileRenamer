@@ -42,7 +42,7 @@ WidgetImageHashSetting::WidgetImageHashSetting(int insertPos, QWidget *parent)
 
 QSharedPointer<AbstractStringBuilder> WidgetImageHashSetting::stringBuilder() const
 {
-    return QSharedPointer<OnFile::ImageHash>::create(positionToInsert());
+    return QSharedPointer<OnFile::ImageHash>::create(insertPosition());
 }
 
 void WidgetImageHashSetting::loadSettings(QSharedPointer<QSettings> qSettings)

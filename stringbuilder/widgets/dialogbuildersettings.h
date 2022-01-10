@@ -20,47 +20,43 @@
 #pragma once
 
 #include "usingstringbuilder.h"
+#include "stringbuilder/onfile/builderchainonfile.h"
 
-#include <QFrame>
-#include <QSharedPointer>
-
-namespace StringBuilder {
-class BuildersModel;
-class SettingsModel;
-} // StringBuilder
+#include <QDialog>
 
 class QTimer;
 
+namespace StringBuilder {
+
+class AbstractWidget;
+
 namespace Ui {
-class FrameBuilderList;
+class DialogBuilderSettings;
 }
 
-class FrameBuilderList : public QFrame
+class DialogBuilderSettings : public QDialog
 {
     Q_OBJECT
-public:
-    explicit FrameBuilderList(QWidget *parent = nullptr);
-    ~FrameBuilderList() override;
 
-    SharedBuilderChainOnFile builderChain() const;
+public:
+    DialogBuilderSettings(QList<AbstractWidget *> widgets, QList<int> showIndexes,
+                          QWidget *parent = nullptr);
+    ~DialogBuilderSettings();
 
 signals:
-    void builderCleared();
     void changeStarted();
     void settingsChanged(SharedBuilderChainOnFile);
 
 private slots:
-    void appendSelectedBuildersToSettings();
-
-    void onSettingActivated(const QModelIndex &index);
-
-private:
+    void acceptSettingsWidgets();
     void notifyStartChanging();
 
-    Ui::FrameBuilderList *ui;
+private:
+    Ui::DialogBuilderSettings *ui;
 
     QTimer *m_timer;
-    StringBuilder::BuildersModel *m_buildersModel;
-    StringBuilder::SettingsModel *m_settingsModel;
+    QList<AbstractWidget *> m_widgets;
 };
 
+
+} // namespace StringBuilder

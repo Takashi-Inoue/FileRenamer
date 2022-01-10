@@ -38,9 +38,7 @@ constexpr char settingsKeyCaseSensitive[] = "CaseSensitive";
 } // anonymous
 
 WidgetReplaceSetting::WidgetReplaceSetting(QWidget *parent)
-    : WidgetReplaceSetting(QString{}, QString{}, false, true)
-{
-}
+    : WidgetReplaceSetting(QString{}, QString{}, false, true) {}
 
 WidgetReplaceSetting::WidgetReplaceSetting(QStringView find, QStringView replace, bool isUseRegExp,
                                            bool isCaseSensitive, QWidget *parent)
@@ -48,6 +46,8 @@ WidgetReplaceSetting::WidgetReplaceSetting(QStringView find, QStringView replace
       ui{new Ui::WidgetReplaceSetting}
 {
     ui->setupUi(this);
+
+    setWindowTitle(QStringLiteral("Replace"));
 
     ui->comboxReplace->setValidator(new FileNameVlidator(this));
     ui->comboxSearch->setCurrentText(find.toString());
@@ -113,6 +113,26 @@ void WidgetReplaceSetting::saveSettings(QSharedPointer<QSettings> qSettings) con
     ui->comboxSearch->saveSettings(qSettings, settingsKeySearch);
 
     qSettings->endGroup();
+}
+
+QString WidgetReplaceSetting::findString() const
+{
+    return ui->comboxSearch->currentText();
+}
+
+QString WidgetReplaceSetting::replaceString() const
+{
+    return ui->comboxReplace->currentText();
+}
+
+bool WidgetReplaceSetting::isUseRegExp() const
+{
+    return ui->checkBoxUseRegex->isChecked();
+}
+
+bool WidgetReplaceSetting::isCaseSensitive() const
+{
+    return ui->checkBoxCaseSensitive->isChecked();
 }
 
 void WidgetReplaceSetting::changeEvent(QEvent *event)

@@ -53,6 +53,11 @@ public:
         return m_pos;
     }
 
+    void setInsertPosition(int pos)
+    {
+        m_pos = pos;
+    }
+
 protected:
     qsizetype posToInsert(qsizetype targetLength)
     {
@@ -66,7 +71,7 @@ protected:
                            : qMin<qsizetype>(m_pos, targetLength);
     }
 
-    const int m_pos;
+    int m_pos;
 };
 
 } // StringBuilder

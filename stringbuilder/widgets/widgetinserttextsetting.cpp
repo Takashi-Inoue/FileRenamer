@@ -31,15 +31,15 @@ constexpr char settingsKeyText[] = "Text";
 }
 
 WidgetInsertTextSetting::WidgetInsertTextSetting(QWidget *parent)
-    : WidgetInsertTextSetting(QString{}, 0, parent)
-{
-}
+    : WidgetInsertTextSetting(QString{}, 0, parent) {}
 
 WidgetInsertTextSetting::WidgetInsertTextSetting(QStringView text, int insertPos, QWidget *parent)
     : AbstractWidget{parent},
       ui{new Ui::WidgetInsertTextSetting}
 {
     ui->setupUi(this);
+
+    setWindowTitle(QStringLiteral("Insert Text"));
 
     ui->combox->setValidator(new FileNameVlidator(this));
     ui->combox->setCurrentText(text.toString());
@@ -84,6 +84,16 @@ void WidgetInsertTextSetting::saveSettings(QSharedPointer<QSettings> qSettings) 
     ui->widgetPositionFixer->saveSettings(qSettings);
 
     qSettings->endGroup();
+}
+
+QString WidgetInsertTextSetting::insertText() const
+{
+    return ui->combox->currentText();
+}
+
+int WidgetInsertTextSetting::insertPosition() const
+{
+    return ui->widgetPositionFixer->value();
 }
 
 void WidgetInsertTextSetting::changeEvent(QEvent *event)

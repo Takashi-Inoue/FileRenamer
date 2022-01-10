@@ -35,6 +35,7 @@ public:
 
     void build(QString &result) override;
     QString toString() const override;
+    AbstractWidget *settingsWidget() override;
 
 protected:
     QCryptographicHash::Algorithm m_algorithm;

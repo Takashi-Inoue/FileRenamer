@@ -18,6 +18,7 @@
  */
 
 #include "number.h"
+#include "widgets/widgetnumbersetting.h"
 
 namespace StringBuilder {
 
@@ -63,6 +64,25 @@ QString Number::toString() const
 void Number::reset()
 {
     m_currentNumber = m_start;
+}
+
+AbstractWidget *Number::settingsWidget()
+{
+    auto widget = new WidgetNumberSetting(m_start, m_step, m_digit, m_prefix, m_suffix, insertPosition());
+
+    connect(widget, &AbstractWidget::accepted, this, [this]() {
+        auto settingsWidget = qobject_cast<WidgetNumberSetting *>(sender());
+
+        m_start = settingsWidget->startNumber();
+        m_step = settingsWidget->incrementalNumber();
+        m_digit = settingsWidget->digits();
+        m_prefix = settingsWidget->prefixString();
+        m_suffix = settingsWidget->suffixString();
+
+        setInsertPosition(settingsWidget->insertPosition());
+    });
+
+    return widget;
 }
 
 } // StringBuilder

@@ -34,13 +34,14 @@ public:
     void build(QString &result) override;
     QString toString() const override;
     void reset() override;
+    AbstractWidget *settingsWidget() override;
 
 private:
-    const int m_start;
-    const int m_step;
-    const int m_digit;
-    const QString m_prefix;
-    const QString m_suffix;
+    int m_start;
+    int m_step;
+    int m_digit;
+    QString m_prefix;
+    QString m_suffix;
 
     int m_currentNumber;
 };

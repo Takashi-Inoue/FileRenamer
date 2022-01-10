@@ -24,6 +24,8 @@
 
 namespace StringBuilder {
 
+class AbstractWidget;
+
 class AbstractStringBuilder : public QObject
 {
     Q_OBJECT
@@ -33,6 +35,7 @@ public:
     virtual void build(QString &result) = 0;
     virtual QString toString() const = 0;
     virtual void reset() {}
+    virtual AbstractWidget *settingsWidget() = 0;
 };
 
 } // StringBuilder

@@ -25,6 +25,9 @@
 
 namespace StringBuilder {
 
+class AbstractWidget;
+class DialogBuilderSettings;
+
 class SettingsModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -47,6 +50,8 @@ public:
     SharedBuilderChainOnFile builderChain() const;
     StringBuilderList builders(const QModelIndexList &indexes) const;
     bool isEmpty() const;
+    DialogBuilderSettings *settingsDialog(QList<int> showIndexes, QWidget *parent) const;
+    QList<AbstractWidget *> settingsWidgets(const QModelIndexList &indexes);
 
 private:
     StringBuilderList m_builders;

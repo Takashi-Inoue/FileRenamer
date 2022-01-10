@@ -40,6 +40,10 @@ public:
     void loadSettings(QSharedPointer<QSettings>) override;
     void saveSettings(QSharedPointer<QSettings>) const override;
 
+public:
+    QString insertText() const;
+    int insertPosition() const;
+
 protected:
     void changeEvent(QEvent *event) override;
 

@@ -35,9 +35,7 @@ constexpr char settingsKeySuffix[] = "Suffix";
 } // anonymous
 
 WidgetNumberSetting::WidgetNumberSetting(QWidget *parent)
-    : WidgetNumberSetting(0, 1, 0, QString{}, QString{}, 0, parent)
-{
-}
+    : WidgetNumberSetting(0, 1, 0, QString{}, QString{}, 0, parent) {}
 
 WidgetNumberSetting::WidgetNumberSetting(int start, int incremental, int digits,
                                          QStringView prefix, QStringView suffix, int insertPos,
@@ -46,6 +44,8 @@ WidgetNumberSetting::WidgetNumberSetting(int start, int incremental, int digits,
       ui{new Ui::WidgetNumberSetting}
 {
     ui->setupUi(this);
+
+    setWindowTitle(QStringLiteral("Number"));
 
     auto fileNameValidator = new FileNameVlidator{this};
 
@@ -124,6 +124,36 @@ void WidgetNumberSetting::saveSettings(QSharedPointer<QSettings> qSettings) cons
     ui->comboxSuffix->saveSettings(qSettings, settingsKeySuffix);
 
     qSettings->endGroup();
+}
+
+int WidgetNumberSetting::startNumber() const
+{
+    return ui->spinBoxStart->value();
+}
+
+int WidgetNumberSetting::incrementalNumber() const
+{
+    return ui->spinBoxStep->value();
+}
+
+int WidgetNumberSetting::digits() const
+{
+    return ui->spinBoxDigit->value();
+}
+
+QString WidgetNumberSetting::prefixString() const
+{
+    return ui->comboxPrefix->currentText();
+}
+
+QString WidgetNumberSetting::suffixString() const
+{
+    return ui->comboxSuffix->currentText();
+}
+
+int WidgetNumberSetting::insertPosition() const
+{
+    return ui->widgetPositionFixer->value();
 }
 
 void WidgetNumberSetting::changeEvent(QEvent *event)

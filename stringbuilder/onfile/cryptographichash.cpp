@@ -19,6 +19,7 @@
 
 #include "cryptographichash.h"
 #include "ifileinfo.h"
+#include "stringbuilder/widgets/widgetfilehashsetting.h"
 
 #include <QFile>
 #include <QMetaEnum>
@@ -69,6 +70,20 @@ QString CryptographicHash::toString() const
 
     return QStringLiteral("File Hash %1 > pos:%2")
             .arg(metaEnum.valueToKey(m_algorithm)).arg(insertPosition());
+}
+
+AbstractWidget *CryptographicHash::settingsWidget()
+{
+    auto widget = new WidgetFileHashSetting(m_algorithm, insertPosition());
+
+    connect(widget, &AbstractWidget::accepted, this, [&, this]() {
+        auto settingsWidget = qobject_cast<WidgetFileHashSetting *>(sender());
+
+        m_algorithm = settingsWidget->algorithm();
+        setInsertPosition(settingsWidget->insertPosition());
+    });
+
+    return widget;
 }
 
 } // OnFile

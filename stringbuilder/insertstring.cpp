@@ -18,6 +18,7 @@
  */
 
 #include "insertstring.h"
+#include "widgets/widgetinserttextsetting.h"
 
 namespace StringBuilder {
 
@@ -49,6 +50,20 @@ QString InsertString::toString() const
         return QStringLiteral("%1 >>").arg(text);
 
     return QStringLiteral("__%1 %2").arg(insertPosition()).arg(text);
+}
+
+AbstractWidget *InsertString::settingsWidget()
+{
+    auto widget = new WidgetInsertTextSetting(m_string, insertPosition());
+
+    connect(widget, &AbstractWidget::accepted, this, [&, this]() {
+        auto settingsWidget = qobject_cast<WidgetInsertTextSetting *>(sender());
+
+        m_string = settingsWidget->insertText();
+        setInsertPosition(settingsWidget->insertPosition());
+    });
+
+    return widget;
 }
 
 } // StringBuilder

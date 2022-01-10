@@ -19,6 +19,7 @@
 
 #include "originalname.h"
 #include "ifileinfo.h"
+#include "stringbuilder/widgets/widgetoriginalnamesetting.h"
 
 namespace StringBuilder {
 namespace OnFile {
@@ -36,13 +37,26 @@ void OriginalName::build(QString &result)
 QString OriginalName::toString() const
 {
     if (isLeftMost())
-        return QStringLiteral("<< Original Name");
+        return QStringLiteral("&lt;&lt; Original Name");
 
     if (isRightMost())
-        return QStringLiteral("Original Name >>");
+        return QStringLiteral("Original Name &gt;&gt;");
 
     return QStringLiteral("__%1 Original Name").arg(insertPosition());
 
+}
+
+AbstractWidget *OriginalName::settingsWidget()
+{
+    auto widget = new WidgetOriginalNameSetting(insertPosition());
+
+    connect(widget, &AbstractWidget::accepted, this, [&, this]() {
+        auto settingsWidget = qobject_cast<WidgetOriginalNameSetting *>(sender());
+
+        setInsertPosition(settingsWidget->insertPosition());
+    });
+
+    return widget;
 }
 
 } // OnFile
