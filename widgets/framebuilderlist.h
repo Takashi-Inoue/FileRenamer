@@ -19,12 +19,17 @@
 
 #pragma once
 
+#include "usingstringbuilder.h"
+
 #include <QFrame>
+#include <QSharedPointer>
 
 namespace StringBuilder {
 class BuildersModel;
 class SettingsModel;
 } // StringBuilder
+
+class QTimer;
 
 namespace Ui {
 class FrameBuilderList;
@@ -37,19 +42,25 @@ public:
     explicit FrameBuilderList(QWidget *parent = nullptr);
     ~FrameBuilderList() override;
 
+    SharedBuilderChainOnFile builderChain() const;
+
 signals:
+    void builderCleared();
     void changeStarted();
-    void settingsChanged();
+    void settingsChanged(SharedBuilderChainOnFile);
 
 private slots:
-    void on_buttonAdd_clicked();
+    void appendSelectedBuildersToSettings();
 
     void onSettingActivated(const QModelIndex &index);
     void onSettingsChangeStarted();
 
 private:
+    void notifyStartChanging();
+
     Ui::FrameBuilderList *ui;
 
+    QTimer *m_timer;
     StringBuilder::BuildersModel *m_buildersModel;
     StringBuilder::SettingsModel *m_settingsModel;
 };

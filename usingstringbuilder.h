@@ -22,7 +22,12 @@
 #include <QList>
 #include <QSharedPointer>
 
-namespace StringBuilder { class AbstractStringBuilder; }
+namespace StringBuilder {
+class AbstractStringBuilder;
+namespace OnFile { class BuilderChainOnFile; }
+} // StringBuilder
 
 using SharedStringBuilder = QSharedPointer<StringBuilder::AbstractStringBuilder>;
 using StringBuilderList = QList<SharedStringBuilder>;
+
+using SharedBuilderChainOnFile = QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile>;

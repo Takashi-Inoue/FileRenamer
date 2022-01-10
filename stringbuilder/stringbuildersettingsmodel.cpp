@@ -19,6 +19,7 @@
 
 #include "stringbuildersettingsmodel.h"
 #include "abstractstringbuilder.h"
+#include "onfile/builderchainonfile.h"
 
 namespace StringBuilder {
 
@@ -29,11 +30,17 @@ SettingsModel::SettingsModel(QObject *parent)
 
 int SettingsModel::rowCount(const QModelIndex &parent) const
 {
+    if (parent.isValid())
+        return 0;
+
     return m_builders.size();
 }
 
 int SettingsModel::columnCount(const QModelIndex &parent) const
 {
+    if (parent.isValid())
+        return 0;
+
     return 1;
 }
 
@@ -44,9 +51,6 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 
     if (role == Qt::DisplayRole)
         return m_builders.at(index.row())->toString();
-
-//    if (role == Qt::FontRole)
-//        return m_builders.at(index.row())->fontForDisplay();
 
 //    if (role == Qt::TextAlignmentRole)
 //        return m_builders.at(index.row())->alignForDisplay().toInt();
@@ -87,6 +91,18 @@ void SettingsModel::appendBuilders(StringBuilderList &&builders)
     endInsertRows();
 }
 
+SharedBuilderChainOnFile SettingsModel::builderChain() const
+{
+    auto builderChain = SharedBuilderChainOnFile::create();
+
+    for (const SharedStringBuilder &builder : m_builders)
+        builderChain->addBuilder(builder);
+
+    builderChain->reset();
+
+    return builderChain;
+}
+
 StringBuilderList SettingsModel::builders(const QModelIndexList &indexes) const
 {
     StringBuilderList builders;
@@ -97,6 +113,11 @@ StringBuilderList SettingsModel::builders(const QModelIndexList &indexes) const
     }
 
     return builders;
+}
+
+bool SettingsModel::isEmpty() const
+{
+    return m_builders.isEmpty();
 }
 
 } // namespace StringBuilder

@@ -44,7 +44,9 @@ public:
 
 public:
     void appendBuilders(StringBuilderList &&builders);
+    SharedBuilderChainOnFile builderChain() const;
     StringBuilderList builders(const QModelIndexList &indexes) const;
+    bool isEmpty() const;
 
 private:
     StringBuilderList m_builders;

@@ -24,12 +24,14 @@
 #include "pathsanalyzer.h"
 #include "path/pathheaderview.h"
 #include "path/pathmodel.h"
+#include "stringbuilder/onfile/builderchainonfile.h"
 #include "widgets/counterlabel.h"
 #include "widgets/dialogdroppeddir.h"
 #include "widgets/dialogloadrenamesettings.h"
 #include "widgets/dialogsaverenamesettings.h"
 #include "widgets/elidelabel.h"
 
+#include <QAbstractButton>
 #include <QDropEvent>
 #include <QMessageBox>
 #include <QMimeData>
@@ -72,12 +74,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     registerPaths(paths);
 
-    connect(ui->formStringBuilderChain, &FormStringBuilderChain::settingsChanged,
+    connect(ui->frameBuilderList, &FrameBuilderList::settingsChanged,
             m_pathModel, &PathModel::startCreateNewNames);
 
-    connect(ui->formStringBuilderChain, &FormStringBuilderChain::changeStarted,
+    connect(ui->frameBuilderList, &FrameBuilderList::changeStarted,
             this, &MainWindow::adaptorToChangeState);
-    connect(ui->formStringBuilderChain, &FormStringBuilderChain::builderCleared,
+    connect(ui->frameBuilderList, &FrameBuilderList::builderCleared,
             this, &MainWindow::adaptorToChangeState);
 
     connect(m_pathModel, &PathModel::itemCleared,    this, &MainWindow::adaptorToChangeState);
@@ -87,7 +89,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_pathModel, &PathModel::renameFinished, this, &MainWindow::adaptorToChangeState);
     connect(m_pathModel, &PathModel::undoStarted,    this, &MainWindow::adaptorToChangeState);
 
-    connect(m_pathModel, &PathModel::internalDataChanged, this, &MainWindow::onPathsDataChanged);
+    connect(m_pathModel, &PathModel::internalDataChanged, this, &MainWindow::startCreatingNewNames);
     connect(m_pathModel, &PathModel::sortingBroken,       this, &MainWindow::onSortingBroken);
 
     connect(ui->actionRename,     &QAction::triggered, m_pathModel, &PathModel::startRename);
@@ -95,10 +97,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionUndo,       &QAction::triggered, m_pathModel, &PathModel::undoRename);
     connect(ui->actionClearItems, &QAction::triggered, m_pathModel, &PathModel::clear);
 
-    connect(ui->actionRename, &QAction::triggered,
-            ui->formStringBuilderChain, &FormStringBuilderChain::saveLatestSettings);
+//    connect(ui->actionRename, &QAction::triggered,
+//            ui->formStringBuilderChain, &FormStringBuilderChain::saveLatestSettings);
 
-    m_pathModel->startCreateNewNames(ui->formStringBuilderChain->builderChain());
+    startCreatingNewNames();
 }
 
 MainWindow::~MainWindow()
@@ -119,7 +121,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     qSettings->setValue(settingsKeyDarkMode, ui->actionDarkMode->isChecked());
     qSettings->endGroup();
 
-    ui->formStringBuilderChain->saveCurrentBuilderSettings(qSettings);
+//    ui->formStringBuilderChain->saveCurrentBuilderSettings(qSettings);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
@@ -138,9 +140,9 @@ void MainWindow::dropEvent(QDropEvent *event)
     registerPaths(paths);
 }
 
-void MainWindow::onPathsDataChanged()
+void MainWindow::startCreatingNewNames()
 {
-    m_pathModel->startCreateNewNames(ui->formStringBuilderChain->builderChain());
+    m_pathModel->startCreateNewNames(ui->frameBuilderList->builderChain());
 }
 
 void MainWindow::onSortingBroken()
@@ -159,7 +161,7 @@ void MainWindow::onButtonLoadSettingsClicked()
 
     auto qSettings = QSharedPointer<QSettings>::create(dlg.settingFullPath(), QSettings::IniFormat);
 
-    ui->formStringBuilderChain->loadBuilderSettings(qSettings);
+//    ui->formStringBuilderChain->loadBuilderSettings(qSettings);
 }
 
 void MainWindow::onButtonSaveSettingsClicked()
@@ -175,7 +177,7 @@ void MainWindow::onButtonSaveSettingsClicked()
 
     qSettings->clear();
 
-    ui->formStringBuilderChain->saveCurrentBuilderSettings(qSettings);
+//    ui->formStringBuilderChain->saveCurrentBuilderSettings(qSettings);
 }
 
 void MainWindow::onActionDarkModeTriggered(bool checked)
@@ -186,8 +188,8 @@ void MainWindow::onActionDarkModeTriggered(bool checked)
 
 void MainWindow::adaptorToChangeState()
 {
-    static const int builderCleared = ui->formStringBuilderChain->metaObject()->indexOfSignal("builderCleared()");
-    static const int changeStarted  = ui->formStringBuilderChain->metaObject()->indexOfSignal("changeStarted()");
+    static const int builderCleared = ui->frameBuilderList->metaObject()->indexOfSignal("builderCleared()");
+    static const int changeStarted  = ui->frameBuilderList->metaObject()->indexOfSignal("changeStarted()");
     static const int itemCleared    = m_pathModel->metaObject()->indexOfSignal("itemCleared()");
     static const int readyToRename  = m_pathModel->metaObject()->indexOfSignal("readyToRename()");
     static const int renameStarted  = m_pathModel->metaObject()->indexOfSignal("renameStarted()");
@@ -249,7 +251,7 @@ void MainWindow::setState(MainWindow::State state)
 
     setAcceptDrops(isEnableToChangeSettings);
 
-    ui->formStringBuilderChain->setEnabled(isEnableToChangeSettings);
+    ui->frameBuilderList->setEnabled(isEnableToChangeSettings);
     ui->tableView->setEnableToChangeItems(isEnableToChangeSettings);
 
     auto header = qobject_cast<PathHeaderView *>(ui->tableView->horizontalHeader());

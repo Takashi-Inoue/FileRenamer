@@ -60,5 +60,10 @@ QString Number::toString() const
             .arg(insertPosition());
 }
 
+void Number::reset()
+{
+    m_currentNumber = m_start;
+}
+
 } // StringBuilder
 

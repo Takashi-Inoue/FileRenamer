@@ -25,9 +25,12 @@
 #include "stringbuilder/stringbuildersmodel.h"
 #include "usingstringbuilder.h"
 
+#include <QTimer>
+
 FrameBuilderList::FrameBuilderList(QWidget *parent)
     : QFrame(parent),
       ui(new Ui::FrameBuilderList),
+      m_timer(new QTimer{this}),
       m_buildersModel(new StringBuilder::BuildersModel{this}),
       m_settingsModel(new StringBuilder::SettingsModel{this})
 {
@@ -35,11 +38,20 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
 
     ui->tableViewBuilders->setModel(m_buildersModel);
     ui->tableViewSettings->setModel(m_settingsModel);
+    ui->tableViewSettings->setItemDelegate(new HtmlTextDelegate{this});
 
     connect(ui->tableViewSettings, &QAbstractItemView::activated,
             this, &FrameBuilderList::onSettingActivated);
 
-    ui->tableViewSettings->setItemDelegate(new HtmlTextDelegate{this});
+    connect(ui->buttonAdd, &QPushButton::clicked,
+            this, &FrameBuilderList::appendSelectedBuildersToSettings);
+
+    m_timer->setSingleShot(true);
+    m_timer->setInterval(QApplication::keyboardInputInterval());
+
+    connect(m_timer, &QTimer::timeout, this, [this]() {
+        emit settingsChanged(builderChain());
+    });
 }
 
 FrameBuilderList::~FrameBuilderList()
@@ -47,11 +59,18 @@ FrameBuilderList::~FrameBuilderList()
     delete ui;
 }
 
-void FrameBuilderList::on_buttonAdd_clicked()
+SharedBuilderChainOnFile FrameBuilderList::builderChain() const
+{
+    return m_settingsModel->builderChain();
+}
+
+void FrameBuilderList::appendSelectedBuildersToSettings()
 {
     const QModelIndexList &indexes = ui->tableViewBuilders->selectionModel()->selectedRows();
 
     m_settingsModel->appendBuilders(m_buildersModel->createBuilders(indexes));
+
+    notifyStartChanging();
 }
 
 void FrameBuilderList::onSettingActivated(const QModelIndex &index)
@@ -61,5 +80,14 @@ void FrameBuilderList::onSettingActivated(const QModelIndex &index)
 void FrameBuilderList::onSettingsChangeStarted()
 {
 
+}
+
+void FrameBuilderList::notifyStartChanging()
+{
+    if (m_settingsModel->isEmpty())
+        emit builderCleared();
+
+    m_timer->start();
+    emit changeStarted();
 }
 

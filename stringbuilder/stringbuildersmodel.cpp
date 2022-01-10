@@ -34,11 +34,17 @@ BuildersModel::BuildersModel(QObject *parent)
 
 int BuildersModel::rowCount(const QModelIndex &parent) const
 {
+    if (parent.isValid())
+        return 0;
+
     return BuilderFactory::builderTypeCount();
 }
 
 int BuildersModel::columnCount(const QModelIndex &parent) const
 {
+    if (parent.isValid())
+        return 0;
+
     return 1;
 }
 

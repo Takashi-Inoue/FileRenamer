@@ -37,6 +37,7 @@ public:
     virtual QString build();
 
     bool isEmpty() const;
+    void reset();
 
 protected:
     QList<QSharedPointer<AbstractStringBuilder>> m_builders;

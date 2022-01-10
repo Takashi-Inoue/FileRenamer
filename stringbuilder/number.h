@@ -33,6 +33,7 @@ public:
 
     void build(QString &result) override;
     QString toString() const override;
+    void reset() override;
 
 private:
     const int m_start;
