@@ -29,9 +29,11 @@ class PathRoot;
 class PathEntity;
 }
 
-namespace StringBuilderOnFile {
+namespace StringBuilder{
+namespace OnFile {
 class BuilderChainOnFile;
-}
+} // OnFile
+} // StringBuilder
 
 class ThreadCreateNewNames : public QThread
 {
@@ -39,7 +41,7 @@ class ThreadCreateNewNames : public QThread
 public:
     ThreadCreateNewNames(QWeakPointer<Path::PathRoot> pathRoot, QObject *parent = nullptr);
 
-    void setStringBuilderOnFile(QSharedPointer<StringBuilderOnFile::BuilderChainOnFile> builderChain);
+    void setStringBuilderOnFile(QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile> builderChain);
     void stop();
 
 signals:
@@ -65,5 +67,5 @@ private:
 
     bool m_isStopRequested = false;
     QWeakPointer<Path::PathRoot> m_pathRoot;
-    QSharedPointer<StringBuilderOnFile::BuilderChainOnFile> m_builderChain;
+    QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile> m_builderChain;
 };

@@ -19,7 +19,7 @@
 
 #pragma once
 
-class AbstractStringBuilderWidget;
+namespace StringBuilder { class AbstractWidget; }
 
 class QWidget;
 
@@ -29,5 +29,6 @@ public:
     StringBuilderWidgetFactory() = default;
 
     // builderIndex links index of combobox in FormStringBuilder.
-    AbstractStringBuilderWidget *createWidget(int builderIndex, QWidget *parent) const;
+    StringBuilder::AbstractWidget *createWidget(
+            int builderIndex, QWidget *parent) const;
 };

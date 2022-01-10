@@ -26,9 +26,11 @@ namespace Path {
 class PathRoot;
 }
 
-namespace StringBuilderOnFile{
+namespace StringBuilder {
+namespace OnFile {
 class BuilderChainOnFile;
-}
+} // OnFile
+} // StringBuilder
 
 class ThreadCreateNewNames;
 class ThreadRename;
@@ -85,7 +87,7 @@ public:
 public slots:
     void clear();
     // Start/Stop threads
-    void startCreateNewNames(QSharedPointer<StringBuilderOnFile::BuilderChainOnFile> builderChain);
+    void startCreateNewNames(QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile> builderChain);
     void startRename();
     void stopRename();
     void undoRename();

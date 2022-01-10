@@ -21,9 +21,15 @@
 
 namespace StringBuilder {
 
+Number::Number()
+    : Number(0, 0, 1, 0, QString{}, QString{}, nullptr)
+{
+}
+
 Number::Number(int pos, int start, int step, int digit, QStringView prefix, QStringView suffix,
                QObject *parent)
     : AbstractInsertString{pos, parent},
+      m_start(start),
       m_step(step),
       m_digit(digit),
       m_prefix(prefix.toString()),
@@ -42,6 +48,16 @@ void Number::build(QString &result)
     result.insert(posToInsert(result.size()), numberString);
 
     m_currentNumber += m_step;
+}
+
+QString Number::toString() const
+{
+    return QStringLiteral("Number %1%2%3, inc %4 > pos:%5")
+            .arg(m_prefix)
+            .arg(m_start, m_digit, 10, QLatin1Char('0'))
+            .arg(m_suffix)
+            .arg(m_step)
+            .arg(insertPosition());
 }
 
 } // StringBuilder

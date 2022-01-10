@@ -27,9 +27,11 @@ class InsertString : public AbstractInsertString
 {
     Q_OBJECT
 public:
+    InsertString();
     InsertString(int pos, QStringView string, QObject *parent = nullptr);
 
     void build(QString &result) override;
+    QString toString() const override;
 
 protected:
     const QString m_string;

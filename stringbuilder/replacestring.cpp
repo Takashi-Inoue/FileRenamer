@@ -19,20 +19,49 @@
 
 #include "replacestring.h"
 
+#include <QRegularExpression>
+
 namespace StringBuilder {
 
-ReplaceString::ReplaceString(QStringView before, QStringView after, bool isCaseSensitive,
-                             QObject *parent)
+ReplaceString::ReplaceString()
+    : ReplaceString(QString{}, QString{}, false, true, nullptr)
+{
+}
+
+ReplaceString::ReplaceString(QStringView before, QStringView after,
+                             bool isUseRegExp, bool isCaseSensitive, QObject *parent)
     : AbstractStringBuilder{parent},
       m_before{before.toString()},
       m_after{after.toString()},
-      m_caseSensitivity{Qt::CaseSensitivity(isCaseSensitive)}
+      m_isUseRegExp{isUseRegExp},
+      m_isCaseSensitive{isCaseSensitive}
 {
 }
 
 void ReplaceString::build(QString &result)
 {
-    result.replace(m_before, m_after, m_caseSensitivity);
+    if (!m_isUseRegExp) {
+        Qt::CaseSensitivity caseSensitivity = m_isCaseSensitive ? Qt::CaseSensitive
+                                                                : Qt::CaseInsensitive;
+        result.replace(m_before, m_after, caseSensitivity);
+        return;
+    }
+
+    QRegularExpression::PatternOptions options
+            = m_isCaseSensitive ? QRegularExpression::NoPatternOption
+                                : QRegularExpression::CaseInsensitiveOption;
+
+    result.replace(QRegularExpression{m_before, options}, m_after);
+}
+
+QString ReplaceString::toString() const
+{
+    const QString regExpOnOff{m_isUseRegExp ? QStringLiteral("On")
+                                            : QStringLiteral("Off")};
+    const QString caseSensitive{m_isCaseSensitive ? QStringLiteral("CaseSensitive")
+                                                  : QStringLiteral("CaseInsensitive")};
+    return QStringLiteral("%1 > %2 [RegExp:%3][%4]")
+            .arg(m_before, m_after, regExpOnOff, caseSensitive);
 }
 
 } // StringBuilder

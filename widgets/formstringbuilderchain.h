@@ -21,7 +21,7 @@
 
 #include <QWidget>
 
-#include "stringbuilderonfile/builderchainonfile.h"
+#include "stringbuilder/onfile/builderchainonfile.h"
 
 class FormStringBuilder;
 
@@ -40,14 +40,14 @@ public:
     explicit FormStringBuilderChain(QWidget *parent = nullptr);
     ~FormStringBuilderChain() override;
 
-    QSharedPointer<StringBuilderOnFile::BuilderChainOnFile> builderChain() const;
+    QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile> builderChain() const;
     void loadBuilderSettings(QSharedPointer<QSettings>);
     void saveCurrentBuilderSettings(QSharedPointer<QSettings>) const;
 
 signals:
     void builderCleared();
     void changeStarted();
-    void settingsChanged(QSharedPointer<StringBuilderOnFile::BuilderChainOnFile>);
+    void settingsChanged(QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile>);
     void settingsIndicesChanged();
 
 public slots:

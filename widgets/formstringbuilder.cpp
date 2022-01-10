@@ -22,8 +22,8 @@
 
 #include "application.h"
 #include "stringbuilderwidgetfactory.h"
-#include "widgets/abstractstringbuilderwidget.h"
-#include "widgets/widgetpositionfixer.h"
+#include "stringbuilder/widgets/abstractstringbuilderwidget.h"
+#include "stringbuilder/widgets/widgetpositionfixer.h"
 
 #include <QAction>
 #include <QPushButton>
@@ -55,7 +55,7 @@ FormStringBuilder::~FormStringBuilder()
 
 QSharedPointer<StringBuilder::AbstractStringBuilder> FormStringBuilder::stringBuilder() const
 {
-    return currentBuilderWidget()->StringBuilder();
+    return currentBuilderWidget()->stringBuilder();
 }
 
 int FormStringBuilder::currentBuilderIndex() const
@@ -90,7 +90,7 @@ void FormStringBuilder::notifySettingIndexChanged(int index, int settingsCount)
     ui->buttonDown->setEnabled(index < settingsCount - 1);
     ui->buttonUp->setEnabled(index != 0);
 
-    auto positionFixer = currentBuilderWidget()->findChild<WidgetPositionFixer *>();
+    auto positionFixer = currentBuilderWidget()->findChild<StringBuilder::WidgetPositionFixer *>();
 
     if (positionFixer != nullptr)
         positionFixer->setEnabled(index != 0);
@@ -112,9 +112,9 @@ void FormStringBuilder::addBuilderWidget(int builderIndex)
 
     StringBuilderWidgetFactory factory;
 
-    AbstractStringBuilderWidget *widget = factory.createWidget(builderIndex, this);
+    StringBuilder::AbstractWidget *widget = factory.createWidget(builderIndex, this);
 
-    connect(widget, &AbstractStringBuilderWidget::changeStarted,
+    connect(widget, &StringBuilder::AbstractWidget::changeStarted,
             this, &FormStringBuilder::changeStarted);
 
     widget->loadSettings(Application::qSettingsForLatestSettings());
@@ -122,9 +122,9 @@ void FormStringBuilder::addBuilderWidget(int builderIndex)
     ui->vLayout->addWidget(widget);
 }
 
-AbstractStringBuilderWidget *FormStringBuilder::currentBuilderWidget() const
+StringBuilder::AbstractWidget *FormStringBuilder::currentBuilderWidget() const
 {
     Q_ASSERT(ui->vLayout->count() > 0);
 
-    return qobject_cast<AbstractStringBuilderWidget *>(ui->vLayout->itemAt(0)->widget());
+    return qobject_cast<StringBuilder::AbstractWidget *>(ui->vLayout->itemAt(0)->widget());
 }

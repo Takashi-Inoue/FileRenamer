@@ -31,6 +31,7 @@ public:
     using QObject::QObject;
 
     virtual void build(QString &result) = 0;
+    virtual QString toString() const = 0;
 };
 
 } // StringBuilder

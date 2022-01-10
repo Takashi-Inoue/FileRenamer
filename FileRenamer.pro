@@ -14,6 +14,7 @@ SOURCES += \
     applicationlog/debuglog.cpp \
     applicationlog/logdata.cpp \
     filenamevlidator.cpp \
+    htmltextdelegate.cpp \
     imagehash/imagehashcalculator.cpp \
     path/parentdir.cpp \
     path/pathentity.cpp \
@@ -29,12 +30,22 @@ SOURCES += \
     stringbuilder/builderchain.cpp \
     stringbuilder/insertstring.cpp \
     stringbuilder/number.cpp \
-    stringbuilder/regexpreplace.cpp \
+    stringbuilder/onfile/builderchainonfile.cpp \
+    stringbuilder/onfile/cryptographichash.cpp \
+    stringbuilder/onfile/imagehash.cpp \
+    stringbuilder/onfile/originalname.cpp \
     stringbuilder/replacestring.cpp \
-    stringbuilderonfile/builderchainonfile.cpp \
-    stringbuilderonfile/cryptographichash.cpp \
-    stringbuilderonfile/imagehash.cpp \
-    stringbuilderonfile/originalname.cpp \
+    stringbuilder/stringbuilderfactory.cpp \
+    stringbuilder/stringbuildersettingsmodel.cpp \
+    stringbuilder/stringbuildersmodel.cpp \
+    stringbuilder/widgets/widgetfilehashsetting.cpp \
+    stringbuilder/widgets/widgetimagehashsetting.cpp \
+    stringbuilder/widgets/widgetinserttextsetting.cpp \
+    stringbuilder/widgets/widgetnumbersetting.cpp \
+    stringbuilder/widgets/widgetonlypositionfixer.cpp \
+    stringbuilder/widgets/widgetoriginalnamesetting.cpp \
+    stringbuilder/widgets/widgetpositionfixer.cpp \
+    stringbuilder/widgets/widgetreplacesetting.cpp \
     stringbuilderwidgetfactory.cpp \
     threadcreatenewnames.cpp \
     threadrename.cpp \
@@ -48,17 +59,10 @@ SOURCES += \
     widgets/elidelabel.cpp \
     widgets/formstringbuilder.cpp \
     widgets/formstringbuilderchain.cpp \
+    widgets/framebuilderlist.cpp \
     widgets/historycombobox.cpp \
     widgets/savedsettingslistwidget.cpp \
-    widgets/widgetapplicationlogs.cpp \
-    widgets/widgetfilehashsetting.cpp \
-    widgets/widgetimagehashsetting.cpp \
-    widgets/widgetinserttextsetting.cpp \
-    widgets/widgetnumbersetting.cpp \
-    widgets/widgetonlypositionfixer.cpp \
-    widgets/widgetoriginalnamesetting.cpp \
-    widgets/widgetpositionfixer.cpp \
-    widgets/widgetreplacesetting.cpp
+    widgets/widgetapplicationlogs.cpp
 
 HEADERS += \
     application.h \
@@ -66,6 +70,7 @@ HEADERS += \
     applicationlog/debuglog.h \
     applicationlog/logdata.h \
     filenamevlidator.h \
+    htmltextdelegate.h \
     imagehash/imagehashcalculator.h \
     mainwindow.h \
     path/parentdir.h \
@@ -86,19 +91,32 @@ HEADERS += \
     stringbuilder/builderchain.h \
     stringbuilder/insertstring.h \
     stringbuilder/number.h \
-    stringbuilder/regexpreplace.h \
+    stringbuilder/onfile/abstractneedfileinfo.h \
+    stringbuilder/onfile/builderchainonfile.h \
+    stringbuilder/onfile/cryptographichash.h \
+    stringbuilder/onfile/ifileinfo.h \
+    stringbuilder/onfile/imagehash.h \
+    stringbuilder/onfile/originalname.h \
     stringbuilder/replacestring.h \
-    stringbuilderonfile/abstractneedfileinfo.h \
-    stringbuilderonfile/builderchainonfile.h \
-    stringbuilderonfile/cryptographichash.h \
-    stringbuilderonfile/ifileinfo.h \
-    stringbuilderonfile/imagehash.h \
-    stringbuilderonfile/originalname.h \
+    stringbuilder/stringbuilderfactory.h \
+    stringbuilder/stringbuildersettingsmodel.h \
+    stringbuilder/stringbuildersmodel.h \
+    stringbuilder/widgets/abstractstringbuilderwidget.h \
+    stringbuilder/widgets/stringbuilderallwidgets.h \
+    stringbuilder/widgets/widgetfilehashsetting.h \
+    stringbuilder/widgets/widgetimagehashsetting.h \
+    stringbuilder/widgets/widgetinserttextsetting.h \
+    stringbuilder/widgets/widgetnumbersetting.h \
+    stringbuilder/widgets/widgetonlypositionfixer.h \
+    stringbuilder/widgets/widgetoriginalnamesetting.h \
+    stringbuilder/widgets/widgetpositionfixer.h \
+    stringbuilder/widgets/widgetreplacesetting.h \
     stringbuilderwidgetfactory.h \
     threadcreatenewnames.h \
     threadrename.h \
     threadundorenaming.h \
-    widgets/abstractstringbuilderwidget.h \
+    usingstringbuilder.h \
+    usingstringbuilderwidget.h \
     widgets/counterlabel.h \
     widgets/dialogdroppeddir.h \
     widgets/dialogloadrenamesettings.h \
@@ -106,32 +124,26 @@ HEADERS += \
     widgets/elidelabel.h \
     widgets/formstringbuilder.h \
     widgets/formstringbuilderchain.h \
+    widgets/framebuilderlist.h \
     widgets/historycombobox.h \
     widgets/savedsettingslistwidget.h \
-    widgets/widgetapplicationlogs.h \
-    widgets/widgetfilehashsetting.h \
-    widgets/widgetimagehashsetting.h \
-    widgets/widgetinserttextsetting.h \
-    widgets/widgetnumbersetting.h \
-    widgets/widgetonlypositionfixer.h \
-    widgets/widgetoriginalnamesetting.h \
-    widgets/widgetpositionfixer.h \
-    widgets/widgetreplacesetting.h
+    widgets/widgetapplicationlogs.h
 
 FORMS += \
     mainwindow.ui \
+    stringbuilder/widgets/widgetfilehashsetting.ui \
+    stringbuilder/widgets/widgetinserttextsetting.ui \
+    stringbuilder/widgets/widgetnumbersetting.ui \
+    stringbuilder/widgets/widgetonlypositionfixer.ui \
+    stringbuilder/widgets/widgetpositionfixer.ui \
+    stringbuilder/widgets/widgetreplacesetting.ui \
     widgets/dialogdroppeddir.ui \
     widgets/dialogloadrenamesettings.ui \
     widgets/dialogsaverenamesettings.ui \
     widgets/formstringbuilder.ui \
     widgets/formstringbuilderchain.ui \
-    widgets/widgetapplicationlogs.ui \
-    widgets/widgetfilehashsetting.ui \
-    widgets/widgetinserttextsetting.ui \
-    widgets/widgetnumbersetting.ui \
-    widgets/widgetonlypositionfixer.ui \
-    widgets/widgetpositionfixer.ui \
-    widgets/widgetreplacesetting.ui
+    widgets/framebuilderlist.ui \
+    widgets/widgetapplicationlogs.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

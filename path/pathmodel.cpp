@@ -312,7 +312,7 @@ void PathModel::clear()
 }
 
 // Start/Stop threads
-void PathModel::startCreateNewNames(QSharedPointer<StringBuilderOnFile::BuilderChainOnFile> builderChain)
+void PathModel::startCreateNewNames(QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile> builderChain)
 {
     if (m_dataRoot->isEmpty())
         return;

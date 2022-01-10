@@ -27,10 +27,30 @@ class AbstractInsertString : public AbstractStringBuilder
 {
     Q_OBJECT
 public:
+    AbstractInsertString()
+        : AbstractInsertString(0, nullptr)
+    {
+    }
+
     AbstractInsertString(int pos, QObject *parent = nullptr)
         : AbstractStringBuilder(parent),
           m_pos(pos)
     {
+    }
+
+    inline bool isLeftMost() const
+    {
+        return m_pos == std::numeric_limits<int>::min();
+    }
+
+    inline bool isRightMost() const
+    {
+        return m_pos == std::numeric_limits<int>::max();
+    }
+
+    int insertPosition() const
+    {
+        return m_pos;
     }
 
 protected:

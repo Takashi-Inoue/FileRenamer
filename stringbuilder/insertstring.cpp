@@ -21,6 +21,11 @@
 
 namespace StringBuilder {
 
+InsertString::InsertString()
+    : InsertString(0, QString{}, nullptr)
+{
+}
+
 InsertString::InsertString(int pos, QStringView string, QObject *parent)
     : AbstractInsertString{pos, parent},
       m_string{string.toString()}
@@ -30,6 +35,20 @@ InsertString::InsertString(int pos, QStringView string, QObject *parent)
 void InsertString::build(QString &result)
 {
     result.insert(posToInsert(result.size()), m_string);
+}
+
+QString InsertString::toString() const
+{
+    const QString text = m_string.isEmpty() ? QStringLiteral("<b>Insert Text</b>")
+                                            : QStringLiteral("<i>%1</i>").arg(m_string);
+
+    if (isLeftMost())
+        return QStringLiteral("<< %1").arg(text);
+
+    if (isRightMost())
+        return QStringLiteral("%1 >>").arg(text);
+
+    return QStringLiteral("__%1 %2").arg(insertPosition()).arg(text);
 }
 
 } // StringBuilder

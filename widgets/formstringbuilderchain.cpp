@@ -22,7 +22,7 @@
 
 #include "application.h"
 #include "formstringbuilder.h"
-#include "widgets/abstractstringbuilderwidget.h"
+#include "stringbuilder/widgets/abstractstringbuilderwidget.h"
 
 #include <QSettings>
 #include <QTimer>
@@ -68,9 +68,9 @@ FormStringBuilderChain::~FormStringBuilderChain()
     delete ui;
 }
 
-QSharedPointer<StringBuilderOnFile::BuilderChainOnFile> FormStringBuilderChain::builderChain() const
+QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile> FormStringBuilderChain::builderChain() const
 {
-    auto builderChain = QSharedPointer<StringBuilderOnFile::BuilderChainOnFile>::create();
+    auto builderChain = QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile>::create();
 
     int count = ui->vLayout->count();
 
@@ -152,14 +152,14 @@ FormStringBuilder *FormStringBuilderChain::createNewSetting(int builderIndex)
 
 void FormStringBuilderChain::saveLatestSettings() const
 {
-    QList<AbstractStringBuilderWidget *> builderWidgets = findChildren<AbstractStringBuilderWidget *>();
+    QList<StringBuilder::AbstractWidget *> builderWidgets = findChildren<StringBuilder::AbstractWidget *>();
 
     if (builderWidgets.isEmpty())
         return;
 
     QSharedPointer<QSettings> qSettings = Application::qSettingsForLatestSettings();
 
-    for (AbstractStringBuilderWidget *builderWidget : builderWidgets)
+    for (StringBuilder::AbstractWidget *builderWidget : builderWidgets)
         builderWidget->saveSettings(qSettings);
 }
 

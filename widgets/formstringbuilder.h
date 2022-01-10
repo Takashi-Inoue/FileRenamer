@@ -22,9 +22,10 @@
 #include <QFrame>
 #include <QSharedPointer>
 
-namespace StringBuilder {class AbstractStringBuilder;}
-
-class AbstractStringBuilderWidget;
+namespace StringBuilder {
+class AbstractStringBuilder;
+class AbstractWidget;
+}
 
 class QPushButton;
 class QSettings;
@@ -62,7 +63,7 @@ private slots:
 
 private:
     void addBuilderWidget(int builderIndex);
-    AbstractStringBuilderWidget *currentBuilderWidget() const;
+    StringBuilder::AbstractWidget *currentBuilderWidget() const;
 
     Ui::FormStringBuilder *ui;
 };

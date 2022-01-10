@@ -19,35 +19,35 @@
 
 #include "stringbuilderwidgetfactory.h"
 
-#include "widgets/widgetoriginalnamesetting.h"
-#include "widgets/widgetnumbersetting.h"
-#include "widgets/widgetreplacesetting.h"
-#include "widgets/widgetinserttextsetting.h"
-#include "widgets/widgetfilehashsetting.h"
-#include "widgets/widgetimagehashsetting.h"
+#include "stringbuilder/widgets/widgetoriginalnamesetting.h"
+#include "stringbuilder/widgets/widgetnumbersetting.h"
+#include "stringbuilder/widgets/widgetreplacesetting.h"
+#include "stringbuilder/widgets/widgetinserttextsetting.h"
+#include "stringbuilder/widgets/widgetfilehashsetting.h"
+#include "stringbuilder/widgets/widgetimagehashsetting.h"
 
-AbstractStringBuilderWidget *StringBuilderWidgetFactory::createWidget(
+StringBuilder::AbstractWidget *StringBuilderWidgetFactory::createWidget(
         int builderIndex, QWidget *parent) const
 {
     // builderIndex links index of combobox in FormStringBuilder.
     switch (builderIndex) {
     case 0:
-        return new WidgetOriginalNameSetting(parent);
+        return new StringBuilder::WidgetOriginalNameSetting(parent);
 
     case 1:
-        return new WidgetNumberSetting(parent);
+        return new StringBuilder::WidgetNumberSetting(parent);
 
     case 2:
-        return new WidgetReplaceSetting(parent);
+        return new StringBuilder::WidgetReplaceSetting(parent);
 
     case 3:
-        return new WidgetInsertTextSetting(parent);
+        return new StringBuilder::WidgetInsertTextSetting(parent);
 
     case 4:
-        return new WidgetFileHashSetting(parent);
+        return new StringBuilder::WidgetFileHashSetting(parent);
 
     case 5:
-        return new WidgetImageHashSetting(parent);
+        return new StringBuilder::WidgetImageHashSetting(parent);
     }
 
     Q_ASSERT(false);

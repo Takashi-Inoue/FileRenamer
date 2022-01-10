@@ -22,7 +22,7 @@
 #include "path/pathroot.h"
 #include "path/pathentity.h"
 #include "path/pathentityinfo.h"
-#include "stringbuilderonfile/builderchainonfile.h"
+#include "stringbuilder/onfile/builderchainonfile.h"
 
 ThreadCreateNewNames::ThreadCreateNewNames(QWeakPointer<Path::PathRoot> pathRoot, QObject *parent)
     : QThread{parent},
@@ -32,7 +32,7 @@ ThreadCreateNewNames::ThreadCreateNewNames(QWeakPointer<Path::PathRoot> pathRoot
 }
 
 void ThreadCreateNewNames::setStringBuilderOnFile(
-        QSharedPointer<StringBuilderOnFile::BuilderChainOnFile> builderChain)
+        QSharedPointer<StringBuilder::OnFile::BuilderChainOnFile> builderChain)
 {
     QWriteLocker locker(&m_lock);
 
