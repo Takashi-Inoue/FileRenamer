@@ -61,10 +61,10 @@ void CryptographicHash::build(QString &result)
         m_fileInfo->setHashHex(m_algorithm, hashHex);
     }
 
-    result.insert(posToInsert(result.size()), hashHex);
+    result.insert(actualInsertPosition(result.size()), hashHex);
 }
 
-QString CryptographicHash::toString() const
+QString CryptographicHash::toHtmlString() const
 {
     auto metaEnum = QMetaEnum::fromType<QCryptographicHash::Algorithm>();
 

@@ -55,7 +55,7 @@ void ReplaceString::build(QString &result)
     result.replace(QRegularExpression{m_before, options}, m_after);
 }
 
-QString ReplaceString::toString() const
+QString ReplaceString::toHtmlString() const
 {
     const QString regExpOnOff(m_isUseRegExp ? QStringLiteral("On")
                                             : QStringLiteral("Off"));

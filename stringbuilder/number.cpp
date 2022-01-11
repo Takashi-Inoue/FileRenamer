@@ -46,12 +46,12 @@ void Number::build(QString &result)
                            .arg(m_currentNumber, m_digit, 10, QLatin1Char('0'))
                            .arg(m_suffix);
 
-    result.insert(posToInsert(result.size()), numberString);
+    result.insert(actualInsertPosition(result.size()), numberString);
 
     m_currentNumber += m_step;
 }
 
-QString Number::toString() const
+QString Number::toHtmlString() const
 {
     return QStringLiteral("Number %1%2%3, inc %4 > pos:%5")
             .arg(m_prefix)

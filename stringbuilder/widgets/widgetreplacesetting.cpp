@@ -21,7 +21,7 @@
 #include "ui_widgetreplacesetting.h"
 
 #include "application.h"
-#include "filenamevlidator.h"
+#include "filenamevalidator.h"
 #include "stringbuilder/replacestring.h"
 
 #include <QSettings>

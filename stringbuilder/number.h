@@ -32,7 +32,7 @@ public:
            QObject *parent = nullptr);
 
     void build(QString &result) override;
-    QString toString() const override;
+    QString toHtmlString() const override;
     void reset() override;
     AbstractWidget *settingsWidget() override;
 

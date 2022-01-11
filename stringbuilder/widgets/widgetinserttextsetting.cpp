@@ -20,7 +20,7 @@
 #include "widgetinserttextsetting.h"
 #include "ui_widgetinserttextsetting.h"
 
-#include "filenamevlidator.h"
+#include "filenamevalidator.h"
 #include "stringbuilder/insertstring.h"
 
 namespace StringBuilder {

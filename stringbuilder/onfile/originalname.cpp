@@ -31,19 +31,18 @@ void OriginalName::build(QString &result)
     QString name = m_fileInfo->isDir() ? m_fileInfo->fileName()
                                        : m_fileInfo->completeBaseName();
 
-    result.insert(posToInsert(result.size()), name);
+    result.insert(actualInsertPosition(result.size()), name);
 }
 
-QString OriginalName::toString() const
+QString OriginalName::toHtmlString() const
 {
     if (isLeftMost())
-        return QStringLiteral("&lt;&lt; Original Name");
+        return QStringLiteral("&lt;&lt; <b>Original Name</b>");
 
     if (isRightMost())
-        return QStringLiteral("Original Name &gt;&gt;");
+        return QStringLiteral("<b>Original Name</b> &gt;&gt;");
 
-    return QStringLiteral("__%1 Original Name").arg(insertPosition());
-
+    return QStringLiteral("__%1 <b>Original Name</b>").arg(insertPosition());
 }
 
 AbstractWidget *OriginalName::settingsWidget()

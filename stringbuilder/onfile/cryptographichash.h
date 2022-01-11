@@ -34,7 +34,7 @@ public:
     CryptographicHash(QCryptographicHash::Algorithm algorithm, int pos, QObject *parent = nullptr);
 
     void build(QString &result) override;
-    QString toString() const override;
+    QString toHtmlString() const override;
     AbstractWidget *settingsWidget() override;
 
 protected:

@@ -46,6 +46,8 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
 
     connect(ui->buttonAdd, &QPushButton::clicked,
             this, &FrameBuilderList::appendSelectedBuildersToSettings);
+    connect(ui->tableViewBuilders, &QAbstractItemView::activated,
+            this, &FrameBuilderList::appendSelectedBuildersToSettings);
 
     m_timer->setSingleShot(true);
     m_timer->setInterval(QApplication::keyboardInputInterval());
@@ -67,7 +69,11 @@ SharedBuilderChainOnFile FrameBuilderList::builderChain() const
 
 void FrameBuilderList::appendSelectedBuildersToSettings()
 {
-    const QModelIndexList &indexes = ui->tableViewBuilders->selectionModel()->selectedRows();
+    QModelIndexList &&indexes = ui->tableViewBuilders->selectionModel()->selectedRows();
+
+    std::sort(indexes.begin(), indexes.end(), [](const QModelIndex &lhs, const QModelIndex &rhs) {
+        return lhs.row() < rhs.row();
+    });
 
     m_settingsModel->appendBuilders(m_buildersModel->createBuilders(indexes));
 

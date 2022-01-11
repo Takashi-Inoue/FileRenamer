@@ -21,8 +21,15 @@
 #include "abstractstringbuilder.h"
 #include "onfile/builderchainonfile.h"
 #include "stringbuilder/widgets/dialogbuildersettings.h"
+#include "stringbuilderfactory.h"
+
+#include <QMimeData>
 
 namespace StringBuilder {
+
+namespace {
+constexpr char mimeDataItemDefault[] = "application/x-qabstractitemmodeldatalist";
+}
 
 SettingsModel::SettingsModel(QObject *parent)
     : QAbstractTableModel{parent}
@@ -51,7 +58,7 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
         return QVariant();
 
     if (role == Qt::DisplayRole)
-        return m_builders.at(index.row())->toString();
+        return m_builders.at(index.row())->toHtmlString();
 
 //    if (role == Qt::TextAlignmentRole)
 //        return m_builders.at(index.row())->alignForDisplay().toInt();
@@ -62,19 +69,35 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction action,
                                     int row, int column, const QModelIndex &parent) const
 {
-    return true;
+    Q_UNUSED(action)
+    Q_UNUSED(column)
+    Q_UNUSED(row)
+
+    if (!parent.isValid())
+        return false;
+
+    if (data->hasFormat(mimeTypeBuilderType))
+        return true;
+
+    if (data->hasFormat(mimeDataItemDefault))
+        return true;
+
+    return false;
 }
 
-bool SettingsModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
-                                 int row, int column, const QModelIndex &parent)
+bool SettingsModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
+                                 int row, int /*column*/, const QModelIndex &parent)
 {
     return false;
 }
 
 Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
 {
+    if (!index.isValid())
+        return {};
+
     return Qt::ItemIsSelectable | Qt::ItemIsDragEnabled
-            | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
+            | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsDropEnabled;
 }
 
 void SettingsModel::appendBuilders(StringBuilderList &&builders)
@@ -133,18 +156,6 @@ DialogBuilderSettings *SettingsModel::settingsDialog(QList<int> showIndexes, QWi
     dlg->deleteLater();
 
     return dlg;
-}
-
-QList<AbstractWidget *> SettingsModel::settingsWidgets(const QModelIndexList &indexes)
-{
-    QList<AbstractWidget *> widgets;
-
-    for (const QModelIndex &index : indexes) {
-        if (index.isValid())
-            widgets.append(m_builders.at(index.row())->settingsWidget());
-    }
-
-    return widgets;
 }
 
 } // namespace StringBuilder

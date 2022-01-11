@@ -13,7 +13,7 @@ SOURCES += \
     applicationlog/applicationlog.cpp \
     applicationlog/debuglog.cpp \
     applicationlog/logdata.cpp \
-    filenamevlidator.cpp \
+    filenamevalidator.cpp \
     htmltextdelegate.cpp \
     imagehash/imagehashcalculator.cpp \
     path/parentdir.cpp \
@@ -47,7 +47,6 @@ SOURCES += \
     stringbuilder/widgets/widgetoriginalnamesetting.cpp \
     stringbuilder/widgets/widgetpositionfixer.cpp \
     stringbuilder/widgets/widgetreplacesetting.cpp \
-    stringbuilderwidgetfactory.cpp \
     threadcreatenewnames.cpp \
     threadrename.cpp \
     threadundorenaming.cpp \
@@ -58,8 +57,6 @@ SOURCES += \
     widgets/dialogloadrenamesettings.cpp \
     widgets/dialogsaverenamesettings.cpp \
     widgets/elidelabel.cpp \
-    widgets/formstringbuilder.cpp \
-    widgets/formstringbuilderchain.cpp \
     widgets/framebuilderlist.cpp \
     widgets/historycombobox.cpp \
     widgets/savedsettingslistwidget.cpp \
@@ -70,7 +67,7 @@ HEADERS += \
     applicationlog/applicationlog.h \
     applicationlog/debuglog.h \
     applicationlog/logdata.h \
-    filenamevlidator.h \
+    filenamevalidator.h \
     htmltextdelegate.h \
     imagehash/imagehashcalculator.h \
     mainwindow.h \
@@ -104,7 +101,6 @@ HEADERS += \
     stringbuilder/stringbuildersmodel.h \
     stringbuilder/widgets/abstractstringbuilderwidget.h \
     stringbuilder/widgets/dialogbuildersettings.h \
-    stringbuilder/widgets/stringbuilderallwidgets.h \
     stringbuilder/widgets/widgetfilehashsetting.h \
     stringbuilder/widgets/widgetimagehashsetting.h \
     stringbuilder/widgets/widgetinserttextsetting.h \
@@ -113,7 +109,6 @@ HEADERS += \
     stringbuilder/widgets/widgetoriginalnamesetting.h \
     stringbuilder/widgets/widgetpositionfixer.h \
     stringbuilder/widgets/widgetreplacesetting.h \
-    stringbuilderwidgetfactory.h \
     threadcreatenewnames.h \
     threadrename.h \
     threadundorenaming.h \
@@ -124,8 +119,6 @@ HEADERS += \
     widgets/dialogloadrenamesettings.h \
     widgets/dialogsaverenamesettings.h \
     widgets/elidelabel.h \
-    widgets/formstringbuilder.h \
-    widgets/formstringbuilderchain.h \
     widgets/framebuilderlist.h \
     widgets/historycombobox.h \
     widgets/savedsettingslistwidget.h \
@@ -143,8 +136,6 @@ FORMS += \
     widgets/dialogdroppeddir.ui \
     widgets/dialogloadrenamesettings.ui \
     widgets/dialogsaverenamesettings.ui \
-    widgets/formstringbuilder.ui \
-    widgets/formstringbuilderchain.ui \
     widgets/framebuilderlist.ui \
     widgets/widgetapplicationlogs.ui
 

@@ -39,10 +39,10 @@ void ImageHash::build(QString &result)
         m_fileInfo->setImageHash(imageHashString);
     }
 
-    result.insert(posToInsert(result.size()), imageHashString);
+    result.insert(actualInsertPosition(result.size()), imageHashString);
 }
 
-QString ImageHash::toString() const
+QString ImageHash::toHtmlString() const
 {
     if (isLeftMost())
         return QStringLiteral("<< Image Hash");

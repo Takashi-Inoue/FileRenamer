@@ -17,7 +17,7 @@
  * along with FileRenamer.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "filenamevlidator.h"
+#include "filenamevalidator.h"
 
 QValidator::State FileNameVlidator::validate(QString &input, int &/*pos*/) const
 {

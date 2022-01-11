@@ -59,7 +59,7 @@ public:
     }
 
 protected:
-    qsizetype posToInsert(qsizetype targetLength)
+    qsizetype actualInsertPosition(qsizetype targetLength)
     {
         if (m_pos == std::numeric_limits<int>::min())
             return 0;

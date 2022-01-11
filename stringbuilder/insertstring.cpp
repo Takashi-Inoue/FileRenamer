@@ -35,10 +35,10 @@ InsertString::InsertString(int pos, QStringView string, QObject *parent)
 
 void InsertString::build(QString &result)
 {
-    result.insert(posToInsert(result.size()), m_string);
+    result.insert(actualInsertPosition(result.size()), m_string);
 }
 
-QString InsertString::toString() const
+QString InsertString::toHtmlString() const
 {
     const QString text = m_string.isEmpty() ? QStringLiteral("<b>Insert Text</b>")
                                             : QStringLiteral("<i>%1</i>").arg(m_string);

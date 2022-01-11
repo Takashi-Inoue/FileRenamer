@@ -20,7 +20,7 @@
 #include "widgetnumbersetting.h"
 #include "ui_widgetnumbersetting.h"
 
-#include "filenamevlidator.h"
+#include "filenamevalidator.h"
 #include "stringbuilder/number.h"
 
 namespace StringBuilder {

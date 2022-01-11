@@ -64,6 +64,9 @@ QVariant BuildersModel::data(const QModelIndex &index, int role) const
 
 Qt::ItemFlags BuildersModel::flags(const QModelIndex &index) const
 {
+    if (!index.isValid())
+        return {};
+
     return Qt::ItemIsSelectable | Qt::ItemIsDragEnabled
             | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
 }
