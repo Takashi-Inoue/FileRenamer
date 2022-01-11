@@ -38,6 +38,7 @@ void HtmlTextDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     QRect drawRect{opt.rect};
     QTextDocument doc;
     doc.setHtml(text);
+    doc.setTextWidth(drawRect.width());
 
     painter->save();
     painter->translate(drawRect.topLeft());

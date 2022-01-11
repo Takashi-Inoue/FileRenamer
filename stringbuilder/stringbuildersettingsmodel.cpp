@@ -82,9 +82,6 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
     if (role == Qt::DisplayRole)
         return m_builders.at(index.row())->toHtmlString();
 
-//    if (role == Qt::TextAlignmentRole)
-//        return m_builders.at(index.row())->alignForDisplay().toInt();
-
     return QVariant();
 }
 

@@ -68,8 +68,15 @@ QString CryptographicHash::toHtmlString() const
 {
     auto metaEnum = QMetaEnum::fromType<QCryptographicHash::Algorithm>();
 
-    return QStringLiteral("File Hash %1 > pos:%2")
-            .arg(metaEnum.valueToKey(m_algorithm)).arg(insertPosition());
+    const char *algorithmName = metaEnum.valueToKey(m_algorithm);
+
+    if (isLeftMost())
+        return QStringLiteral("<p align=\"left\">&lt;&lt; <b>%1</b></p>").arg(algorithmName);
+
+    if (isRightMost())
+        return QStringLiteral("<p align=\"right\"><b>%1</b> &gt;&gt;</p>").arg(algorithmName);
+
+    return QStringLiteral("<p align=\"left\">__%1 <b>%2</b></p>").arg(insertPosition()).arg(algorithmName);
 }
 
 AbstractWidget *CryptographicHash::settingsWidget()

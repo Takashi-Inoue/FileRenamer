@@ -40,16 +40,17 @@ void InsertString::build(QString &result)
 
 QString InsertString::toHtmlString() const
 {
-    const QString text = m_string.isEmpty() ? QStringLiteral("<b>Insert Text</b>")
-                                            : QStringLiteral("<i>%1</i>").arg(m_string);
+    const QString text = m_string.isEmpty()
+                         ? QStringLiteral("<b>Insert Text</b>")
+                         : QStringLiteral("<b>Insert Text</b> <i>%1</i>").arg(m_string);
 
     if (isLeftMost())
-        return QStringLiteral("<< %1").arg(text);
+        return QStringLiteral("<p align=\"left\">&lt;&lt; %1</p>").arg(text);
 
     if (isRightMost())
-        return QStringLiteral("%1 >>").arg(text);
+        return QStringLiteral("<p align=\"right\">%1 &gt;&gt;</p>").arg(text);
 
-    return QStringLiteral("__%1 %2").arg(insertPosition()).arg(text);
+    return QStringLiteral("<p align=\"left\">__%1 %2</p>").arg(insertPosition()).arg(text);
 }
 
 AbstractWidget *InsertString::settingsWidget()

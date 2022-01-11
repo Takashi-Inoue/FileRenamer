@@ -33,6 +33,7 @@ public:
     using QObject::QObject;
 
     virtual void build(QString &result) = 0;
+
     virtual QString toHtmlString() const = 0;
     virtual void reset() {}
     virtual AbstractWidget *settingsWidget() = 0;

@@ -61,7 +61,7 @@ QString ReplaceString::toHtmlString() const
                                             : QStringLiteral("Off"));
     const QString caseSensitive(m_isCaseSensitive ? QStringLiteral("CaseSensitive")
                                                   : QStringLiteral("CaseInsensitive"));
-    return QStringLiteral("%1 > %2 [RegExp:%3][%4]")
+    return QStringLiteral("<p align=\"center\"><b>Replace</b> <i>%1</i> &gt; <i>%2</i> [RegExp:%3][%4]</p>")
             .arg(m_before, m_after, regExpOnOff, caseSensitive);
 }
 

@@ -53,12 +53,19 @@ void Number::build(QString &result)
 
 QString Number::toHtmlString() const
 {
-    return QStringLiteral("Number %1%2%3, inc %4 > pos:%5")
-            .arg(m_prefix)
-            .arg(m_start, m_digit, 10, QLatin1Char('0'))
-            .arg(m_suffix)
-            .arg(m_step)
-            .arg(insertPosition());
+    const QString baseText = QStringLiteral("<b>Number</b> <i>%1%2%3</i>&nbsp;&nbsp;[Incremental:%4]")
+                             .arg(m_prefix)
+                             .arg(m_start, m_digit, 10, QLatin1Char('0'))
+                             .arg(m_suffix)
+                             .arg(m_step);
+
+    if (isLeftMost())
+        return QStringLiteral("<p align=\"left\">&lt;&lt; %1</p>").arg(baseText);
+
+    if (isRightMost())
+        return QStringLiteral("<p align=\"right\">%1 &gt;&gt;</p>").arg(baseText);
+
+    return QStringLiteral("<p align=\"left\">__%1 %2</p>").arg(insertPosition()).arg(baseText);
 }
 
 void Number::reset()

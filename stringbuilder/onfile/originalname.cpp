@@ -37,12 +37,12 @@ void OriginalName::build(QString &result)
 QString OriginalName::toHtmlString() const
 {
     if (isLeftMost())
-        return QStringLiteral("&lt;&lt; <b>Original Name</b>");
+        return QStringLiteral("<p align=\"left\">&lt;&lt; <b>Original Name</b></p>");
 
     if (isRightMost())
-        return QStringLiteral("<b>Original Name</b> &gt;&gt;");
+        return QStringLiteral("<p align=\"right\"><b>Original Name</b> &gt;&gt;</p>");
 
-    return QStringLiteral("__%1 <b>Original Name</b>").arg(insertPosition());
+    return QStringLiteral("<p align=\"left\">__%1 <b>Original Name</b></p>").arg(insertPosition());
 }
 
 AbstractWidget *OriginalName::settingsWidget()

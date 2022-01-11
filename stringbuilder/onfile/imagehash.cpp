@@ -45,12 +45,12 @@ void ImageHash::build(QString &result)
 QString ImageHash::toHtmlString() const
 {
     if (isLeftMost())
-        return QStringLiteral("<< Image Hash");
+        return QStringLiteral("<p align=\"left\">&lt;&lt; <b>Image Hash</b></p>");
 
     if (isRightMost())
-        return QStringLiteral("Image Hash >>");
+        return QStringLiteral("<p align=\"right\"><b>Image Hash</b> &gt;&gt;</p>");
 
-    return QStringLiteral("__%1 Image Hash").arg(insertPosition());
+    return QStringLiteral("<p align=\"left\">__%1 <b>Image Hash</b></p>").arg(insertPosition());
 }
 
 AbstractWidget *ImageHash::settingsWidget()
