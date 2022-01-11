@@ -45,6 +45,9 @@ public:
                       int row, int column, const QModelIndex &parent) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
+signals:
+    void settingsChanged(SharedBuilderChainOnFile);
+
 public:
     void appendBuilders(StringBuilderList &&builders);
     SharedBuilderChainOnFile builderChain() const;

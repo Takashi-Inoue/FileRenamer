@@ -110,7 +110,6 @@ private slots:
     void onNewNameStateChanged(int row);
 
 private:
-    QList<int> rowsFromMimeData(const QMimeData *data) const;
     void stopThreadToCreateNames();
 
     QSharedPointer<Path::PathRoot> m_dataRoot;

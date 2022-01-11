@@ -127,7 +127,7 @@ void PathTableViewMenu::createActions()
     };
 
     const QHash<Action, QIcon> icons = {
-        {Action::RemoveItem, QIcon(QStringLiteral(":/res/images/x.svg"))}
+        {Action::RemoveItem, QIcon(QStringLiteral(":/x.svg"))}
       , {Action::CopyName,   QIcon(QStringLiteral(":/res/images/file.svg"))}
       , {Action::OpenPath,   QIcon(QStringLiteral(":/res/images/exec.svg"))}
       , {Action::DeletePath, QIcon(QStringLiteral(":/res/images/delete_file.svg"))}

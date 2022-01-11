@@ -57,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->toolBar->insertWidget(ui->actionClearItems, hSpacer);
 
     ui->dockWidgetLogs->setVisible(false);
-    ui->splitter->setSizes({350, 450});
+    ui->splitter->setSizes({400, 300});
 
     initStatusBar();
 

@@ -22,14 +22,36 @@
 #include "onfile/builderchainonfile.h"
 #include "stringbuilder/widgets/dialogbuildersettings.h"
 #include "stringbuilderfactory.h"
+#include "utilitysmvc.h"
 
+#include <QIODeviceBase>
 #include <QMimeData>
 
 namespace StringBuilder {
 
 namespace {
-constexpr char mimeDataItemDefault[] = "application/x-qabstractitemmodeldatalist";
+
+void moveItems(StringBuilderList &builders, QList<int> rows, int targetRow)
+{
+    if (rows.isEmpty())
+        return;
+
+    StringBuilderList removedItems;
+
+    removedItems.reserve(rows.size());
+
+    for (auto rItr = rows.rbegin(), rEnd = rows.rend(); rItr != rEnd; ++rItr)
+        removedItems.append(builders.takeAt(*rItr));
+
+    int lowerCount = std::distance(rows.cbegin(),
+                                   std::lower_bound(rows.cbegin(), rows.cend(), targetRow));
+    targetRow -= lowerCount;
+
+    for (const SharedStringBuilder &builder : removedItems)
+        builders.insert(targetRow, builder);
 }
+
+} // anonymous
 
 SettingsModel::SettingsModel(QObject *parent)
     : QAbstractTableModel{parent}
@@ -66,29 +88,40 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction action,
-                                    int row, int column, const QModelIndex &parent) const
+bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
+                                    int /*row*/, int /*column*/, const QModelIndex &parent) const
 {
-    Q_UNUSED(action)
-    Q_UNUSED(column)
-    Q_UNUSED(row)
-
     if (!parent.isValid())
         return false;
 
     if (data->hasFormat(mimeTypeBuilderType))
         return true;
 
-    if (data->hasFormat(mimeDataItemDefault))
+    if (data->hasFormat(mimeTypeModelDataList))
         return true;
 
     return false;
 }
 
 bool SettingsModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
-                                 int row, int /*column*/, const QModelIndex &parent)
+                                 int /*row*/, int /*column*/, const QModelIndex &parent)
 {
-    return false;
+    const int targetRow = parent.row();
+
+    if (targetRow == -1)
+        return false;
+
+    if (data->hasFormat(mimeTypeModelDataList)) {
+        beginResetModel();
+        moveItems(m_builders, rowsFromMimeData(data), targetRow);
+        endResetModel();
+    } else {
+        return false;
+    }
+
+    emit settingsChanged(builderChain());
+
+    return true;
 }
 
 Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const

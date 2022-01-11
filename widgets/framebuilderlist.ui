@@ -24,7 +24,7 @@
     <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>0</number>
+    <number>8</number>
    </property>
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -178,7 +178,7 @@
    <item row="2" column="2">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Activate, Drag&amp;Drop or Push add button to add a settings.</string>
+      <string>Activate or Push add button to add a settings.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

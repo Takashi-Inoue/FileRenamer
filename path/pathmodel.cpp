@@ -23,14 +23,11 @@
 #include "threadcreatenewnames.h"
 #include "threadrename.h"
 #include "threadundorenaming.h"
+#include "utilitysmvc.h"
 
 #include <QIODevice>
 #include <QIcon>
 #include <QMimeData>
-
-namespace {
-constexpr char mimeTypeModelDataList[] = "application/x-qabstractitemmodeldatalist";
-} // anonymous
 
 PathModel::PathModel(QObject *parent)
     : QAbstractTableModel(parent),
@@ -382,30 +379,6 @@ void PathModel::onNewNameStateChanged(int row)
     QModelIndex modelIndex = index(row, int(HSection::NewName));
 
     emit dataChanged(modelIndex, modelIndex, {Qt::DecorationRole});
-}
-
-// drag & drop
-QList<int> PathModel::rowsFromMimeData(const QMimeData *data) const
-{
-    if (!data->hasFormat(mimeTypeModelDataList))
-        return QList<int>();
-
-    QList<int> rows;
-    QByteArray encodedData = data->data(mimeTypeModelDataList);
-    QDataStream stream(&encodedData, QIODevice::ReadOnly);
-
-    while (!stream.atEnd()) {
-        int row;
-        int col;
-        QMap<int, QVariant> roleDataMap;
-
-        stream >> row >> col >> roleDataMap;
-
-        if (col == 0)
-            rows << row;
-    }
-
-    return rows;
 }
 
 // private //

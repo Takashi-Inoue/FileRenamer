@@ -68,6 +68,7 @@ HEADERS += \
     applicationlog/debuglog.h \
     applicationlog/logdata.h \
     filenamevalidator.h \
+    genericactions.h \
     htmltextdelegate.h \
     imagehash/imagehashcalculator.h \
     mainwindow.h \
@@ -114,6 +115,7 @@ HEADERS += \
     threadundorenaming.h \
     usingstringbuilder.h \
     usingstringbuilderwidget.h \
+    utilitysmvc.h \
     widgets/counterlabel.h \
     widgets/dialogdroppeddir.h \
     widgets/dialogloadrenamesettings.h \

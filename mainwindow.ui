@@ -26,6 +26,9 @@
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
+      <property name="handleWidth">
+       <number>10</number>
+      </property>
       <widget class="FrameBuilderList" name="frameBuilderList">
        <property name="frameShape">
         <enum>QFrame::NoFrame</enum>

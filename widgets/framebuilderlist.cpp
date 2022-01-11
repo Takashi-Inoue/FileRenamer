@@ -20,12 +20,14 @@
 #include "framebuilderlist.h"
 #include "ui_framebuilderlist.h"
 
-#include "stringbuilder/widgets/dialogbuildersettings.h"
+#include "genericactions.h"
 #include "htmltextdelegate.h"
 #include "stringbuilder/stringbuildersettingsmodel.h"
 #include "stringbuilder/stringbuildersmodel.h"
+#include "stringbuilder/widgets/dialogbuildersettings.h"
 #include "usingstringbuilder.h"
 
+#include <QAction>
 #include <QTimer>
 
 FrameBuilderList::FrameBuilderList(QWidget *parent)
@@ -41,6 +43,11 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
     ui->tableViewSettings->setModel(m_settingsModel);
     ui->tableViewSettings->setItemDelegate(new HtmlTextDelegate{this});
 
+    auto deleteAction = GenericActions::createDeleteAction(QIcon{QStringLiteral(":/x.svg")}, this);
+
+    ui->tableViewSettings->addAction(deleteAction);
+    ui->tableViewSettings->setContextMenuPolicy(Qt::CustomContextMenu);
+
     connect(ui->tableViewSettings, &QAbstractItemView::activated,
             this, &FrameBuilderList::onSettingActivated);
 
@@ -48,6 +55,9 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
             this, &FrameBuilderList::appendSelectedBuildersToSettings);
     connect(ui->tableViewBuilders, &QAbstractItemView::activated,
             this, &FrameBuilderList::appendSelectedBuildersToSettings);
+
+    connect(m_settingsModel, &StringBuilder::SettingsModel::settingsChanged,
+            this, &FrameBuilderList::settingsChanged);
 
     m_timer->setSingleShot(true);
     m_timer->setInterval(QApplication::keyboardInputInterval());
