@@ -191,4 +191,20 @@ DialogBuilderSettings *SettingsModel::settingsDialog(QList<int> showIndexes, QWi
     return dlg;
 }
 
+void SettingsModel::removeSpecifiedRows(QModelIndexList &&indexes)
+{
+    std::sort(indexes.begin(), indexes.end(), [](const QModelIndex &lhs, const QModelIndex &rhs) {
+        return rhs.row() < lhs.row();
+    });
+
+    beginResetModel();
+
+    for (const QModelIndex &index : indexes)
+        m_builders.removeAt(index.row());
+
+    endResetModel();
+
+    emit settingsChanged(builderChain());
+}
+
 } // namespace StringBuilder

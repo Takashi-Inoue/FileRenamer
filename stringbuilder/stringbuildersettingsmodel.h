@@ -54,6 +54,7 @@ public:
     StringBuilderList builders(const QModelIndexList &indexes) const;
     bool isEmpty() const;
     DialogBuilderSettings *settingsDialog(QList<int> showIndexes, QWidget *parent) const;
+    void removeSpecifiedRows(QModelIndexList &&indexes);
 
 private:
     StringBuilderList m_builders;

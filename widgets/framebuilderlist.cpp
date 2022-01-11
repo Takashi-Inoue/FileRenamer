@@ -28,6 +28,7 @@
 #include "usingstringbuilder.h"
 
 #include <QAction>
+#include <QMenu>
 #include <QTimer>
 
 FrameBuilderList::FrameBuilderList(QWidget *parent)
@@ -47,6 +48,11 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
 
     ui->tableViewSettings->addAction(deleteAction);
     ui->tableViewSettings->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(deleteAction, &QAction::triggered, this, &FrameBuilderList::deleteSelectedSettings);
+
+    connect(ui->tableViewSettings, &QWidget::customContextMenuRequested,
+            this, &FrameBuilderList::showSettingsViewContextMenu);
 
     connect(ui->tableViewSettings, &QAbstractItemView::activated,
             this, &FrameBuilderList::onSettingActivated);
@@ -90,6 +96,11 @@ void FrameBuilderList::appendSelectedBuildersToSettings()
     notifyStartChanging();
 }
 
+void FrameBuilderList::deleteSelectedSettings()
+{
+    m_settingsModel->removeSpecifiedRows(ui->tableViewSettings->selectionModel()->selectedRows());
+}
+
 void FrameBuilderList::onSettingActivated(const QModelIndex &/*index*/)
 {
     QList<int> rows;
@@ -109,6 +120,21 @@ void FrameBuilderList::onSettingActivated(const QModelIndex &/*index*/)
         ui->tableViewSettings->update(index);
 
     notifyStartChanging();
+}
+
+void FrameBuilderList::showSettingsViewContextMenu(const QPoint &/*pos*/)
+{
+    if (!ui->tableViewSettings->selectionModel()->hasSelection())
+        return;
+
+    auto menu = new QMenu{this};
+
+    connect(menu, &QMenu::aboutToHide, this, [this]() {
+        sender()->deleteLater();
+    });
+
+    menu->addActions(ui->tableViewSettings->actions());
+    menu->popup(QCursor::pos());
 }
 
 void FrameBuilderList::notifyStartChanging()

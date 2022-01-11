@@ -168,7 +168,7 @@
    <item row="2" column="0">
     <widget class="QLabel" name="label_3">
      <property name="text">
-      <string>Activate an item to configure setting.</string>
+      <string>Activate item to configure setting.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -178,7 +178,7 @@
    <item row="2" column="2">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Activate or Push add button to add a settings.</string>
+      <string>Activate or Push add button to add settings.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
