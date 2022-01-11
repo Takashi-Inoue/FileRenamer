@@ -18,6 +18,7 @@
  */
 
 #include "number.h"
+#include "utilityshtml.h"
 #include "widgets/widgetnumbersetting.h"
 
 namespace StringBuilder {
@@ -60,12 +61,12 @@ QString Number::toHtmlString() const
                              .arg(m_step);
 
     if (isLeftMost())
-        return QStringLiteral("<p align=\"left\">&lt;&lt; %1</p>").arg(baseText);
+        return Html::leftAligned(QStringLiteral("&lt;&lt; %1").arg(baseText));
 
     if (isRightMost())
-        return QStringLiteral("<p align=\"right\">%1 &gt;&gt;</p>").arg(baseText);
+        return Html::rightAligned(QStringLiteral("%1 &gt;&gt;").arg(baseText));
 
-    return QStringLiteral("<p align=\"left\">__%1 %2</p>").arg(insertPosition()).arg(baseText);
+    return Html::leftAligned(QStringLiteral("__%1 %2").arg(insertPosition()).arg(baseText));
 }
 
 void Number::reset()

@@ -18,6 +18,7 @@
  */
 
 #include "replacestring.h"
+#include "utilityshtml.h"
 #include "widgets/widgetreplacesetting.h"
 
 #include <QRegularExpression>
@@ -61,8 +62,10 @@ QString ReplaceString::toHtmlString() const
                                             : QStringLiteral("Off"));
     const QString caseSensitive(m_isCaseSensitive ? QStringLiteral("CaseSensitive")
                                                   : QStringLiteral("CaseInsensitive"));
-    return QStringLiteral("<p align=\"center\"><b>Replace</b> <i>%1</i> &gt; <i>%2</i> [RegExp:%3][%4]</p>")
-            .arg(m_before, m_after, regExpOnOff, caseSensitive);
+
+    const QString text = QStringLiteral("<b>Replace</b> <i>%1</i> &gt; <i>%2</i> [RegExp:%3][%4]")
+                         .arg(m_before, m_after, regExpOnOff, caseSensitive);
+    return Html::centerAligned(text);
 }
 
 AbstractWidget *ReplaceString::settingsWidget()

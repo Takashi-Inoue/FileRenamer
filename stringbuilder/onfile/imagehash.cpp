@@ -21,6 +21,7 @@
 #include "ifileinfo.h"
 #include "imagehash/imagehashcalculator.h"
 #include "stringbuilder/widgets/widgetimagehashsetting.h"
+#include "utilityshtml.h"
 
 namespace StringBuilder {
 namespace OnFile {
@@ -45,12 +46,12 @@ void ImageHash::build(QString &result)
 QString ImageHash::toHtmlString() const
 {
     if (isLeftMost())
-        return QStringLiteral("<p align=\"left\">&lt;&lt; <b>Image Hash</b></p>");
+        return Html::leftAligned(QStringLiteral("&lt;&lt; <b>Image Hash</b>"));
 
     if (isRightMost())
-        return QStringLiteral("<p align=\"right\"><b>Image Hash</b> &gt;&gt;</p>");
+        return Html::rightAligned(QStringLiteral("<b>Image Hash</b> &gt;&gt;"));
 
-    return QStringLiteral("<p align=\"left\">__%1 <b>Image Hash</b></p>").arg(insertPosition());
+    return Html::leftAligned(QStringLiteral("__%1 <b>Image Hash</b>").arg(insertPosition()));
 }
 
 AbstractWidget *ImageHash::settingsWidget()

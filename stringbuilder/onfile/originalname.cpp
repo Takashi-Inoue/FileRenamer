@@ -20,6 +20,7 @@
 #include "originalname.h"
 #include "ifileinfo.h"
 #include "stringbuilder/widgets/widgetoriginalnamesetting.h"
+#include "utilityshtml.h"
 
 namespace StringBuilder {
 namespace OnFile {
@@ -37,12 +38,12 @@ void OriginalName::build(QString &result)
 QString OriginalName::toHtmlString() const
 {
     if (isLeftMost())
-        return QStringLiteral("<p align=\"left\">&lt;&lt; <b>Original Name</b></p>");
+        return Html::leftAligned(QStringLiteral("&lt;&lt; <b>Original Name</b>"));
 
     if (isRightMost())
-        return QStringLiteral("<p align=\"right\"><b>Original Name</b> &gt;&gt;</p>");
+        return Html::rightAligned(QStringLiteral("<b>Original Name</b> &gt;&gt;"));
 
-    return QStringLiteral("<p align=\"left\">__%1 <b>Original Name</b></p>").arg(insertPosition());
+    return Html::leftAligned(QStringLiteral("__%1 <b>Original Name</b>").arg(insertPosition()));
 }
 
 AbstractWidget *OriginalName::settingsWidget()

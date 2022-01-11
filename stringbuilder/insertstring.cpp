@@ -18,6 +18,7 @@
  */
 
 #include "insertstring.h"
+#include "utilityshtml.h"
 #include "widgets/widgetinserttextsetting.h"
 
 namespace StringBuilder {
@@ -45,12 +46,12 @@ QString InsertString::toHtmlString() const
                          : QStringLiteral("<b>Insert Text</b> <i>%1</i>").arg(m_string);
 
     if (isLeftMost())
-        return QStringLiteral("<p align=\"left\">&lt;&lt; %1</p>").arg(text);
+        return Html::leftAligned(QStringLiteral("&lt;&lt; %1").arg(text));
 
     if (isRightMost())
-        return QStringLiteral("<p align=\"right\">%1 &gt;&gt;</p>").arg(text);
+        return Html::rightAligned(QStringLiteral("%1 &gt;&gt;").arg(text));
 
-    return QStringLiteral("<p align=\"left\">__%1 %2</p>").arg(insertPosition()).arg(text);
+    return Html::leftAligned(QStringLiteral("__%1 %2").arg(insertPosition()).arg(text));
 }
 
 AbstractWidget *InsertString::settingsWidget()

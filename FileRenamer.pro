@@ -115,6 +115,7 @@ HEADERS += \
     threadundorenaming.h \
     usingstringbuilder.h \
     usingstringbuilderwidget.h \
+    utilityshtml.h \
     utilitysmvc.h \
     widgets/counterlabel.h \
     widgets/dialogdroppeddir.h \

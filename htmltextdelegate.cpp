@@ -19,8 +19,10 @@
 
 #include "htmltextdelegate.h"
 
+#include <QAbstractTextDocumentLayout>
 #include <QApplication>
 #include <QPainter>
+#include <QPalette>
 #include <QTextDocument>
 
 void HtmlTextDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
@@ -41,8 +43,19 @@ void HtmlTextDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     doc.setTextWidth(drawRect.width());
 
     painter->save();
+
     painter->translate(drawRect.topLeft());
     painter->setClipRect(drawRect.translated(-drawRect.x(), -drawRect.y()));
-    doc.drawContents(painter);
+
+    const QPalette &palette = opt.widget->palette();
+    const QColor &textColor = (opt.state & QStyle::State_Selected)
+                              ? palette.color(QPalette::HighlightedText)
+                              : palette.color(QPalette::Text);
+
+    QAbstractTextDocumentLayout::PaintContext paintContext;
+
+    paintContext.palette.setColor(QPalette::Text, textColor);
+    doc.documentLayout()->draw(painter, paintContext);
+
     painter->restore();
 }

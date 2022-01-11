@@ -20,6 +20,7 @@
 #include "cryptographichash.h"
 #include "ifileinfo.h"
 #include "stringbuilder/widgets/widgetfilehashsetting.h"
+#include "utilityshtml.h"
 
 #include <QFile>
 #include <QMetaEnum>
@@ -71,12 +72,13 @@ QString CryptographicHash::toHtmlString() const
     const char *algorithmName = metaEnum.valueToKey(m_algorithm);
 
     if (isLeftMost())
-        return QStringLiteral("<p align=\"left\">&lt;&lt; <b>%1</b></p>").arg(algorithmName);
+        return Html::leftAligned(QStringLiteral("&lt;&lt; <b>%1</b>").arg(algorithmName));
 
     if (isRightMost())
-        return QStringLiteral("<p align=\"right\"><b>%1</b> &gt;&gt;</p>").arg(algorithmName);
+        return Html::rightAligned(QStringLiteral("<b>%1</b> &gt;&gt;").arg(algorithmName));
 
-    return QStringLiteral("<p align=\"left\">__%1 <b>%2</b></p>").arg(insertPosition()).arg(algorithmName);
+    return Html::leftAligned(
+                QStringLiteral("__%1 <b>%2</b>").arg(insertPosition()).arg(algorithmName));
 }
 
 AbstractWidget *CryptographicHash::settingsWidget()
