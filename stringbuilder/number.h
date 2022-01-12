@@ -31,6 +31,11 @@ public:
     Number(int pos, int start, int step, int digit, QStringView prefix, QStringView suffix,
            QObject *parent = nullptr);
 
+    constexpr BuilderType builderType() const override
+    {
+        return BuilderType::Number;
+    }
+
     void build(QString &result) override;
     QString toHtmlString() const override;
     void reset() override;

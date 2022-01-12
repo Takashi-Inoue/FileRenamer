@@ -20,6 +20,7 @@
 #include "framebuilderlist.h"
 #include "ui_framebuilderlist.h"
 
+#include "application.h"
 #include "genericactions.h"
 #include "htmltextdelegate.h"
 #include "stringbuilder/stringbuildersettingsmodel.h"
@@ -29,6 +30,7 @@
 
 #include <QAction>
 #include <QMenu>
+#include <QSettings>
 #include <QTimer>
 
 FrameBuilderList::FrameBuilderList(QWidget *parent)
@@ -71,10 +73,19 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
     connect(m_timer, &QTimer::timeout, this, [this]() {
         emit settingsChanged(builderChain());
     });
+
+    QSettings qSet{Application::settingsIniPath(QStringLiteral("lastsettings.ini")),
+                QSettings::IniFormat};
+    m_settingsModel->loadSettings(&qSet);
 }
 
 FrameBuilderList::~FrameBuilderList()
 {
+    QSettings qSet{Application::settingsIniPath(QStringLiteral("lastsettings.ini")),
+                QSettings::IniFormat};
+
+    m_settingsModel->saveSettings(&qSet);
+
     delete ui;
 }
 
@@ -145,4 +156,3 @@ void FrameBuilderList::notifyStartChanging()
     m_timer->start();
     emit changeStarted();
 }
-

@@ -45,7 +45,7 @@ QString DialogLoadRenameSettings::settingFullPath() const
     if (currentItem == nullptr)
         return QString();
 
-    return QStringLiteral("%1/%2.ini").arg(Application::renameSettingsDirPath(), currentItem->text());
+    return QStringLiteral("%1/%2.ini").arg(Application::settingsDirPath(), currentItem->text());
 }
 
 void DialogLoadRenameSettings::onListWidgetItemSelectionChanged()

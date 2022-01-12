@@ -26,8 +26,14 @@
 
 #include <QIODeviceBase>
 #include <QMimeData>
+#include <QSettings>
 
 namespace StringBuilder {
+
+namespace Settings {
+constexpr char groupName[] = "SettingsList";
+constexpr char keyTypeList[] = "Types";
+} // Settings
 
 namespace {
 
@@ -204,14 +210,52 @@ void SettingsModel::removeSpecifiedRows(QModelIndexList &&indexes)
     emit settingsChanged(builderChain());
 }
 
-void SettingsModel::loadSettings(QSharedPointer<QSettings> qSet)
+void SettingsModel::loadSettings(QSettings *qSet)
 {
+    beginResetModel();
 
+    m_builders.clear();
+
+    qSet->beginGroup(Settings::groupName);
+
+    QVariant &&typeIntList = qSet->value(Settings::keyTypeList, QVariant::fromValue(QList<int>{}));
+    QList<int> types{typeIntList.value<QList<int>>()};
+
+    for (int i = -1; int typeInt : types) {
+        auto type = BuilderType(typeInt);
+
+        SharedStringBuilder builder = BuilderFactory::createBuilder(type);
+
+        qSet->beginGroup(QString::number(++i));
+        builder->loadSettings(qSet);
+        qSet->endGroup();
+
+        m_builders.append(builder);
+    }
+
+    qSet->endGroup();
+
+    endResetModel();
 }
 
-void SettingsModel::saveSettings(QSharedPointer<QSettings> qSet) const
+void SettingsModel::saveSettings(QSettings *qSet) const
 {
+    qSet->beginGroup(Settings::groupName);
+    qSet->remove("");
 
+    QList<int> types;
+
+    for (int i = -1; const SharedStringBuilder &builder : m_builders) {
+        types.append(int(builder->builderType()));
+
+        qSet->beginGroup(QString::number(++i));
+        builder->saveSettings(qSet);
+        qSet->endGroup();
+    }
+
+    qSet->setValue(Settings::keyTypeList, QVariant::fromValue(types));
+
+    qSet->endGroup();
 }
 
 } // namespace StringBuilder

@@ -19,6 +19,8 @@
 
 #pragma once
 
+#include "buildertypes.h"
+
 #include <QObject>
 #include <QString>
 
@@ -33,6 +35,8 @@ class AbstractStringBuilder : public QObject
     Q_OBJECT
 public:
     using QObject::QObject;
+
+    virtual constexpr BuilderType builderType() const = 0;
 
     virtual void build(QString &result) = 0;
 

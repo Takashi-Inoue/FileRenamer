@@ -30,6 +30,11 @@ class OriginalName : public AbstractNeedFileInfo
 public:
     using AbstractNeedFileInfo::AbstractNeedFileInfo;
 
+    constexpr BuilderType builderType() const override
+    {
+        return BuilderType::OriginalName;
+    }
+
     void build(QString &result) override;
     QString toHtmlString() const override;
     AbstractWidget *settingsWidget() override;

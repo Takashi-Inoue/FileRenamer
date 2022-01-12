@@ -41,7 +41,8 @@ public:
     static void saveMainSettings();
 
     static QString mainSettingsFilePath();
-    static QString renameSettingsDirPath();
+    static QString settingsDirPath();
+    static QString settingsIniPath(QStringView iniFileName);
 
     static QSharedPointer<QSettings> mainQSettings();
     static QSharedPointer<QSettings> qSettingsForLatestSettings();

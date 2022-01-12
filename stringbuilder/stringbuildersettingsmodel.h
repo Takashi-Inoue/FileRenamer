@@ -58,8 +58,8 @@ public:
     DialogBuilderSettings *settingsDialog(QList<int> showIndexes, QWidget *parent) const;
     void removeSpecifiedRows(QModelIndexList &&indexes);
 
-    void loadSettings(QSharedPointer<QSettings> qSet);
-    void saveSettings(QSharedPointer<QSettings> qSet) const;
+    void loadSettings(QSettings *qSet);
+    void saveSettings(QSettings *qSet) const;
 
 private:
     StringBuilderList m_builders;

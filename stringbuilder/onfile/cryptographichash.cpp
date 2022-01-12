@@ -105,7 +105,7 @@ void CryptographicHash::loadSettings(QSettings *qSet)
 {
     qSet->beginGroup(Settings::groupName);
 
-    QVariant value = qSet->value(Settings::keyAlgorithm, QCryptographicHash::Md5);
+    QVariant value = qSet->value(Settings::keyAlgorithm, int(QCryptographicHash::Md5)).toInt();
 
     m_algorithm = value.value<QCryptographicHash::Algorithm>();
 
@@ -118,7 +118,7 @@ void CryptographicHash::saveSettings(QSettings *qSet) const
 {
     qSet->beginGroup(Settings::groupName);
 
-    qSet->setValue(Settings::keyAlgorithm, m_algorithm);
+    qSet->setValue(Settings::keyAlgorithm, int(m_algorithm));
     AbstractInsertString::saveSettings(qSet);
 
     qSet->endGroup();

@@ -31,6 +31,11 @@ public:
     ReplaceString(QStringView before, QStringView after, bool isUseRegExp, bool isCaseSensitive,
                   QObject *parent = nullptr);
 
+    constexpr BuilderType builderType() const override
+    {
+        return BuilderType::ReplaceText;
+    }
+
     void build(QString &result) override;
     QString toHtmlString() const override;
     AbstractWidget *settingsWidget() override;

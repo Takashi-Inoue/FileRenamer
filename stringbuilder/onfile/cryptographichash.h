@@ -33,6 +33,11 @@ public:
     CryptographicHash();
     CryptographicHash(QCryptographicHash::Algorithm algorithm, int pos, QObject *parent = nullptr);
 
+    constexpr BuilderType builderType() const override
+    {
+        return BuilderType::FileHash;
+    }
+
     void build(QString &result) override;
     QString toHtmlString() const override;
     AbstractWidget *settingsWidget() override;

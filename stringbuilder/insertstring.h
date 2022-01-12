@@ -30,6 +30,11 @@ public:
     InsertString();
     InsertString(int pos, QStringView string, QObject *parent = nullptr);
 
+    constexpr BuilderType builderType() const override
+    {
+        return BuilderType::InsertText;
+    }
+
     void build(QString &result) override;
     QString toHtmlString() const override;
     AbstractWidget *settingsWidget() override;
