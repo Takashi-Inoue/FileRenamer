@@ -34,6 +34,9 @@ public:
     QString toHtmlString() const override;
     AbstractWidget *settingsWidget() override;
 
+    void loadSettings(QSettings *qSet) override;
+    void saveSettings(QSettings *qSet) const override;
+
 protected:
     QString m_string;
 };

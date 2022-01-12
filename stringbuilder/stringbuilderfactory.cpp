@@ -30,25 +30,6 @@
 
 namespace StringBuilder {
 
-int BuilderFactory::builderTypeCount()
-{
-    return 6;
-}
-
-QString BuilderFactory::builderTitle(BuilderType builderType)
-{
-    static const QHash<BuilderType, QString> titles{
-        {BuilderType::OriginalName, QStringLiteral("Original Name")},
-        {BuilderType::InsertText, QStringLiteral("Insert Text")},
-        {BuilderType::ReplaceText, QStringLiteral("Replace Text")},
-        {BuilderType::Number, QStringLiteral("Number")},
-        {BuilderType::FileHash, QStringLiteral("File Hash")},
-        {BuilderType::ImageHash, QStringLiteral("Image Hash")},
-    };
-
-    return titles[builderType];
-}
-
 SharedStringBuilder BuilderFactory::createBuilder(BuilderType builderType)
 {
     if (builderType == BuilderType::OriginalName)

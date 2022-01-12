@@ -27,6 +27,7 @@ SOURCES += \
     pathsanalyzer.cpp \
     renamestate/renamestateinitial.cpp \
     searchindirs.cpp \
+    stringbuilder/abstractinsertstring.cpp \
     stringbuilder/builderchain.cpp \
     stringbuilder/insertstring.cpp \
     stringbuilder/number.cpp \
@@ -88,6 +89,7 @@ HEADERS += \
     stringbuilder/abstractinsertstring.h \
     stringbuilder/abstractstringbuilder.h \
     stringbuilder/builderchain.h \
+    stringbuilder/buildertypes.h \
     stringbuilder/insertstring.h \
     stringbuilder/number.h \
     stringbuilder/onfile/abstractneedfileinfo.h \

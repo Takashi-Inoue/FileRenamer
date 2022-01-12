@@ -23,8 +23,14 @@
 #include "stringbuilder/widgets/widgetimagehashsetting.h"
 #include "utilityshtml.h"
 
+#include <QSettings>
+
 namespace StringBuilder {
 namespace OnFile {
+
+namespace Settings {
+constexpr char groupName[] = "ImageHash";
+} // Settings
 
 void ImageHash::build(QString &result)
 {
@@ -65,6 +71,24 @@ AbstractWidget *ImageHash::settingsWidget()
     });
 
     return widget;
+}
+
+void ImageHash::loadSettings(QSettings *qSet)
+{
+    qSet->beginGroup(Settings::groupName);
+
+    AbstractInsertString::loadSettings(qSet);
+
+    qSet->endGroup();
+}
+
+void ImageHash::saveSettings(QSettings *qSet) const
+{
+    qSet->beginGroup(Settings::groupName);
+
+    AbstractInsertString::saveSettings(qSet);
+
+    qSet->endGroup();
 }
 
 } // OnFile

@@ -204,4 +204,14 @@ void SettingsModel::removeSpecifiedRows(QModelIndexList &&indexes)
     emit settingsChanged(builderChain());
 }
 
+void SettingsModel::loadSettings(QSharedPointer<QSettings> qSet)
+{
+
+}
+
+void SettingsModel::saveSettings(QSharedPointer<QSettings> qSet) const
+{
+
+}
+
 } // namespace StringBuilder

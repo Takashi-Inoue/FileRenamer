@@ -22,8 +22,17 @@
 #include "widgets/widgetreplacesetting.h"
 
 #include <QRegularExpression>
+#include <QSettings>
 
 namespace StringBuilder {
+
+namespace Settings {
+constexpr char groupName[] = "ReplaceText";
+constexpr char keyFind[] = "Find";
+constexpr char keyReplace[] = "Replace";
+constexpr char keyIsUseRegExp[] = "UseRegExp";
+constexpr char keyIsCaseSensitive[] = "CaseSensitive";
+} // Settings
 
 ReplaceString::ReplaceString()
     : ReplaceString(QString{}, QString{}, false, true, nullptr)
@@ -82,6 +91,30 @@ AbstractWidget *ReplaceString::settingsWidget()
     });
 
     return widget;
+}
+
+void ReplaceString::loadSettings(QSettings *qSet)
+{
+    qSet->beginGroup(Settings::groupName);
+
+    m_before = qSet->value(Settings::keyFind, QString{}).toString();
+    m_after = qSet->value(Settings::keyReplace, QString{}).toString();
+    m_isUseRegExp = qSet->value(Settings::keyIsUseRegExp, false).toBool();
+    m_isCaseSensitive = qSet->value(Settings::keyIsCaseSensitive, true).toBool();
+
+    qSet->endGroup();
+}
+
+void ReplaceString::saveSettings(QSettings *qSet) const
+{
+    qSet->beginGroup(Settings::groupName);
+
+    qSet->setValue(Settings::keyFind, m_before);
+    qSet->setValue(Settings::keyReplace, m_after);
+    qSet->setValue(Settings::keyIsUseRegExp, m_isUseRegExp);
+    qSet->setValue(Settings::keyIsCaseSensitive, m_isCaseSensitive);
+
+    qSet->endGroup();
 }
 
 } // StringBuilder

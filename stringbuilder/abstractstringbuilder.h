@@ -22,6 +22,8 @@
 #include <QObject>
 #include <QString>
 
+class QSettings;
+
 namespace StringBuilder {
 
 class AbstractWidget;
@@ -37,6 +39,9 @@ public:
     virtual QString toHtmlString() const = 0;
     virtual void reset() {}
     virtual AbstractWidget *settingsWidget() = 0;
+
+    virtual void loadSettings(QSettings *qSet) = 0;
+    virtual void saveSettings(QSettings *qSet) const = 0;
 };
 
 } // StringBuilder

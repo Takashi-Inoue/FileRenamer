@@ -24,9 +24,15 @@
 
 #include <QFile>
 #include <QMetaEnum>
+#include <QSettings>
 
 namespace StringBuilder {
 namespace OnFile {
+
+namespace Settings {
+constexpr char groupName[] = "FileHash";
+constexpr char keyAlgorithm[] = "keyAlgorithm";
+} // Settings
 
 CryptographicHash::CryptographicHash()
     : CryptographicHash(QCryptographicHash::Md5, 0, nullptr)
@@ -93,6 +99,29 @@ AbstractWidget *CryptographicHash::settingsWidget()
     });
 
     return widget;
+}
+
+void CryptographicHash::loadSettings(QSettings *qSet)
+{
+    qSet->beginGroup(Settings::groupName);
+
+    QVariant value = qSet->value(Settings::keyAlgorithm, QCryptographicHash::Md5);
+
+    m_algorithm = value.value<QCryptographicHash::Algorithm>();
+
+    AbstractInsertString::loadSettings(qSet);
+
+    qSet->endGroup();
+}
+
+void CryptographicHash::saveSettings(QSettings *qSet) const
+{
+    qSet->beginGroup(Settings::groupName);
+
+    qSet->setValue(Settings::keyAlgorithm, m_algorithm);
+    AbstractInsertString::saveSettings(qSet);
+
+    qSet->endGroup();
 }
 
 } // OnFile

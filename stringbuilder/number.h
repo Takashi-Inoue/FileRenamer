@@ -36,6 +36,9 @@ public:
     void reset() override;
     AbstractWidget *settingsWidget() override;
 
+    void loadSettings(QSettings *qSet) override;
+    void saveSettings(QSettings *qSet) const override;
+
 private:
     int m_start;
     int m_step;

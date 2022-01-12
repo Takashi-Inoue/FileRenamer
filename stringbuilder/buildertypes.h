@@ -19,18 +19,32 @@
 
 #pragma once
 
-#include "buildertypes.h"
-#include "usingstringbuilder.h"
+#include <QHash>
+#include <QString>
 
 namespace StringBuilder {
 
-class BuilderFactory
-{
-public:
-    static SharedStringBuilder createBuilder(BuilderType builderType);
+enum class BuilderType : int {
+    OriginalName, InsertText, ReplaceText, Number, FileHash, ImageHash
 };
 
-constexpr char mimeTypeBuilderType[] = "mimetype.stringbuilder.type";
+constexpr int builderTypeCount()
+{
+    return 6;
+}
 
-} // namespace StringBuilder
+inline QString builderName(BuilderType builderType)
+{
+    static const QHash<BuilderType, QString> names{
+        {BuilderType::OriginalName, QStringLiteral("Original Name")},
+        {BuilderType::InsertText, QStringLiteral("Insert Text")},
+        {BuilderType::ReplaceText, QStringLiteral("Replace Text")},
+        {BuilderType::Number, QStringLiteral("Number")},
+        {BuilderType::FileHash, QStringLiteral("File Hash")},
+        {BuilderType::ImageHash, QStringLiteral("Image Hash")},
+    };
 
+    return names[builderType];
+}
+
+} // StringBuilder

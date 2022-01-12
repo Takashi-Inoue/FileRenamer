@@ -21,7 +21,14 @@
 #include "utilityshtml.h"
 #include "widgets/widgetinserttextsetting.h"
 
+#include <QSettings>
+
 namespace StringBuilder {
+
+namespace Settings {
+constexpr char groupName[] = "InsertText";
+constexpr char keyText[] = "Text";
+} // Settings
 
 InsertString::InsertString()
     : InsertString(0, QString{}, nullptr)
@@ -66,6 +73,26 @@ AbstractWidget *InsertString::settingsWidget()
     });
 
     return widget;
+}
+
+void InsertString::loadSettings(QSettings *qSet)
+{
+    qSet->beginGroup(Settings::groupName);
+
+    m_string = qSet->value(Settings::keyText, QString{}).toString();
+    AbstractInsertString::loadSettings(qSet);
+
+    qSet->endGroup();
+}
+
+void InsertString::saveSettings(QSettings *qSet) const
+{
+    qSet->beginGroup(Settings::groupName);
+
+    qSet->setValue(Settings::keyText, m_string);
+    AbstractInsertString::saveSettings(qSet);
+
+    qSet->endGroup();
 }
 
 } // StringBuilder

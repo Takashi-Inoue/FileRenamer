@@ -37,7 +37,7 @@ int BuildersModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return BuilderFactory::builderTypeCount();
+    return builderTypeCount();
 }
 
 int BuildersModel::columnCount(const QModelIndex &parent) const
@@ -57,7 +57,7 @@ QVariant BuildersModel::data(const QModelIndex &index, int role) const
         return Qt::AlignCenter;
 
     if (role == Qt::DisplayRole)
-        return BuilderFactory::builderTitle(BuilderFactory::BuilderType(index.row()));
+        return builderName(BuilderType(index.row()));
 
     return QVariant();
 }
@@ -93,7 +93,7 @@ StringBuilderList BuildersModel::createBuilders(const QModelIndexList &indexes) 
         if (!index.isValid())
             continue;
 
-        auto builderType = BuilderFactory::BuilderType(index.row());
+        auto builderType = BuilderType(index.row());
 
         builders.append(BuilderFactory::createBuilder(builderType));
     }

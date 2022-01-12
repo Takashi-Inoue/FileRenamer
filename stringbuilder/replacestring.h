@@ -35,6 +35,9 @@ public:
     QString toHtmlString() const override;
     AbstractWidget *settingsWidget() override;
 
+    void loadSettings(QSettings *qSet) override;
+    void saveSettings(QSettings *qSet) const override;
+
 private:
     QString m_before;
     QString m_after;

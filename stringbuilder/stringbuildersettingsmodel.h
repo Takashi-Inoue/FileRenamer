@@ -23,6 +23,8 @@
 
 #include <QAbstractTableModel>
 
+class QSettings;
+
 namespace StringBuilder {
 
 class AbstractWidget;
@@ -55,6 +57,9 @@ public:
     bool isEmpty() const;
     DialogBuilderSettings *settingsDialog(QList<int> showIndexes, QWidget *parent) const;
     void removeSpecifiedRows(QModelIndexList &&indexes);
+
+    void loadSettings(QSharedPointer<QSettings> qSet);
+    void saveSettings(QSharedPointer<QSettings> qSet) const;
 
 private:
     StringBuilderList m_builders;

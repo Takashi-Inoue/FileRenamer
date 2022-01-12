@@ -37,7 +37,10 @@ public:
     QString toHtmlString() const override;
     AbstractWidget *settingsWidget() override;
 
-protected:
+    void loadSettings(QSettings *qSet) override;
+    void saveSettings(QSettings *qSet) const override;
+
+private:
     QCryptographicHash::Algorithm m_algorithm;
 };
 

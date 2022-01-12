@@ -22,8 +22,14 @@
 #include "stringbuilder/widgets/widgetoriginalnamesetting.h"
 #include "utilityshtml.h"
 
+#include <QSettings>
+
 namespace StringBuilder {
 namespace OnFile {
+
+namespace Settings {
+constexpr char groupName[] = "OriginalName";
+} // Settings
 
 void OriginalName::build(QString &result)
 {
@@ -57,6 +63,24 @@ AbstractWidget *OriginalName::settingsWidget()
     });
 
     return widget;
+}
+
+void OriginalName::loadSettings(QSettings *qSet)
+{
+    qSet->beginGroup(Settings::groupName);
+
+    AbstractInsertString::loadSettings(qSet);
+
+    qSet->endGroup();
+}
+
+void OriginalName::saveSettings(QSettings *qSet) const
+{
+    qSet->beginGroup(Settings::groupName);
+
+    AbstractInsertString::saveSettings(qSet);
+
+    qSet->endGroup();
 }
 
 } // OnFile
