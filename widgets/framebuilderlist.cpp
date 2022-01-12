@@ -29,9 +29,38 @@
 #include "usingstringbuilder.h"
 
 #include <QAction>
+#include <QDir>
 #include <QMenu>
 #include <QSettings>
 #include <QTimer>
+
+namespace {
+
+constexpr char lastSettingsFileName[] = "Last used.ini";
+
+void initSettingsComboBox(QComboBox *combox)
+{
+    QDir dir{Application::settingsDirPath()};
+
+    if (!dir.exists())
+        return;
+
+    QStringList &&inis = dir.entryList({QStringLiteral("*.ini")}, QDir::Files, QDir::Name);
+    qsizetype indexLastUsed = inis.indexOf(QString{lastSettingsFileName});
+
+    if (indexLastUsed != -1)
+        inis.removeAt(indexLastUsed);
+
+    combox->addItem(QStringLiteral("New settings"));
+
+    for (QStringView iniName : inis)
+        combox->addItem(iniName.chopped(4).toString(), iniName.toString());
+
+    if (indexLastUsed != -1)
+        combox->addItem(QString{lastSettingsFileName}.chopped(4), QString{lastSettingsFileName});
+}
+
+} // anonymous
 
 FrameBuilderList::FrameBuilderList(QWidget *parent)
     : QFrame(parent),
@@ -74,14 +103,21 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
         emit settingsChanged(builderChain());
     });
 
-    QSettings qSet{Application::settingsIniPath(QStringLiteral("lastsettings.ini")),
-                QSettings::IniFormat};
-    m_settingsModel->loadSettings(&qSet);
+    initSettingsComboBox(ui->comboxSettings);
+
+    connect(ui->comboxSettings, &QComboBox::currentIndexChanged,
+            this, &FrameBuilderList::loadSettings);
+
+    const int lastIndex = ui->comboxSettings->count() - 1;
+
+    ui->comboxSettings->itemData(lastIndex) == QString{lastSettingsFileName}
+        ? ui->comboxSettings->setCurrentIndex(lastIndex)
+        : ui->comboxSettings->setCurrentIndex(0);
 }
 
 FrameBuilderList::~FrameBuilderList()
 {
-    QSettings qSet{Application::settingsIniPath(QStringLiteral("lastsettings.ini")),
+    QSettings qSet{Application::settingsIniPath(QString{lastSettingsFileName}),
                 QSettings::IniFormat};
 
     m_settingsModel->saveSettings(&qSet);
@@ -110,6 +146,20 @@ void FrameBuilderList::appendSelectedBuildersToSettings()
 void FrameBuilderList::deleteSelectedSettings()
 {
     m_settingsModel->removeSpecifiedRows(ui->tableViewSettings->selectionModel()->selectedRows());
+}
+
+void FrameBuilderList::loadSettings(int comboBoxIndex)
+{
+    QVariant &&iniFileNameData = ui->comboxSettings->itemData(comboBoxIndex);
+
+    if (!iniFileNameData.isValid()) {
+        m_settingsModel->clearSettings();
+        return;
+    }
+
+    QSettings qSet{Application::settingsIniPath(iniFileNameData.toString()), QSettings::IniFormat};
+
+    m_settingsModel->loadSettings(&qSet);
 }
 
 void FrameBuilderList::onSettingActivated(const QModelIndex &/*index*/)

@@ -49,7 +49,17 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="buttonSave">
+      <widget class="QComboBox" name="comboxSettings">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QToolButton" name="buttonSave">
        <property name="toolTip">
         <string>Save current rename settings</string>
        </property>
@@ -60,19 +70,14 @@
         <iconset resource="../images.qrc">
          <normaloff>:/res/images/save.svg</normaloff>:/res/images/save.svg</iconset>
        </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="buttonLoad">
-       <property name="toolTip">
-        <string>Load Rename settings</string>
+       <property name="iconSize">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
        </property>
-       <property name="text">
-        <string>Load</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images.qrc">
-         <normaloff>:/res/images/load.svg</normaloff>:/res/images/load.svg</iconset>
+       <property name="popupMode">
+        <enum>QToolButton::InstantPopup</enum>
        </property>
       </widget>
      </item>

@@ -175,6 +175,15 @@ StringBuilderList SettingsModel::builders(const QModelIndexList &indexes) const
     return builders;
 }
 
+void SettingsModel::clearSettings()
+{
+    beginResetModel();
+    m_builders.clear();
+    endResetModel();
+
+    emit settingsChanged(builderChain());
+}
+
 bool SettingsModel::isEmpty() const
 {
     return m_builders.isEmpty();
@@ -236,6 +245,8 @@ void SettingsModel::loadSettings(QSettings *qSet)
     qSet->endGroup();
 
     endResetModel();
+
+    emit settingsChanged(builderChain());
 }
 
 void SettingsModel::saveSettings(QSettings *qSet) const
