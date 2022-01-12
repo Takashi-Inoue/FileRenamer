@@ -29,6 +29,7 @@ class BuildersModel;
 class SettingsModel;
 } // StringBuilder
 
+class WidgetLoadSaveBuilderSettings;
 class QTimer;
 
 namespace Ui {
@@ -52,10 +53,9 @@ signals:
 private slots:
     void appendSelectedBuildersToSettings();
     void deleteSelectedSettings();
-    void loadSettings(int comboBoxIndex);
 
-    void onSettingActivated(const QModelIndex &index);
-    void showSettingsViewContextMenu(const QPoint &pos);
+    void showSettingDialog(const QModelIndex &index);
+    void showPopMenuForSettingsView(const QPoint &pos);
 
 private:
     void notifyStartChanging();
@@ -65,5 +65,6 @@ private:
     QTimer *m_timer;
     StringBuilder::BuildersModel *m_buildersModel;
     StringBuilder::SettingsModel *m_settingsModel;
+    WidgetLoadSaveBuilderSettings *m_widgetLoadSaver = nullptr;
 };
 
