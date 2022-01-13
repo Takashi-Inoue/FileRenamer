@@ -34,48 +34,6 @@
 
 namespace {
 
-constexpr char lastSettingsFileName[] = "Last used.ini";
-
-inline void addIniNameToComboBox(QComboBox *combox, QStringView completeIniFileName)
-{
-    Q_CHECK_PTR(combox);
-    Q_ASSERT(completeIniFileName.right(4) == QString{".ini"});
-
-    combox->addItem(completeIniFileName.chopped(4).toString(), completeIniFileName.toString());
-}
-
-inline void insertIniNameToComboBox(QComboBox *combox, int insertIndex,
-                                    QStringView completeIniFileName)
-{
-    Q_CHECK_PTR(combox);
-    Q_ASSERT(completeIniFileName.right(4) == QString{".ini"});
-
-    combox->insertItem(insertIndex, completeIniFileName.chopped(4).toString(),
-                       completeIniFileName.toString());
-}
-
-void initSettingsComboBox(QComboBox *combox)
-{
-    combox->addItem(QObject::tr("New settings"));
-
-    QDir dir{Application::settingsDirPath()};
-
-    if (!dir.exists())
-        return;
-
-    QStringList &&inis = dir.entryList({QStringLiteral("*.ini")}, QDir::Files, QDir::Name);
-    qsizetype indexLastUsed = inis.indexOf(QString{lastSettingsFileName});
-
-    if (indexLastUsed != -1)
-        inis.removeAt(indexLastUsed);
-
-    for (QStringView iniName : inis)
-        addIniNameToComboBox(combox, iniName);
-
-    if (indexLastUsed != -1)
-        addIniNameToComboBox(combox, QString{lastSettingsFileName});
-}
-
 QString requestNewIniName()
 {
     QInputDialog dlg;
@@ -125,7 +83,7 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
 
     addActions({m_actionSave, actionSaveAs}); // to enable shortcut
 
-    initSettingsComboBox(ui->comboxSettings);
+    ui->comboxSettings->setModel(m_settingsListModel);
 
     connect(ui->comboxSettings, SIGNAL(currentIndexChanged(int)), this, SLOT(loadSettings(int)));
     connect(ui->comboxSettings, &QComboBox::currentIndexChanged, this, [this](int index) {
@@ -135,9 +93,8 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
 
     const int lastIndex = ui->comboxSettings->count() - 1;
 
-    ui->comboxSettings->itemData(lastIndex) == QString{lastSettingsFileName}
-        ? ui->comboxSettings->setCurrentIndex(lastIndex)
-        : ui->comboxSettings->setCurrentIndex(0);
+    m_settingsListModel->existsLastUsedSettings() ? ui->comboxSettings->setCurrentIndex(lastIndex)
+                                                  : ui->comboxSettings->setCurrentIndex(0);
 
     ui->buttonConfig->setMenu(configMenu);
 }
@@ -149,32 +106,24 @@ WidgetLoadSaveBuilderSettings::~WidgetLoadSaveBuilderSettings()
 
 void WidgetLoadSaveBuilderSettings::saveLatestSettings() const
 {
-    QSettings qSet{Application::settingsIniPath(QString{lastSettingsFileName}),
-                QSettings::IniFormat};
-
-    m_settingsModel->saveSettings(&qSet);
+    m_settingsModel->saveSettings(m_settingsListModel->qSettingsForLastUsed().get());
 }
 
 void WidgetLoadSaveBuilderSettings::loadSettings(int comboBoxIndex)
 {
-    QVariant &&iniFileNameData = ui->comboxSettings->itemData(comboBoxIndex);
-
-    if (!iniFileNameData.isValid()) {
+    if (comboBoxIndex == 0) {
         m_settingsModel->clearSettings();
         return;
     }
 
-    QSettings qSet{Application::settingsIniPath(iniFileNameData.toString()), QSettings::IniFormat};
-
-    m_settingsModel->loadSettings(&qSet);
+    m_settingsModel->loadSettings(m_settingsListModel->qSettings(comboBoxIndex).get());
 }
 
 void WidgetLoadSaveBuilderSettings::saveOverwrite() const
 {
-    QSettings qSet{Application::settingsIniPath(ui->comboxSettings->currentData().toString()),
-                QSettings::IniFormat};
+    const int comboBoxIndex = ui->comboxSettings->currentIndex();
 
-    m_settingsModel->saveSettings(&qSet);
+    m_settingsModel->saveSettings(m_settingsListModel->qSettings(comboBoxIndex).get());
 }
 
 void WidgetLoadSaveBuilderSettings::saveNewSettings() const
@@ -199,18 +148,10 @@ void WidgetLoadSaveBuilderSettings::saveNewSettings() const
 
     m_settingsModel->saveSettings(&qSet);
 
-    QStringList iniFiles;
-
-    for (int i = 1, count = ui->comboxSettings->count() - 1; i < count; ++i)
-        iniFiles.append(ui->comboxSettings->itemData(i).toString());
-
-    int insertIndex = std::distance(iniFiles.begin(),
-        std::upper_bound(iniFiles.begin(), iniFiles.end(), iniFileName)) + 1;
-
-    insertIniNameToComboBox(ui->comboxSettings, insertIndex, iniFileName);
+    int insertedIndex = m_settingsListModel->insertNewSettings(iniFileName.chopped(4));
 
     ui->comboxSettings->blockSignals(true);
-    ui->comboxSettings->setCurrentIndex(insertIndex);
+    ui->comboxSettings->setCurrentIndex(insertedIndex);
     ui->comboxSettings->blockSignals(false);
 }
 

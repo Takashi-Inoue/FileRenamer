@@ -20,6 +20,9 @@
 #pragma once
 
 #include <QAbstractTableModel>
+#include <QSharedPointer>
+
+class QSettings;
 
 class RenameSettingsModel : public QAbstractTableModel
 {
@@ -40,7 +43,11 @@ public: // QAbstractItemModel interface
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
 public:
+    bool existsLastUsedSettings() const;
+    int insertNewSettings(QStringView settingsName);
     void load();
+    QSharedPointer<QSettings> qSettings(int row) const;
+    QSharedPointer<QSettings> qSettingsForLastUsed() const;
 
 private:
     QStringList m_iniBaseNames;
