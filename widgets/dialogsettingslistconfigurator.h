@@ -19,37 +19,24 @@
 
 #pragma once
 
-#include <QWidget>
-
-namespace StringBuilder { class SettingsModel; }
+#include <QDialog>
 
 class RenameSettingsModel;
 
-class QMenu;
+namespace Ui { class DialogSettingsListConfigurator; }
 
-namespace Ui { class WidgetLoadSaveBuilderSettings; }
-
-class WidgetLoadSaveBuilderSettings : public QWidget
+class DialogSettingsListConfigurator : public QDialog
 {
     Q_OBJECT
+
 public:
-    explicit WidgetLoadSaveBuilderSettings(StringBuilder::SettingsModel *settingsModel,
-                                           QWidget *parent = nullptr);
-    ~WidgetLoadSaveBuilderSettings();
+    explicit DialogSettingsListConfigurator(RenameSettingsModel *model, QWidget *parent = nullptr);
+    ~DialogSettingsListConfigurator();
 
-    void saveLatestSettings() const;
-
-private slots:
-    void loadSettings(int comboBoxIndex);
-    void saveOverwrite() const;
-    void saveNewSettings() const;
-    void showConfigureDialog();
+protected:
+    void changeEvent(QEvent *e);
 
 private:
-    Ui::WidgetLoadSaveBuilderSettings *ui;
-
-    StringBuilder::SettingsModel *m_settingsModel;
-    RenameSettingsModel *m_settingsListModel;
-    QAction *m_actionSave = nullptr;
+    Ui::DialogSettingsListConfigurator *ui;
 };
 

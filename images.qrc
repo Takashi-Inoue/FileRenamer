@@ -28,5 +28,6 @@
         <file>res/images/file.svg</file>
         <file>res/images/delete_file.svg</file>
         <file>res/images/exec_double.svg</file>
+        <file>res/images/settings.svg</file>
     </qresource>
 </RCC>

@@ -21,7 +21,9 @@
 #include "ui_widgetloadsavebuildersettings.h"
 
 #include "application.h"
+#include "dialogsettingslistconfigurator.h"
 #include "filenamevalidator.h"
+#include "renamesettingsmodel.h"
 #include "stringbuilder/stringbuildersettingsmodel.h"
 
 #include <QDir>
@@ -97,25 +99,31 @@ QString requestNewIniName()
 
 } // anonymous
 
+//--------------------------------------------------------------------------------------------------
+
 WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
         StringBuilder::SettingsModel *settingsModel, QWidget *parent)
     : QWidget(parent),
       ui(new Ui::WidgetLoadSaveBuilderSettings),
       m_settingsModel(settingsModel),
-      m_saveButtonMenu(new QMenu{this})
+      m_settingsListModel(new RenameSettingsModel{this})
 {
     Q_CHECK_PTR(settingsModel);
 
     ui->setupUi(this);
 
-    m_actionSave = m_saveButtonMenu->addAction(
+    auto configMenu = new QMenu{this};
+
+    m_actionSave = configMenu->addAction(
                        tr("Save"), this, &WidgetLoadSaveBuilderSettings::saveOverwrite,
                        QKeySequence{QKeySequence::Save});
-    QAction *actionSaveAs = m_saveButtonMenu->addAction(
+    QAction *actionSaveAs = configMenu->addAction(
                                 tr("Save As"), this, &WidgetLoadSaveBuilderSettings::saveNewSettings,
                                 QKeySequence{QStringLiteral("Ctrl+Shift+S")});
-    addAction(m_actionSave); // to enable shortcut
-    addAction(actionSaveAs);
+    configMenu->addSeparator();
+    configMenu->addAction(tr("Edit List"), this, &WidgetLoadSaveBuilderSettings::showConfigureDialog);
+
+    addActions({m_actionSave, actionSaveAs}); // to enable shortcut
 
     initSettingsComboBox(ui->comboxSettings);
 
@@ -131,8 +139,7 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
         ? ui->comboxSettings->setCurrentIndex(lastIndex)
         : ui->comboxSettings->setCurrentIndex(0);
 
-    connect(ui->buttonSave, &QPushButton::clicked,
-            this, &WidgetLoadSaveBuilderSettings::saveSettings);
+    ui->buttonConfig->setMenu(configMenu);
 }
 
 WidgetLoadSaveBuilderSettings::~WidgetLoadSaveBuilderSettings()
@@ -162,28 +169,12 @@ void WidgetLoadSaveBuilderSettings::loadSettings(int comboBoxIndex)
     m_settingsModel->loadSettings(&qSet);
 }
 
-void WidgetLoadSaveBuilderSettings::saveSettings() const
-{
-    QString iniFileName = ui->comboxSettings->currentData().toString();
-
-    if (iniFileName.isEmpty() || iniFileName == lastSettingsFileName) {
-        saveNewSettings();
-        return;
-    } else {
-        m_saveButtonMenu->popup(QCursor::pos());
-    }
-
-//    if (iniFileName.isEmpty())
-//        return;
-
-//    QSettings qSet{Application::settingsIniPath(iniFileName), QSettings::IniFormat};
-
-    //    m_settingsModel->saveSettings(&qSet);
-}
-
 void WidgetLoadSaveBuilderSettings::saveOverwrite() const
 {
+    QSettings qSet{Application::settingsIniPath(ui->comboxSettings->currentData().toString()),
+                QSettings::IniFormat};
 
+    m_settingsModel->saveSettings(&qSet);
 }
 
 void WidgetLoadSaveBuilderSettings::saveNewSettings() const
@@ -221,4 +212,11 @@ void WidgetLoadSaveBuilderSettings::saveNewSettings() const
     ui->comboxSettings->blockSignals(true);
     ui->comboxSettings->setCurrentIndex(insertIndex);
     ui->comboxSettings->blockSignals(false);
+}
+
+void WidgetLoadSaveBuilderSettings::showConfigureDialog()
+{
+    DialogSettingsListConfigurator dlg(m_settingsListModel, this);
+
+    dlg.exec();
 }

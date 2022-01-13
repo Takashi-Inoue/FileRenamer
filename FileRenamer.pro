@@ -27,6 +27,7 @@ SOURCES += \
     path/pathtableview.cpp \
     path/pathtableviewmenu.cpp \
     pathsanalyzer.cpp \
+    renamesettingsmodel.cpp \
     renamestate/renamestateinitial.cpp \
     searchindirs.cpp \
     stringbuilder/abstractinsertstring.cpp \
@@ -59,6 +60,7 @@ SOURCES += \
     widgets/dialogdroppeddir.cpp \
     widgets/dialogloadrenamesettings.cpp \
     widgets/dialogsaverenamesettings.cpp \
+    widgets/dialogsettingslistconfigurator.cpp \
     widgets/elidelabel.cpp \
     widgets/framebuilderlist.cpp \
     widgets/historycombobox.cpp \
@@ -86,6 +88,7 @@ HEADERS += \
     path/pathtableviewmenu.h \
     path/usingpathentity.h \
     pathsanalyzer.h \
+    renamesettingsmodel.h \
     renamestate/renamestateistate.h \
     renamestate/renamestateinitial.h \
     searchindirs.h \
@@ -126,6 +129,7 @@ HEADERS += \
     widgets/dialogdroppeddir.h \
     widgets/dialogloadrenamesettings.h \
     widgets/dialogsaverenamesettings.h \
+    widgets/dialogsettingslistconfigurator.h \
     widgets/elidelabel.h \
     widgets/framebuilderlist.h \
     widgets/historycombobox.h \
@@ -145,6 +149,7 @@ FORMS += \
     widgets/dialogdroppeddir.ui \
     widgets/dialogloadrenamesettings.ui \
     widgets/dialogsaverenamesettings.ui \
+    widgets/dialogsettingslistconfigurator.ui \
     widgets/framebuilderlist.ui \
     widgets/widgetapplicationlogs.ui \
     widgets/widgetloadsavebuildersettings.ui

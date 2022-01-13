@@ -37,19 +37,22 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="buttonSave">
+    <widget class="QToolButton" name="buttonConfig">
      <property name="toolTip">
-      <string>Save current rename settings</string>
+      <string>Configure settings list</string>
      </property>
      <property name="icon">
       <iconset resource="../images.qrc">
-       <normaloff>:/res/images/save.svg</normaloff>:/res/images/save.svg</iconset>
+       <normaloff>:/res/images/settings.svg</normaloff>:/res/images/settings.svg</iconset>
      </property>
      <property name="iconSize">
       <size>
        <width>20</width>
        <height>20</height>
       </size>
+     </property>
+     <property name="popupMode">
+      <enum>QToolButton::InstantPopup</enum>
      </property>
     </widget>
    </item>
