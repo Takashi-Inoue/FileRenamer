@@ -42,6 +42,7 @@ public:
 private slots:
     void loadSettings(int comboBoxIndex);
     void saveSettings() const;
+    void saveOverwrite() const;
     void saveNewSettings() const;
 
 private:
@@ -49,5 +50,6 @@ private:
 
     StringBuilder::SettingsModel *m_settingsModel;
     QMenu *m_saveButtonMenu;
+    QAction *m_actionSave = nullptr;
 };
 

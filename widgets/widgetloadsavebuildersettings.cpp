@@ -34,9 +34,27 @@ namespace {
 
 constexpr char lastSettingsFileName[] = "Last used.ini";
 
+inline void addIniNameToComboBox(QComboBox *combox, QStringView completeIniFileName)
+{
+    Q_CHECK_PTR(combox);
+    Q_ASSERT(completeIniFileName.right(4) == QString{".ini"});
+
+    combox->addItem(completeIniFileName.chopped(4).toString(), completeIniFileName.toString());
+}
+
+inline void insertIniNameToComboBox(QComboBox *combox, int insertIndex,
+                                    QStringView completeIniFileName)
+{
+    Q_CHECK_PTR(combox);
+    Q_ASSERT(completeIniFileName.right(4) == QString{".ini"});
+
+    combox->insertItem(insertIndex, completeIniFileName.chopped(4).toString(),
+                       completeIniFileName.toString());
+}
+
 void initSettingsComboBox(QComboBox *combox)
 {
-    combox->addItem(QStringLiteral("New settings"));
+    combox->addItem(QObject::tr("New settings"));
 
     QDir dir{Application::settingsDirPath()};
 
@@ -50,10 +68,10 @@ void initSettingsComboBox(QComboBox *combox)
         inis.removeAt(indexLastUsed);
 
     for (QStringView iniName : inis)
-        combox->addItem(iniName.chopped(4).toString(), iniName.toString());
+        addIniNameToComboBox(combox, iniName);
 
     if (indexLastUsed != -1)
-        combox->addItem(QString{lastSettingsFileName}.chopped(4), QString{lastSettingsFileName});
+        addIniNameToComboBox(combox, QString{lastSettingsFileName});
 }
 
 QString requestNewIniName()
@@ -67,8 +85,9 @@ QString requestNewIniName()
     if (lineEdit)
         lineEdit->setValidator(new FileNameVlidator{lineEdit});
 
-    dlg.setWindowTitle(QStringLiteral("Save as new"));
-    dlg.setLabelText(QStringLiteral("Settings name to save:"));
+    dlg.setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
+    dlg.setWindowTitle(QObject::tr("Save As"));
+    dlg.setLabelText(QObject::tr("Settings name to save as:"));
 
     if (dlg.exec() == QDialog::Rejected)
         return QString{};
@@ -89,10 +108,22 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
 
     ui->setupUi(this);
 
+    m_actionSave = m_saveButtonMenu->addAction(
+                       tr("Save"), this, &WidgetLoadSaveBuilderSettings::saveOverwrite,
+                       QKeySequence{QKeySequence::Save});
+    QAction *actionSaveAs = m_saveButtonMenu->addAction(
+                                tr("Save As"), this, &WidgetLoadSaveBuilderSettings::saveNewSettings,
+                                QKeySequence{QStringLiteral("Ctrl+Shift+S")});
+    addAction(m_actionSave); // to enable shortcut
+    addAction(actionSaveAs);
+
     initSettingsComboBox(ui->comboxSettings);
 
-    connect(ui->comboxSettings, &QComboBox::currentIndexChanged,
-            this, &WidgetLoadSaveBuilderSettings::loadSettings);
+    connect(ui->comboxSettings, SIGNAL(currentIndexChanged(int)), this, SLOT(loadSettings(int)));
+    connect(ui->comboxSettings, &QComboBox::currentIndexChanged, this, [this](int index) {
+        bool isEnabled = (index > 0) && (index < ui->comboxSettings->count() - 1);
+        m_actionSave->setEnabled(isEnabled);
+    });
 
     const int lastIndex = ui->comboxSettings->count() - 1;
 
@@ -102,12 +133,6 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
 
     connect(ui->buttonSave, &QPushButton::clicked,
             this, &WidgetLoadSaveBuilderSettings::saveSettings);
-
-    QAction *actionSaveAsNew = m_saveButtonMenu->addAction(
-                                   QStringLiteral("Save as new"), this,
-                                   &WidgetLoadSaveBuilderSettings::saveNewSettings,
-                                   QKeySequence{QStringLiteral("Ctrl+Shift+S")});
-    addAction(actionSaveAsNew); // to enable shortcut
 }
 
 WidgetLoadSaveBuilderSettings::~WidgetLoadSaveBuilderSettings()
@@ -153,7 +178,12 @@ void WidgetLoadSaveBuilderSettings::saveSettings() const
 
 //    QSettings qSet{Application::settingsIniPath(iniFileName), QSettings::IniFormat};
 
-//    m_settingsModel->saveSettings(&qSet);
+    //    m_settingsModel->saveSettings(&qSet);
+}
+
+void WidgetLoadSaveBuilderSettings::saveOverwrite() const
+{
+
 }
 
 void WidgetLoadSaveBuilderSettings::saveNewSettings() const
@@ -166,10 +196,9 @@ void WidgetLoadSaveBuilderSettings::saveNewSettings() const
     const QString iniFilePath = Application::settingsIniPath(iniFileName);
 
     if (QFileInfo::exists(iniFilePath)) {
-        const QString text{QStringLiteral("%1 is already exists. Overwrite?")
-                    .arg(iniFileName.chopped(4))};
+        const QString text{tr("%1 is already exists. Overwrite?").arg(iniFileName.chopped(4))};
         QMessageBox::StandardButton button
-                = QMessageBox::question(nullptr, QStringLiteral("Confirm overwriting"), text);
+                = QMessageBox::question(nullptr, tr("Confirm overwriting"), text);
 
         if (button == QMessageBox::No)
             return;
@@ -178,4 +207,18 @@ void WidgetLoadSaveBuilderSettings::saveNewSettings() const
     QSettings qSet{iniFilePath, QSettings::IniFormat};
 
     m_settingsModel->saveSettings(&qSet);
+
+    QStringList iniFiles;
+
+    for (int i = 1, count = ui->comboxSettings->count() - 1; i < count; ++i)
+        iniFiles.append(ui->comboxSettings->itemData(i).toString());
+
+    int insertIndex = std::distance(iniFiles.begin(),
+        std::upper_bound(iniFiles.begin(), iniFiles.end(), iniFileName)) + 1;
+
+    insertIniNameToComboBox(ui->comboxSettings, insertIndex, iniFileName);
+
+    ui->comboxSettings->blockSignals(true);
+    ui->comboxSettings->setCurrentIndex(insertIndex);
+    ui->comboxSettings->blockSignals(false);
 }
