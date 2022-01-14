@@ -117,8 +117,8 @@ void WidgetPositionFixer::setAlignmentUI(PositionAlignment alignment)
         return;
 
     QHash<PositionAlignment, QPair<QString, Qt::Alignment>> labelSettings = {
-        {PositionAlignment::Leftmost,  qMakePair(QStringLiteral("Leftmost"),  Qt::AlignLeft)}
-      , {PositionAlignment::Rightmost, qMakePair(QStringLiteral("Rightmost"), Qt::AlignRight)}
+        {PositionAlignment::Leftmost,  qMakePair(tr("Leftmost"),  Qt::AlignLeft)}
+      , {PositionAlignment::Rightmost, qMakePair(tr("Rightmost"), Qt::AlignRight)}
     };
 
     ui->labelDisplay->setAlignment(labelSettings[alignment].second | Qt::AlignVCenter);

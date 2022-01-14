@@ -101,7 +101,7 @@ void PathTableView::copyName()
 
     QGuiApplication::clipboard()->setText(text);
 
-    QString statusText = QStringLiteral("Copied to clipboard : <b>%1</b>").arg(text);
+    QString statusText = tr("Copied to clipboard : <b>%1</b>").arg(text);
 
     emit statusTextChanged(QIcon(), statusText);
 }

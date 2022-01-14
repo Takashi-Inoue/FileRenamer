@@ -49,8 +49,8 @@ void InsertString::build(QString &result)
 QString InsertString::toHtmlString() const
 {
     const QString text = m_string.isEmpty()
-                         ? QStringLiteral("<b>Insert Text</b>")
-                         : QStringLiteral("<b>Insert Text</b> <i>%1</i>").arg(m_string);
+                         ? tr("<b>Insert Text</b>")
+                         : tr("<b>Insert Text</b> <i>%1</i>").arg(m_string);
 
     if (isLeftMost())
         return Html::leftAligned(QStringLiteral("&lt;&lt; %1").arg(text));

@@ -67,12 +67,10 @@ void ReplaceString::build(QString &result)
 
 QString ReplaceString::toHtmlString() const
 {
-    const QString regExpOnOff(m_isUseRegExp ? QStringLiteral("On")
-                                            : QStringLiteral("Off"));
-    const QString caseSensitive(m_isCaseSensitive ? QStringLiteral("CaseSensitive")
-                                                  : QStringLiteral("CaseInsensitive"));
+    const QString regExpOnOff(m_isUseRegExp ? tr("On") : tr("Off"));
+    const QString caseSensitive(m_isCaseSensitive ? tr("CaseSensitive") : tr("CaseInsensitive"));
 
-    const QString text = QStringLiteral("<b>Replace</b> <i>%1</i> &gt; <i>%2</i> [RegExp:%3][%4]")
+    const QString text = tr("<b>Replace</b> <i>%1</i> &gt; <i>%2</i> [RegExp:%3][%4]")
                          .arg(m_before, m_after, regExpOnOff, caseSensitive);
     return Html::centerAligned(text);
 }

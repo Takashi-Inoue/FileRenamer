@@ -43,8 +43,7 @@ DialogDroppedDir::DialogDroppedDir(const QList<ParentChildrenPair> &dirs, QWidge
     ui->setupUi(this);
 
     const QString headerText = (dirs.size() == 1 && dirs[0].second.size() == 1)
-            ? QStringLiteral("Directory")
-            : QStringLiteral("Directories");
+            ? tr("Directory") : tr("Directories");
     ui->treeWidget->headerItem()->setText(0, headerText);
 
     QIcon dirIcon = QFileIconProvider().icon(QAbstractFileIconProvider::Folder);

@@ -35,14 +35,14 @@ void ThreadRename::stop()
 {
     QWriteLocker locker(&m_lock);
 
-    qInfo() << QStringLiteral("Thread for renaming got request to stop.");
+    qInfo() << tr("Thread for renaming got request to stop.");
 
     m_isStopRequested = true;
 }
 
 void ThreadRename::run()
 {
-    qInfo() << QStringLiteral("Start renaming.");
+    qInfo() << tr("Start renaming.");
 
     m_lock.lockForWrite();
     m_isStopRequested = false;
@@ -78,7 +78,7 @@ void ThreadRename::run()
         return;
     }
 
-    qInfo() << QStringLiteral("Finished renaming.");
+    qInfo() << tr("Finished renaming.");
 
     emit completed();
 }

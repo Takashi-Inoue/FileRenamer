@@ -37,7 +37,7 @@ WidgetOriginalNameSetting::WidgetOriginalNameSetting(QWidget *parent)
 WidgetOriginalNameSetting::WidgetOriginalNameSetting(int insertPos, QWidget *parent)
     : WidgetOnlyPositionFixer{insertPos, parent}
 {
-    setTitle(QStringLiteral("Original name"));
+    setTitle(tr("Original name"));
 }
 
 QSharedPointer<AbstractStringBuilder> WidgetOriginalNameSetting::stringBuilder() const

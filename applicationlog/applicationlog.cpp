@@ -50,8 +50,8 @@ void removeOldestLogFile()
     QString oldestFile = dir.absoluteFilePath(fileNames.first());
 
     QFile().remove(oldestFile)
-            ? qInfo() << QStringLiteral("Removed oldest log file. [%1]").arg(oldestFile)
-            : qInfo() << QStringLiteral("Failed to remove oldest log file. [%1]").arg(oldestFile);
+            ? qInfo() << QObject::tr("Removed oldest log file. [%1]").arg(oldestFile)
+            : qInfo() << QObject::tr("Failed to remove oldest log file. [%1]").arg(oldestFile);
 }
 
 } // anonymous
@@ -85,9 +85,9 @@ QVariant ApplicationLog::headerData(int section, Qt::Orientation orientation, in
         return QVariant{};
 
     static const QHash<int, QString> hashData = {
-        {0, QStringLiteral("Time")},
-        {1, QStringLiteral("Category")},
-        {2, QStringLiteral("Content")},
+        {0, tr("Time")},
+        {1, tr("Category")},
+        {2, tr("Content")},
     };
 
     return hashData[section];
@@ -147,7 +147,7 @@ void ApplicationLog::writeFile() const
     const QString logDirectory = logDirPath();
 
     if (!QDir{}.mkpath(logDirectory)) {
-        qInfo() << QStringLiteral("Failed to create log directory. %1").arg(logDirectory);
+        qInfo() << tr("Failed to create log directory. %1").arg(logDirectory);
         return;
     }
 
@@ -160,7 +160,7 @@ void ApplicationLog::writeFile() const
     QFile file{filePathName};
 
     if (!file.open(QIODevice::WriteOnly)) {
-        qInfo() << QStringLiteral("Failed to write log to [%1]. Error: %2")
+        qInfo() << tr("Failed to write log to [%1]. Error: %2")
                   .arg(filePathName, file.errorString());
         return;
     }
@@ -168,7 +168,7 @@ void ApplicationLog::writeFile() const
     for (const SharedLogData &logData : m_applicationLogs)
         logData->write(file);
 
-    qInfo() << QStringLiteral("Wrote log to the file. [%1]").arg(filePathName);
+    qInfo() << tr("Wrote log to the file. [%1]").arg(filePathName);
 }
 
 void ApplicationLog::writeSpecifiedLogs(QStringView groupName) const
@@ -181,7 +181,7 @@ void ApplicationLog::writeSpecifiedLogs(QStringView groupName) const
     const QString logDirectory = logDirPath();
 
     if (!QDir().mkpath(logDirectory)) {
-        qInfo() << QStringLiteral("Failed to create log directory. %1").arg(logDirectory);
+        qInfo() << tr("Failed to create log directory. %1").arg(logDirectory);
         return;
     }
 
@@ -190,7 +190,7 @@ void ApplicationLog::writeSpecifiedLogs(QStringView groupName) const
     QFile file{filePathName};
 
     if (!file.open(QIODevice::WriteOnly)) {
-        qInfo() << QStringLiteral("Failed to write log to [%1]. Error: %2")
+        qInfo() << tr("Failed to write log to [%1]. Error: %2")
                   .arg(filePathName, file.errorString());
         return;
     }
@@ -200,5 +200,5 @@ void ApplicationLog::writeSpecifiedLogs(QStringView groupName) const
             logData->write(file);
     }
 
-    qInfo() << QStringLiteral("Wrote log to the file. [%1]").arg(filePathName);
+    qInfo() << tr("Wrote log to the file. [%1]").arg(filePathName);
 }

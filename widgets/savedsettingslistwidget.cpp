@@ -31,7 +31,7 @@
 
 SavedSettingsListWidget::SavedSettingsListWidget(QWidget *parent)
     : QListWidget(parent),
-      m_deleteAction(new QAction(QIcon(":/res/images/clear.svg"), QStringLiteral("Delete"), this))
+      m_deleteAction(new QAction(QIcon(":/res/images/clear.svg"), tr("Delete"), this))
 {
     m_deleteAction->setShortcutContext(Qt::WidgetShortcut);
     m_deleteAction->setShortcut(QKeySequence(QKeySequence::Delete));
@@ -96,20 +96,20 @@ void SavedSettingsListWidget::onActionDeleteTriggered()
     const QString currentText = currentItem->text();
     const QString currentTextBold = QStringLiteral("<b>%1</b>").arg(currentText);
 
-    QString msg = QStringLiteral("%1<br>Would you like to delete this setting?").arg(currentTextBold);
+    QString msg = tr("%1<br>Would you like to delete this setting?").arg(currentTextBold);
 
-    if (QMessageBox::question(this, QStringLiteral("Confirm Delete"), msg) != QMessageBox::Yes)
+    if (QMessageBox::question(this, tr("Confirm Delete"), msg) != QMessageBox::Yes)
         return;
 
     QString settingFilePath = QString("%1/%2.ini").arg(settingsDir(), currentText);
 
-    msg = QStringLiteral("%1<br>Failed to delete this setting.").arg(currentTextBold);
+    msg = tr("%1<br>Failed to delete this setting.").arg(currentTextBold);
 
 
     if (QFile::moveToTrash(settingFilePath))
         delete takeItem(currentRow());
     else
-        QMessageBox::warning(this, QStringLiteral("Failed to Delete"), msg);
+        QMessageBox::warning(this, tr("Failed to Delete"), msg);
 }
 
 void SavedSettingsListWidget::onItemSelectionChanged()

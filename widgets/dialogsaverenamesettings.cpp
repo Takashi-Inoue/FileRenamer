@@ -54,10 +54,10 @@ void DialogSaveRenameSettings::accept()
         return;
     }
 
-    QString msg = QStringLiteral("<b>%1</b> already exists.<br>").arg(m_newSettingName)
-                + QStringLiteral("Would you like to replace existing setting?");
+    QString msg = tr("<b>%1</b> already exists.<br>").arg(m_newSettingName)
+                + tr("Would you like to replace existing setting?");
 
-    if (QMessageBox::question(this, QStringLiteral("Confirm Replace"), msg) != QMessageBox::Yes)
+    if (QMessageBox::question(this, tr("Confirm Replace"), msg) != QMessageBox::Yes)
         return;
 
     QDialog::accept();

@@ -47,7 +47,7 @@ void SearchInDirs::exec(QList<ParentChildrenPair> targetDirs)
     const QStringList nameFilters = m_settings.filters;
     int hierarchy = m_settings.hierarchy;
 
-    qInfo() << QStringLiteral("Start searching entities in directories. Filters=[%1], Hierarchy=[%2]")
+    qInfo() << QObject::tr("Start searching entities in directories. Filters=[%1], Hierarchy=[%2]")
               .arg(nameFilters.join(';')).arg(hierarchy);
 
     while (!targetDirs.isEmpty()) {
@@ -71,10 +71,10 @@ void SearchInDirs::searchForDirs(const QDir &parentDir
     if (!m_settings.isSearchDirs)
         return;
 
-    qInfo() << QStringLiteral("Search directories in [%1]").arg(parentDir.absolutePath());
+    qInfo() << QObject::tr("Search directories in [%1]").arg(parentDir.absolutePath());
 
     if (parentDir.nameFilters().isEmpty()) {
-        qInfo() << QStringLiteral("%1 directory(-ies) is/are found.").arg(childrenNames.size());
+        qInfo() << QObject::tr("%1 directory(-ies) is/are found.").arg(childrenNames.size());
 
 #ifdef OUTPUT_FOUND_NAMES
         qDebug() << childrenNames;
@@ -96,7 +96,7 @@ void SearchInDirs::searchForDirs(const QDir &parentDir
     if (childrenNames.isEmpty())
         return;
 
-    qInfo() << QStringLiteral("%1 directory(-ies) is/are found.").arg(childrenNames.size());
+    qInfo() << QObject::tr("%1 directory(-ies) is/are found.").arg(childrenNames.size());
 
 #ifdef OUTPUT_FOUND_NAMES
     qDebug() << childrenNames;
@@ -110,14 +110,14 @@ void SearchInDirs::searchForFiles(const QDir &parentDir)
     if (!m_settings.isSearchFiles)
         return;
 
-//    qInfo() << QStringLiteral("Search files in [%1]").arg(parentDir.absolutePath());
+//    qInfo() << tr("Search files in [%1]").arg(parentDir.absolutePath());
 
     QStringList childrenNames = parentDir.entryList(QDir::Files | QDir::Hidden);
 
     if (childrenNames.isEmpty())
         return;
 
-    qInfo() << QStringLiteral("%1 file(s) is/are found in %2")
+    qInfo() << QObject::tr("%1 file(s) is/are found in %2")
                .arg(childrenNames.size()).arg(parentDir.path());
 
 #ifdef OUTPUT_FOUND_NAMES

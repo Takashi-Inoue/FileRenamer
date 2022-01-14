@@ -20,6 +20,7 @@
 #pragma once
 
 #include <QHash>
+#include <QObject>
 #include <QString>
 
 namespace StringBuilder {
@@ -36,12 +37,12 @@ constexpr int builderTypeCount()
 inline QString builderName(BuilderType builderType)
 {
     static const QHash<BuilderType, QString> names{
-        {BuilderType::OriginalName, QStringLiteral("Original Name")},
-        {BuilderType::InsertText, QStringLiteral("Insert Text")},
-        {BuilderType::ReplaceText, QStringLiteral("Replace Text")},
-        {BuilderType::Number, QStringLiteral("Number")},
-        {BuilderType::FileHash, QStringLiteral("File Hash")},
-        {BuilderType::ImageHash, QStringLiteral("Image Hash")},
+        {BuilderType::OriginalName, QObject::tr("Original Name")},
+        {BuilderType::InsertText, QObject::tr("Insert Text")},
+        {BuilderType::ReplaceText, QObject::tr("Replace Text")},
+        {BuilderType::Number, QObject::tr("Number")},
+        {BuilderType::FileHash, QObject::tr("File Hash")},
+        {BuilderType::ImageHash, QObject::tr("Image Hash")},
     };
 
     return names[builderType];

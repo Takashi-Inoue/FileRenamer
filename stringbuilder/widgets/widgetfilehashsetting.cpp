@@ -39,7 +39,7 @@ WidgetFileHashSetting::WidgetFileHashSetting(QCryptographicHash::Algorithm algor
 {
     ui->setupUi(this);
 
-    setWindowTitle(QStringLiteral("File Hash"));
+    setWindowTitle(tr("File Hash"));
 
     ui->widgetPositionFixer->setValue(insertPos);
 

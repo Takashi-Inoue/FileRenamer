@@ -65,7 +65,7 @@ void Number::build(QString &result)
 
 QString Number::toHtmlString() const
 {
-    const QString baseText = QStringLiteral("<b>Number</b> <i>%1%2%3</i>&nbsp;&nbsp;[Increment:%4]")
+    const QString baseText = tr("<b>Number</b> <i>%1%2%3</i>&nbsp;&nbsp;[Increment:%4]")
                              .arg(m_prefix)
                              .arg(m_start, m_digit, 10, QLatin1Char('0'))
                              .arg(m_suffix)

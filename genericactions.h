@@ -25,7 +25,7 @@ namespace GenericActions {
 
 QAction *createDeleteAction(const QIcon &icon, QObject *parent = nullptr)
 {
-    auto deleteAction = new QAction(icon, QStringLiteral("Delete"), parent);
+    auto deleteAction = new QAction(icon, QObject::tr("Delete"), parent);
 
     deleteAction->setShortcut(QKeySequence::Delete);
     deleteAction->setShortcutContext(Qt::WidgetShortcut);

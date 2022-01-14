@@ -44,14 +44,14 @@ void ThreadCreateNewNames::stop()
 {
     QWriteLocker locker(&m_lock);
 
-//    qInfo() << QStringLiteral("Thread for creating new name got request to stop.");
+//    qInfo() << tr("Thread for creating new name got request to stop.");
 
     m_isStopRequested = true;
 }
 
 void ThreadCreateNewNames::run()
 {
-//    qInfo() << QStringLiteral("Start creating new name(s).");
+//    qInfo() << tr("Start creating new name(s).");
 
     QReadLocker locker(&m_lock);
 
@@ -75,7 +75,7 @@ void ThreadCreateNewNames::run()
     if (m_builderChain->isEmpty())
         return;
 
-//    qInfo() << QStringLiteral("Finished creating new name(s).");
+//    qInfo() << tr("Finished creating new name(s).");
 
     emit completed();
 }
@@ -89,7 +89,7 @@ bool ThreadCreateNewNames::isStopRequested() const
 
 bool ThreadCreateNewNames::checkNewNames(HashToCheckEntities &hashToCheckNames)
 {
-//    qInfo() << QStringLiteral("Start checking new name(s).");
+//    qInfo() << tr("Start checking new name(s).");
 
     bool isOk = true;
 
@@ -122,7 +122,7 @@ bool ThreadCreateNewNames::checkNewNames(HashToCheckEntities &hashToCheckNames)
     if (isOk)
         emit newNameCollisionNotDetected();
 
-//    qInfo() << QStringLiteral("Finished checking new name(s).");
+//    qInfo() << tr("Finished checking new name(s).");
 
     return true;
 }

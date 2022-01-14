@@ -165,11 +165,11 @@ QIcon PathEntity::stateIcon() const
 QString PathEntity::stateText() const
 {
     static const QHash<int, QString> texts = {
-        {int(State::Initial),     QStringLiteral("Waiting")},
-        {int(State::Ready),       QStringLiteral("Ready")},
-        {int(State::SameNewName), QStringLiteral("Same new name")},
-        {int(State::Success),     QStringLiteral("Succeeded")},
-        {int(State::Failure),     QStringLiteral("Failed")},
+        {int(State::Initial),     QObject::tr("Waiting")},
+        {int(State::Ready),       QObject::tr("Ready")},
+        {int(State::SameNewName), QObject::tr("Same new name")},
+        {int(State::Success),     QObject::tr("Succeeded")},
+        {int(State::Failure),     QObject::tr("Failed")},
     };
 
     QReadLocker locker(&m_lock);
@@ -192,20 +192,20 @@ QString PathEntity::statusText() const
         return QStringLiteral("%1 -> %2").arg(fullPath(), newName());
 
     case State::SameNewName:
-        return QStringLiteral("New name <b>%1</b> is duplicated.").arg(newName());
+        return QObject::tr("New name <b>%1</b> is duplicated.").arg(newName());
 
     case State::Success:
-        return QStringLiteral("New path: %1%2").arg(parentPath(), newName());
+        return QObject::tr("New path: %1%2").arg(parentPath(), newName());
 
     case State::Failure:
         if (m_errorCode == ErrorCode::AlreadyExist)
-            return QStringLiteral("<b>%1%2</b> already exeists.").arg(parentPath(), newName());
+            return QObject::tr("<b>%1%2</b> already exeists.").arg(parentPath(), newName());
 
         if (m_errorCode == ErrorCode::SourceNotFound)
-            return QStringLiteral("<b>%1</b> does not exeists.").arg(fullPath());
+            return QObject::tr("<b>%1</b> does not exeists.").arg(fullPath());
 
         if (m_errorCode == ErrorCode::Unknown)
-            return QStringLiteral("Unknown error occered. Please confirm that file is not opened.");
+            return QObject::tr("Unknown error occered. Please confirm that file is not opened.");
     }
 
     return QString();
@@ -225,8 +225,8 @@ bool PathEntity::rename()
 
     bool isOk = dir.rename(m_name, m_newName);
 
-    QString result = isOk ? QStringLiteral("SUCCEEDED")
-                          : QStringLiteral("---FAILED");
+    QString result = isOk ? QObject::tr("SUCCEEDED")
+                          : QObject::tr("---FAILED");
 
     QString log = QStringLiteral("%1 - %2/%3 -> %4").arg(result, dir.absolutePath(), m_name, m_newName);
 
@@ -260,8 +260,8 @@ bool PathEntity::undoRename()
 
     bool isOk = dir.rename(m_newName, m_name);
 
-    QString result = isOk ? QStringLiteral("SUCCEEDED")
-                          : QStringLiteral("---FAILED");
+    QString result = isOk ? QObject::tr("SUCCEEDED")
+                          : QObject::tr("---FAILED");
 
     QString log = QStringLiteral("%1 - %2/%3 -> %4").arg(result, dir.absolutePath(), m_newName, m_name);
 

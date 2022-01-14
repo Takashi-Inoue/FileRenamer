@@ -45,7 +45,7 @@ WidgetNumberSetting::WidgetNumberSetting(int start, int incremental, int digits,
 {
     ui->setupUi(this);
 
-    setWindowTitle(QStringLiteral("Number"));
+    setWindowTitle(tr("Number"));
 
     auto fileNameValidator = new FileNameVlidator{this};
 

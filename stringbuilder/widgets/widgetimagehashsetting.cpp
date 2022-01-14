@@ -37,7 +37,7 @@ WidgetImageHashSetting::WidgetImageHashSetting(QWidget *parent)
 WidgetImageHashSetting::WidgetImageHashSetting(int insertPos, QWidget *parent)
     : WidgetOnlyPositionFixer(insertPos, parent)
 {
-    setTitle(QStringLiteral("Image Hash"));
+    setTitle(tr("Image Hash"));
 }
 
 QSharedPointer<AbstractStringBuilder> WidgetImageHashSetting::stringBuilder() const

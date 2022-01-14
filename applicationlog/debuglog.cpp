@@ -41,7 +41,7 @@ void DebugLog::writeFile()
     QFile file{QStringLiteral("%1/debug.log").arg(QApplication::applicationDirPath())};
 
     if (!file.open(QIODevice::WriteOnly)) {
-        qDebug() << QStringLiteral("failed to write log to %1 : %2")
+        qDebug() << QObject::tr("failed to write log to %1 : %2")
                     .arg(file.fileName(), file.errorString());
         return;
     }

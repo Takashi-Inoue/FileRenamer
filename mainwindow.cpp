@@ -266,7 +266,7 @@ void MainWindow::setState(MainWindow::State state)
 
 void MainWindow::registerPaths(const QStringList &paths)
 {
-    qInfo() << QStringLiteral("Start registering paths.");
+    qInfo() << tr("Start registering paths.");
 
     auto sorting = qScopeGuard([this]() {
         QHeaderView *header = ui->tableView->horizontalHeader();
@@ -280,7 +280,7 @@ void MainWindow::registerPaths(const QStringList &paths)
     analyzer.analyze(paths);
 
     if (!analyzer.isAllDir()) {
-        qInfo() << QStringLiteral("Register dropped paths.");
+        qInfo() << tr("Register dropped paths.");
         m_pathModel->addPaths(analyzer.dirs(), analyzer.files());
 
         return;
@@ -292,7 +292,7 @@ void MainWindow::registerPaths(const QStringList &paths)
         return;
 
     if (msgBoxResult == QMessageBox::Yes) {
-        qInfo() << QStringLiteral("Register dropped directories.");
+        qInfo() << tr("Register dropped directories.");
         m_pathModel->addPaths(analyzer.dirs(), {});
 
         return;
@@ -309,13 +309,13 @@ void MainWindow::registerPaths(const QStringList &paths)
 int MainWindow::execConfirmRenameDirDlg(const QStringList &dirPaths)
 {
     const QString titles[] = {
-        QStringLiteral("Confirm Rename Dir")
-      , QStringLiteral("Confirm Rename Dirs")
+        tr("Confirm Rename Dir")
+      , tr("Confirm Rename Dirs")
     };
 
     const QString msgs[] = {
-        QStringLiteral("Directory has been sent.\n\nWould you like to rename this dir?")
-      , QStringLiteral("Directories have been sent.\n\nWould you like to rename these dirs?")
+        tr("Directory has been sent.\n\nWould you like to rename this dir?")
+      , tr("Directories have been sent.\n\nWould you like to rename these dirs?")
     };
 
     qsizetype indexMsg = (dirPaths.size() > 1);
@@ -323,7 +323,7 @@ int MainWindow::execConfirmRenameDirDlg(const QStringList &dirPaths)
     QMessageBox msgBox(QMessageBox::Question, titles[indexMsg], msgs[indexMsg],
                        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel, this);
 
-    msgBox.button(QMessageBox::No)->setText(QStringLiteral("No, search files"));
+    msgBox.button(QMessageBox::No)->setText(tr("No, search files"));
     msgBox.button(QMessageBox::No)->setIcon(QIcon(":/icons/search"));
     msgBox.button(QMessageBox::Yes)->setIcon(QIcon(":/icons/folder"));
     msgBox.setDetailedText(dirPaths.join('\n'));
@@ -344,7 +344,7 @@ int MainWindow::execConfirmRenameDirDlg(const QStringList &dirPaths)
 void MainWindow::initStatusBar()
 {
     auto statusItemCount = new CounterLabel(QStringLiteral("item"), QStringLiteral("items"), this);
-    auto statusSelectedCount = new CounterLabel(QStringLiteral("selected"), this);
+    auto statusSelectedCount = new CounterLabel(tr("selected"), this);
     auto statusState = new ElideLabel(this);
     auto statusMain = new ElideLabel(this);
 

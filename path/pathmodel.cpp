@@ -71,9 +71,9 @@ QVariant PathModel::headerData(int section, Qt::Orientation orientation, int rol
 
     if (role == Qt::DisplayRole) {
         static const QMap<HSection, QString> m_textMap = {
-            {HSection::OriginalName, QStringLiteral("Original name")},
-            {HSection::NewName,      QStringLiteral("New name")},
-            {HSection::Path,         QStringLiteral("Path")},
+            {HSection::OriginalName, tr("Original name")},
+            {HSection::NewName,      tr("New name")},
+            {HSection::Path,         tr("Path")},
         };
 
         return m_textMap[HSection(section)];

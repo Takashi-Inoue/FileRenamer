@@ -39,7 +39,7 @@ WidgetInsertTextSetting::WidgetInsertTextSetting(QStringView text, int insertPos
 {
     ui->setupUi(this);
 
-    setWindowTitle(QStringLiteral("Insert Text"));
+    setWindowTitle(tr("Insert Text"));
 
     ui->combox->setValidator(new FileNameVlidator(this));
     ui->combox->setCurrentText(text.toString());

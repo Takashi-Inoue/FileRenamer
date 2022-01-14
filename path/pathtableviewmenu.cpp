@@ -61,8 +61,8 @@ void PathTableViewMenu::updateActions()
 
     const auto currentSection = HSection(currentIndex.column());
 
-    const QString copyNameText((currentSection == HSection::Path) ? QStringLiteral("Copy path")
-                                                                  : QStringLiteral("Copy name"));
+    const QString copyNameText((currentSection == HSection::Path) ? tr("Copy path")
+                                                                  : tr("Copy name"));
 
     m_actions[Action::CopyName]->setText(copyNameText);
 
@@ -89,11 +89,11 @@ void PathTableViewMenu::updateActions()
             isDir = pathModel->isDir(currentIndex.row());
     }
 
-    const QString typeText = isDir ? QStringLiteral("directory")
-                                   : QStringLiteral("file");
+    const QString typeText = isDir ? tr("directory")
+                                   : tr("file");
 
-    const QString openPathText = QStringLiteral("Open %1").arg(typeText);
-    const QString deletePathText = QStringLiteral("Delete %1").arg(typeText);
+    const QString openPathText = tr("Open %1").arg(typeText);
+    const QString deletePathText = tr("Delete %1").arg(typeText);
 
     m_actions[Action::OpenPath]->setText(openPathText);
     m_actions[Action::DeletePath]->setText(deletePathText);
@@ -101,7 +101,7 @@ void PathTableViewMenu::updateActions()
     const QString originalName = pathModel->originalName(currentIndex.row());
     const QString newName = pathModel->newName(currentIndex.row());
 
-    m_actions[Action::OpenMulti]->setText(QStringLiteral("Open both files/dirs"));
+    m_actions[Action::OpenMulti]->setText(tr("Open both files/dirs"));
 
     adjustSize();
 
@@ -119,11 +119,11 @@ void PathTableViewMenu::updateActions()
 void PathTableViewMenu::createActions()
 {
     const QHash<Action, QString> texts = {
-        {Action::RemoveItem, QStringLiteral("Remove from list(&R)")}
-      , {Action::CopyName,   QStringLiteral("Copy name(&C)")}
-      , {Action::OpenPath,   QStringLiteral("Open file(&O)")}
-      , {Action::DeletePath, QStringLiteral("Delete file(&D)")}
-      , {Action::OpenMulti , QStringLiteral("Open both files(&B)")}
+        {Action::RemoveItem, tr("Remove from list(&R)")}
+      , {Action::CopyName,   tr("Copy name(&C)")}
+      , {Action::OpenPath,   tr("Open file(&O)")}
+      , {Action::DeletePath, tr("Delete file(&D)")}
+      , {Action::OpenMulti , tr("Open both files(&B)")}
     };
 
     const QHash<Action, QIcon> icons = {
@@ -175,17 +175,17 @@ void PathTableViewMenu::createActions()
 
 void PathTableViewMenu::createMenu()
 {
-    QAction *sectionList = addSection(QStringLiteral("List"));
+    QAction *sectionList = addSection(tr("List"));
 
     addAction(m_actions[Action::RemoveItem]);
 
-    m_sections[Section::FileName] = addSection(QStringLiteral("filename"));
+    m_sections[Section::FileName] = addSection(tr("filename"));
 
     addAction(m_actions[Action::CopyName]);
     addAction(m_actions[Action::OpenPath]);
     addAction(m_actions[Action::DeletePath]);
 
-    m_sections[Section::MultiFiles] = addSection(QStringLiteral("both"));
+    m_sections[Section::MultiFiles] = addSection(tr("both"));
 
     addAction(m_actions[Action::OpenMulti]);
 

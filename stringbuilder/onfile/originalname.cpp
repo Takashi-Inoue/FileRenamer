@@ -44,12 +44,12 @@ void OriginalName::build(QString &result)
 QString OriginalName::toHtmlString() const
 {
     if (isLeftMost())
-        return Html::leftAligned(QStringLiteral("&lt;&lt; <b>Original Name</b>"));
+        return Html::leftAligned(tr("&lt;&lt; <b>Original Name</b>"));
 
     if (isRightMost())
-        return Html::rightAligned(QStringLiteral("<b>Original Name</b> &gt;&gt;"));
+        return Html::rightAligned(tr("<b>Original Name</b> &gt;&gt;"));
 
-    return Html::leftAligned(QStringLiteral("__%1 <b>Original Name</b>").arg(insertPosition()));
+    return Html::leftAligned(tr("__%1 <b>Original Name</b>").arg(insertPosition()));
 }
 
 AbstractWidget *OriginalName::settingsWidget()

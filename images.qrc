@@ -13,17 +13,11 @@
         <file>res/images/success.svg</file>
         <file>res/images/failure.svg</file>
         <file>res/images/clear.svg</file>
-        <file>res/images/load.svg</file>
-        <file>res/images/save.svg</file>
-        <file>res/images/leftmost.svg</file>
-        <file>res/images/rightmost.svg</file>
         <file>res/images/darkmode.svg</file>
         <file>res/images/forward.svg</file>
         <file>res/images/stop.svg</file>
         <file>res/images/backward.svg</file>
         <file>res/images/exit.svg</file>
-        <file>res/images/down.svg</file>
-        <file>res/images/up.svg</file>
         <file>res/images/exec.svg</file>
         <file>res/images/file.svg</file>
         <file>res/images/delete_file.svg</file>

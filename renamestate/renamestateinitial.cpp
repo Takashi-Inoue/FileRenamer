@@ -30,7 +30,7 @@ QIcon Initial::stateIcon() const
 
 QString Initial::stateText() const
 {
-    return QStringLiteral("Waiting");
+    return QObject::tr("Waiting");
 }
 
 bool Initial::isAfterRenaming() const

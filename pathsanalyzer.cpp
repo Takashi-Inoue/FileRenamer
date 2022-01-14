@@ -32,18 +32,18 @@ void PathsAnalyzer::analyze(const QStringList &paths)
     if (paths.size() == 0)
         return;
 
-    qInfo() << QStringLiteral("PathsAnalyzer: start analyzing.");
+    qInfo() << QObject::tr("PathsAnalyzer: start analyzing.");
 
     for (const QString &path : paths) {
-        qInfo() << QStringLiteral("Analyzing...[%1]").arg(path);
+        qInfo() << QObject::tr("Analyzing...[%1]").arg(path);
 
         QFileInfo fileInfo(path);
 
         if (fileInfo.isRoot() || fileInfo.isRelative() || !fileInfo.exists())
             continue;
 
-        qDebug() << (fileInfo.isDir() ? QStringLiteral("[%1] is dir.").arg(path)
-                                      : QStringLiteral("[%1] is file.").arg(path));
+        qDebug() << (fileInfo.isDir() ? QObject::tr("[%1] is dir.").arg(path)
+                                      : QObject::tr("[%1] is file.").arg(path));
 
         QList<ParentChildrenPair> &paths = fileInfo.isDir() ? m_dirs : m_files;
         QString parentDir = fileInfo.absolutePath();
@@ -65,7 +65,7 @@ void PathsAnalyzer::analyze(const QStringList &paths)
     qDebug() << m_dirs << m_files;
 #endif
 
-    qInfo() << QStringLiteral("PathsAnalyzer: finished analyzing.");
+    qInfo() << QObject::tr("PathsAnalyzer: finished analyzing.");
 }
 
 QList<PathsAnalyzer::ParentChildrenPair> PathsAnalyzer::dirs() const
