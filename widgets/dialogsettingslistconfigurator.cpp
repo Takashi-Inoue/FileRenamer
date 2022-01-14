@@ -31,12 +31,19 @@ DialogSettingsListConfigurator::DialogSettingsListConfigurator(
 
     ui->actionDelete->setShortcut(QKeySequence::Delete);
     ui->tableView->setModel(model);
+    ui->tableView->setContextMenuPolicy(Qt::ActionsContextMenu);
+    ui->tableView->addActions({ui->actionRename, ui->actionDelete});
 
     connect(model, SIGNAL(loaded()), this, SLOT(hideNotEditableSettings()));
     connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(removeSelectedSettings()));
     connect(ui->actionReload, SIGNAL(triggered()), model, SLOT(load()));
     connect(ui->actionRename, &QAction::triggered, this, [this]() {
         ui->tableView->edit(ui->tableView->currentIndex());
+    });
+    connect(ui->tableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, [this]() {
+        bool isEnableEdit = ui->tableView->selectionModel()->hasSelection();
+        ui->actionDelete->setEnabled(isEnableEdit);
+        ui->actionRename->setEnabled(isEnableEdit);
     });
 
     hideNotEditableSettings();
