@@ -21,32 +21,44 @@
 
 #include "abstractstringbuilder.h"
 
+class QSettings;
+
 namespace StringBuilder {
 
 class AbstractInsertString : public AbstractStringBuilder
 {
     Q_OBJECT
 public:
-    AbstractInsertString(int pos, QObject *parent = nullptr)
-        : AbstractStringBuilder(parent),
-          m_pos(pos)
+    AbstractInsertString();
+    AbstractInsertString(int pos, QObject *parent = nullptr);
+
+    inline bool isLeftMost() const
     {
+        return m_pos == std::numeric_limits<int>::min();
     }
 
-protected:
-    qsizetype posToInsert(qsizetype targetLength)
+    inline bool isRightMost() const
     {
-        if (m_pos == std::numeric_limits<int>::min())
-            return 0;
-
-        if (m_pos == std::numeric_limits<int>::max())
-            return targetLength;
-
-        return (m_pos < 0) ? qMax<qsizetype>(0, targetLength + m_pos)
-                           : qMin<qsizetype>(m_pos, targetLength);
+        return m_pos == std::numeric_limits<int>::max();
     }
 
-    const int m_pos;
+    inline int insertPosition() const
+    {
+        return m_pos;
+    }
+
+    inline void setInsertPosition(int pos)
+    {
+        m_pos = pos;
+    }
+
+    qsizetype actualInsertPosition(qsizetype targetLength);
+
+    void loadSettings(QSettings *qSet) override;
+    void saveSettings(QSettings *qSet) const override;
+
+private:
+    int m_pos;
 };
 
 } // StringBuilder

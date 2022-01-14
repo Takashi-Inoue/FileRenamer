@@ -42,4 +42,10 @@ bool BuilderChain::isEmpty() const
     return m_builders.isEmpty();
 }
 
+void BuilderChain::reset()
+{
+    for (QSharedPointer<AbstractStringBuilder> &builder : m_builders)
+        builder->reset();
+}
+
 } // StringBuilder

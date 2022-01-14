@@ -23,7 +23,9 @@
 #include "applicationlog/debuglog.h"
 
 #include <QApplication>
+#include <QLibraryInfo>
 #include <QStyleFactory>
+#include <QTranslator>
 
 int main(int argc, char *argv[])
 {
@@ -31,15 +33,22 @@ int main(int argc, char *argv[])
 
     QApplication::setStyle(QStyleFactory::create("Fusion"));
 
-    Application::loadMainSettings();
-
-    QFont font = QApplication::font("QMenu");
-    font.setPointSize(10);
-
-    QApplication::setFont(font);
-
     QCoreApplication::setApplicationName("FileRenamer");
     QCoreApplication::setApplicationVersion("1.3.0.0");
+
+    Application::loadMainSettings();
+
+    const QString localName{QLocale::system().name()};
+
+    if (QTranslator translator;
+            translator.load("qt_" + localName, QLibraryInfo::path(QLibraryInfo::TranslationsPath))) {
+        a.installTranslator(&translator);
+    }
+
+    if (QTranslator translator;
+            translator.load("fr_" + localName, QApplication::applicationDirPath() + "/translations")) {
+        a.installTranslator(&translator);
+    }
 
     DebugLog::init();
 

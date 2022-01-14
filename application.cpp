@@ -80,9 +80,14 @@ QString Application::mainSettingsFilePath()
     return QApplication::applicationFilePath().replace(".exe", ".ini");
 }
 
-QString Application::renameSettingsDirPath()
+QString Application::settingsDirPath()
 {
     return QApplication::applicationDirPath() + QStringLiteral("/settings");
+}
+
+QString Application::settingsIniPath(QStringView iniFileName)
+{
+    return QStringLiteral("%1/%2").arg(settingsDirPath(), iniFileName);
 }
 
 QSharedPointer<QSettings> Application::mainQSettings()

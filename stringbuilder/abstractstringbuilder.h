@@ -19,10 +19,16 @@
 
 #pragma once
 
+#include "buildertypes.h"
+
 #include <QObject>
 #include <QString>
 
+class QSettings;
+
 namespace StringBuilder {
+
+class AbstractWidget;
 
 class AbstractStringBuilder : public QObject
 {
@@ -30,7 +36,16 @@ class AbstractStringBuilder : public QObject
 public:
     using QObject::QObject;
 
+    virtual constexpr BuilderType builderType() const = 0;
+
     virtual void build(QString &result) = 0;
+
+    virtual QString toHtmlString() const = 0;
+    virtual void reset() {}
+    virtual AbstractWidget *settingsWidget() = 0;
+
+    virtual void loadSettings(QSettings *qSet) = 0;
+    virtual void saveSettings(QSettings *qSet) const = 0;
 };
 
 } // StringBuilder

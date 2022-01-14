@@ -27,15 +27,27 @@ class ReplaceString : public AbstractStringBuilder
 {
     Q_OBJECT
 public:
-    ReplaceString(QStringView before, QStringView after, bool isCaseSensitive,
+    ReplaceString();
+    ReplaceString(QStringView before, QStringView after, bool isUseRegExp, bool isCaseSensitive,
                   QObject *parent = nullptr);
 
+    constexpr BuilderType builderType() const override
+    {
+        return BuilderType::ReplaceText;
+    }
+
     void build(QString &result) override;
+    QString toHtmlString() const override;
+    AbstractWidget *settingsWidget() override;
+
+    void loadSettings(QSettings *qSet) override;
+    void saveSettings(QSettings *qSet) const override;
 
 private:
-    const QString m_before;
-    const QString m_after;
-    const Qt::CaseSensitivity m_caseSensitivity;
+    QString m_before;
+    QString m_after;
+    bool m_isUseRegExp;
+    bool m_isCaseSensitive;
 };
 
 } // StringBuilder

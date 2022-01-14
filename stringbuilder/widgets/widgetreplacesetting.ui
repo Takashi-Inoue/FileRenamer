@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>StringBuilder::WidgetReplaceSetting</class>
+ <widget class="QWidget" name="StringBuilder::WidgetReplaceSetting">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>414</width>
+    <height>121</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="2">
+    <widget class="QCheckBox" name="checkBoxUseRegex">
+     <property name="text">
+      <string>Regular expression</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QLabel" name="label">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Replace</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Replace text</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Search text</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3">
+    <widget class="QCheckBox" name="checkBoxCaseSensitive">
+     <property name="text">
+      <string>Case sensitive</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="2">
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>2</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="2" colspan="2">
+    <widget class="HistoryComboBox" name="comboxReplace">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <property name="maxCount">
+      <number>10</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2" colspan="2">
+    <widget class="HistoryComboBox" name="comboxSearch">
+     <property name="editable">
+      <bool>true</bool>
+     </property>
+     <property name="maxCount">
+      <number>10</number>
+     </property>
+     <property name="insertPolicy">
+      <enum>QComboBox::NoInsert</enum>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>HistoryComboBox</class>
+   <extends>QComboBox</extends>
+   <header>widgets/historycombobox.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>checkBoxUseRegex</tabstop>
+  <tabstop>checkBoxCaseSensitive</tabstop>
+  <tabstop>comboxSearch</tabstop>
+  <tabstop>comboxReplace</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

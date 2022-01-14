@@ -20,13 +20,13 @@
 #pragma once
 
 #include "usingpathentity.h"
-#include "stringbuilderonfile/ifileinfo.h"
+#include "stringbuilder/onfile/ifileinfo.h"
 
 namespace Path {
 
 class PathEntity;
 
-class PathEntityInfo : public StringBuilderOnFile::IFileInfo
+class PathEntityInfo : public StringBuilder::OnFile::IFileInfo
 {
 public:
     PathEntityInfo(SharedEntity entity);

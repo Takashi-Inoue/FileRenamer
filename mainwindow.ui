@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1024</width>
-    <height>720</height>
+    <width>845</width>
+    <height>587</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -20,92 +20,39 @@
    <string>FileRenamer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+       <enum>Qt::Vertical</enum>
       </property>
-      <widget class="QWidget" name="layoutWidget">
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="font">
-             <font>
-              <pointsize>11</pointsize>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Rename settings</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>24</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="buttonSaveSettings">
-            <property name="toolTip">
-             <string>Save current rename settings</string>
-            </property>
-            <property name="text">
-             <string>Save</string>
-            </property>
-            <property name="icon">
-             <iconset resource="images.qrc">
-              <normaloff>:/res/images/save.svg</normaloff>:/res/images/save.svg</iconset>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="buttonLoadSettings">
-            <property name="toolTip">
-             <string>Load Rename settings</string>
-            </property>
-            <property name="text">
-             <string>Load</string>
-            </property>
-            <property name="icon">
-             <iconset resource="images.qrc">
-              <normaloff>:/res/images/load.svg</normaloff>:/res/images/load.svg</iconset>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QScrollArea" name="scrollArea">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="FormStringBuilderChain" name="formStringBuilderChain">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>557</width>
-             <height>524</height>
-            </rect>
-           </property>
-          </widget>
-         </widget>
-        </item>
-       </layout>
+      <property name="handleWidth">
+       <number>10</number>
+      </property>
+      <widget class="FrameBuilderList" name="frameBuilderList">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
+       <property name="frameShadow">
+        <enum>QFrame::Raised</enum>
+       </property>
+       <property name="lineWidth">
+        <number>0</number>
+       </property>
       </widget>
       <widget class="PathTableView" name="tableView">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="editTriggers">
         <set>QAbstractItemView::NoEditTriggers</set>
        </property>
@@ -308,12 +255,6 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>FormStringBuilderChain</class>
-   <extends>QWidget</extends>
-   <header>widgets/formstringbuilderchain.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>PathTableView</class>
    <extends>QTableView</extends>
    <header>path/pathtableview.h</header>
@@ -322,6 +263,12 @@
    <class>WidgetApplicationLogs</class>
    <extends>QWidget</extends>
    <header>widgets/widgetapplicationlogs.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>FrameBuilderList</class>
+   <extends>QFrame</extends>
+   <header>widgets/framebuilderlist.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -358,38 +305,6 @@
     <hint type="destinationlabel">
      <x>439</x>
      <y>619</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonSaveSettings</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>onButtonSaveSettingsClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>382</x>
-     <y>69</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>875</x>
-     <y>267</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonLoadSettings</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>onButtonLoadSettingsClicked()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>455</x>
-     <y>70</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>875</x>
-     <y>85</y>
     </hint>
    </hints>
   </connection>

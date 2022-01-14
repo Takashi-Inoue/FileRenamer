@@ -27,16 +27,29 @@ class Number : public AbstractInsertString
 {
     Q_OBJECT
 public:
+    Number();
     Number(int pos, int start, int step, int digit, QStringView prefix, QStringView suffix,
            QObject *parent = nullptr);
 
+    constexpr BuilderType builderType() const override
+    {
+        return BuilderType::Number;
+    }
+
     void build(QString &result) override;
+    QString toHtmlString() const override;
+    void reset() override;
+    AbstractWidget *settingsWidget() override;
+
+    void loadSettings(QSettings *qSet) override;
+    void saveSettings(QSettings *qSet) const override;
 
 private:
-    const int m_step;
-    const int m_digit;
-    const QString m_prefix;
-    const QString m_suffix;
+    int m_start;
+    int m_step;
+    int m_digit;
+    QString m_prefix;
+    QString m_suffix;
 
     int m_currentNumber;
 };

@@ -27,12 +27,23 @@ class InsertString : public AbstractInsertString
 {
     Q_OBJECT
 public:
+    InsertString();
     InsertString(int pos, QStringView string, QObject *parent = nullptr);
 
+    constexpr BuilderType builderType() const override
+    {
+        return BuilderType::InsertText;
+    }
+
     void build(QString &result) override;
+    QString toHtmlString() const override;
+    AbstractWidget *settingsWidget() override;
+
+    void loadSettings(QSettings *qSet) override;
+    void saveSettings(QSettings *qSet) const override;
 
 protected:
-    const QString m_string;
+    QString m_string;
 };
 
 } // StringBuilder
