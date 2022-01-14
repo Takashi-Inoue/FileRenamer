@@ -37,7 +37,7 @@ public:
     void setFileInfo(QSharedPointer<IFileInfo> fileInfo);
 
 private slots:
-    void onNeedFileInfo(AbstractNeedFileInfo *stringBuilder);
+    void onNeedFileInfo(StringBuilder::OnFile::AbstractNeedFileInfo *stringBuilder);
 
 private:
     QSharedPointer<IFileInfo> m_fileInfo;

@@ -22,19 +22,24 @@
 
 #include "renamesettingsmodel.h"
 
-DialogSettingsListConfigurator::DialogSettingsListConfigurator(RenameSettingsModel *model,
-                                                               QWidget *parent)
+DialogSettingsListConfigurator::DialogSettingsListConfigurator(
+        RenameSettingsModel *model, QWidget *parent)
     : QDialog(parent),
       ui(new Ui::DialogSettingsListConfigurator)
 {
     ui->setupUi(this);
 
     ui->actionDelete->setShortcut(QKeySequence::Delete);
-    ui->toolDelete->setDefaultAction(ui->actionDelete);
-    ui->toolRename->setDefaultAction(ui->actionRename);
-    ui->toolReload->setDefaultAction(ui->actionReload);
-
     ui->tableView->setModel(model);
+
+    connect(model, SIGNAL(loaded()), this, SLOT(hideNotEditableSettings()));
+    connect(ui->actionDelete, SIGNAL(triggered()), this, SLOT(removeSelectedSettings()));
+    connect(ui->actionReload, SIGNAL(triggered()), model, SLOT(load()));
+    connect(ui->actionRename, &QAction::triggered, this, [this]() {
+        ui->tableView->edit(ui->tableView->currentIndex());
+    });
+
+    hideNotEditableSettings();
 }
 
 DialogSettingsListConfigurator::~DialogSettingsListConfigurator()
@@ -42,14 +47,16 @@ DialogSettingsListConfigurator::~DialogSettingsListConfigurator()
     delete ui;
 }
 
-void DialogSettingsListConfigurator::changeEvent(QEvent *e)
+void DialogSettingsListConfigurator::hideNotEditableSettings()
 {
-    QDialog::changeEvent(e);
-    switch (e->type()) {
-    case QEvent::LanguageChange:
-        ui->retranslateUi(this);
-        break;
-    default:
-        break;
-    }
+    ui->tableView->hideRow(0);
+    ui->tableView->hideRow(ui->tableView->model()->rowCount() - 1);
+}
+
+void DialogSettingsListConfigurator::removeSelectedSettings()
+{
+    const QModelIndexList &indexes = ui->tableView->selectionModel()->selectedRows();
+
+    for (auto rItr = indexes.crbegin(), rEnd = indexes.crend(); rItr != rEnd; ++rItr)
+        ui->tableView->model()->removeRow(rItr->row());
 }

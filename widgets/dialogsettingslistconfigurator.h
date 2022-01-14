@@ -33,8 +33,9 @@ public:
     explicit DialogSettingsListConfigurator(RenameSettingsModel *model, QWidget *parent = nullptr);
     ~DialogSettingsListConfigurator();
 
-protected:
-    void changeEvent(QEvent *e);
+private slots:
+    void hideNotEditableSettings();
+    void removeSelectedSettings();
 
 private:
     Ui::DialogSettingsListConfigurator *ui;

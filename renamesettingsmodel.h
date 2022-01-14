@@ -45,9 +45,14 @@ public: // QAbstractItemModel interface
 public:
     bool existsLastUsedSettings() const;
     int insertNewSettings(QStringView settingsName);
-    void load();
     QSharedPointer<QSettings> qSettings(int row) const;
     QSharedPointer<QSettings> qSettingsForLastUsed() const;
+
+signals:
+    void loaded();
+
+public slots:
+    void load();
 
 private:
     QStringList m_iniBaseNames;

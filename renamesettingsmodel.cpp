@@ -22,7 +22,9 @@
 #include "application.h"
 
 #include <QDir>
+#include <QFile>
 #include <QSettings>
+#include <QDebug>
 
 namespace {
 constexpr char lastSettingsFileName[] = "Last used.ini";
@@ -126,7 +128,15 @@ bool RenameSettingsModel::removeRows(int row, int count, const QModelIndex &pare
         return false;
 
     beginRemoveRows(parent, row, row + count - 1);
-    m_iniBaseNames.remove(row, count);
+
+    for (int i = 0; i < count; ++i) {
+        QString &&iniBaseName = m_iniBaseNames.takeAt(row + i);
+        QString &&iniPath = Application::settingsIniPath(completeIniName(iniBaseName));
+
+        if (!QFile::moveToTrash(iniPath))
+            qWarning() << tr("Failed to remove a file. [%1]").arg(iniPath);
+    }
+
     endRemoveRows();
 
     return true;
@@ -144,6 +154,22 @@ int RenameSettingsModel::insertNewSettings(QStringView settingsName)
     m_iniBaseNames.insert(itr, settingsName.toString());
 
     return std::distance(m_iniBaseNames.cbegin(), itr);
+}
+
+QSharedPointer<QSettings> RenameSettingsModel::qSettings(int row) const
+{
+    Q_ASSERT(row > 0 && row < m_iniBaseNames.count());
+
+    QString iniPath{Application::settingsIniPath(completeIniName(m_iniBaseNames.at(row)))};
+
+    return QSharedPointer<QSettings>::create(iniPath, QSettings::IniFormat);
+}
+
+QSharedPointer<QSettings> RenameSettingsModel::qSettingsForLastUsed() const
+{
+    QString iniPath{Application::settingsIniPath(QString{lastSettingsFileName})};
+
+    return QSharedPointer<QSettings>::create(iniPath, QSettings::IniFormat);
 }
 
 void RenameSettingsModel::load()
@@ -172,20 +198,6 @@ void RenameSettingsModel::load()
         m_iniBaseNames.append(QString{lastSettingsFileName}.chopped(4));
 
     endResetModel();
-}
 
-QSharedPointer<QSettings> RenameSettingsModel::qSettings(int row) const
-{
-    Q_ASSERT(row > 0 && row < m_iniBaseNames.count());
-
-    QString iniPath{Application::settingsIniPath(completeIniName(m_iniBaseNames.at(row)))};
-
-    return QSharedPointer<QSettings>::create(iniPath, QSettings::IniFormat);
-}
-
-QSharedPointer<QSettings> RenameSettingsModel::qSettingsForLastUsed() const
-{
-    QString iniPath{Application::settingsIniPath(QString{lastSettingsFileName})};
-
-    return QSharedPointer<QSettings>::create(iniPath, QSettings::IniFormat);
+    emit loaded();
 }
