@@ -34,6 +34,8 @@
 
 namespace {
 
+constexpr char propertyCurrentText[] = "propertyCurrentText";
+
 QString requestNewIniName()
 {
     QInputDialog dlg;
@@ -89,6 +91,17 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
     connect(ui->comboxSettings, &QComboBox::currentIndexChanged, this, [this](int index) {
         bool isEnabled = (index > 0) && (index < ui->comboxSettings->count() - 1);
         m_actionSave->setEnabled(isEnabled);
+    });
+
+    connect(m_settingsListModel, &QAbstractItemModel::modelAboutToBeReset, this, [this]() {
+        ui->comboxSettings->setProperty(propertyCurrentText, ui->comboxSettings->currentText());
+    });
+    connect(m_settingsListModel, &QAbstractItemModel::modelReset, this, [this]() {
+        QVariant value = ui->comboxSettings->property(propertyCurrentText);
+        if (value.isValid()) {
+            ui->comboxSettings->setCurrentText(value.toString());
+            ui->comboxSettings->setProperty(propertyCurrentText, QVariant{});
+        }
     });
 
     const int lastIndex = ui->comboxSettings->count() - 1;
