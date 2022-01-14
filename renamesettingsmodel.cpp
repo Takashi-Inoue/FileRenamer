@@ -150,10 +150,13 @@ bool RenameSettingsModel::existsLastUsedSettings() const
 int RenameSettingsModel::insertNewSettings(QStringView settingsName)
 {
     auto itr = std::upper_bound(++m_iniBaseNames.cbegin(), --m_iniBaseNames.cend(), settingsName);
+    const int insertIndex = std::distance(m_iniBaseNames.cbegin(), itr);
 
-    m_iniBaseNames.insert(itr, settingsName.toString());
+    beginInsertRows(QModelIndex{}, insertIndex, insertIndex);
+    m_iniBaseNames.insert(insertIndex, settingsName.toString());
+    endInsertRows();
 
-    return std::distance(m_iniBaseNames.cbegin(), itr);
+    return insertIndex;
 }
 
 QSharedPointer<QSettings> RenameSettingsModel::qSettings(int row) const

@@ -43,7 +43,6 @@ private slots:
     void loadSettings(int comboBoxIndex);
     void saveOverwrite() const;
     void saveNewSettings() const;
-    void showConfigureDialog();
 
 private:
     Ui::WidgetLoadSaveBuilderSettings *ui;

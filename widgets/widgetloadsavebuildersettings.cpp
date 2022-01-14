@@ -81,7 +81,9 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
                                 tr("Save As"), this, &WidgetLoadSaveBuilderSettings::saveNewSettings,
                                 QKeySequence{QStringLiteral("Ctrl+Shift+S")});
     configMenu->addSeparator();
-    configMenu->addAction(tr("Edit List"), this, &WidgetLoadSaveBuilderSettings::showConfigureDialog);
+    configMenu->addAction(tr("Edit List"), this, [this]() {
+        DialogSettingsListConfigurator(m_settingsListModel, this).exec();
+    });
 
     addActions({m_actionSave, actionSaveAs}); // to enable shortcut
 
@@ -161,16 +163,9 @@ void WidgetLoadSaveBuilderSettings::saveNewSettings() const
 
     m_settingsModel->saveSettings(&qSet);
 
-    int insertedIndex = m_settingsListModel->insertNewSettings(iniFileName.chopped(4));
-
     ui->comboxSettings->blockSignals(true);
-    ui->comboxSettings->setCurrentIndex(insertedIndex);
+    int insertedIndex = m_settingsListModel->insertNewSettings(iniFileName.chopped(4));
     ui->comboxSettings->blockSignals(false);
-}
 
-void WidgetLoadSaveBuilderSettings::showConfigureDialog()
-{
-    DialogSettingsListConfigurator dlg(m_settingsListModel, this);
-
-    dlg.exec();
+    ui->comboxSettings->setCurrentIndex(insertedIndex);
 }
