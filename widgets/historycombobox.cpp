@@ -51,21 +51,21 @@ void HistoryComboBox::insertCurrentTextToItem(int index)
         insertItem(index, currentText());
 }
 
-void HistoryComboBox::loadSettings(QSharedPointer<QSettings> qSettings, QString key)
+void HistoryComboBox::loadSettings(QSettings * qSettings, QString key)
 {
     qSettings->beginGroup(settingsGroupName);
     addItems(qSettings->value(key).toStringList());
     qSettings->endGroup();
 }
 
-void HistoryComboBox::saveSettings(QSharedPointer<QSettings> qSettings, QString key)
+void HistoryComboBox::saveSettings(QSettings * qSettings, QString key)
 {
     qSettings->beginGroup(settingsGroupName);
     qSettings->setValue(key, allItemsText());
     qSettings->endGroup();
 }
 
-void HistoryComboBox::loadSettings(QSharedPointer<QSettings> qSettings, QString subGroup, QString key)
+void HistoryComboBox::loadSettings(QSettings * qSettings, QString subGroup, QString key)
 {
     qSettings->beginGroup(settingsGroupName);
     qSettings->beginGroup(subGroup);
@@ -74,7 +74,7 @@ void HistoryComboBox::loadSettings(QSharedPointer<QSettings> qSettings, QString 
     qSettings->endGroup();
 }
 
-void HistoryComboBox::saveSettings(QSharedPointer<QSettings> qSettings, QString subGroup, QString key)
+void HistoryComboBox::saveSettings(QSettings * qSettings, QString subGroup, QString key)
 {
     qSettings->beginGroup(settingsGroupName);
     qSettings->beginGroup(subGroup);

@@ -40,8 +40,6 @@ public:
 
     // StringBuilder::AbstractWidget interface
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
-    void loadSettings(QSharedPointer<QSettings> qSettings) override;
-    void saveSettings(QSharedPointer<QSettings> qSettings) const override;
 
     QCryptographicHash::Algorithm algorithm() const;
     int insertPosition() const;

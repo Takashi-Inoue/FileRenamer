@@ -24,11 +24,6 @@
 
 namespace StringBuilder {
 
-namespace {
-constexpr char settingsGroupName[] = "CryptographicHash";
-constexpr char settingsKeyAlgorithm[] = "Algorithm";
-}
-
 WidgetFileHashSetting::WidgetFileHashSetting(QWidget *parent)
     : WidgetFileHashSetting(QCryptographicHash::Algorithm::Md5, 0, parent) {}
 
@@ -79,31 +74,6 @@ QSharedPointer<AbstractStringBuilder> WidgetFileHashSetting::stringBuilder() con
 
     return QSharedPointer<OnFile::CryptographicHash>::create(
                 algorithm, ui->widgetPositionFixer->value());
-}
-
-void WidgetFileHashSetting::loadSettings(QSharedPointer<QSettings> qSettings)
-{
-    qSettings->beginGroup(settingsGroupName);
-
-    QVariant algorithm = qSettings->value(settingsKeyAlgorithm, QCryptographicHash::Algorithm::Sha224);
-    ui->widgetPositionFixer->loadSettings(qSettings);
-
-    qSettings->endGroup();
-
-    int index = ui->comboBoxHashType->findData(algorithm);
-
-    if (index != -1)
-        ui->comboBoxHashType->setCurrentIndex(index);
-}
-
-void WidgetFileHashSetting::saveSettings(QSharedPointer<QSettings> qSettings) const
-{
-    qSettings->beginGroup(settingsGroupName);
-
-    qSettings->setValue(settingsKeyAlgorithm, ui->comboBoxHashType->currentData());
-    ui->widgetPositionFixer->saveSettings(qSettings);
-
-    qSettings->endGroup();
 }
 
 QCryptographicHash::Algorithm WidgetFileHashSetting::algorithm() const

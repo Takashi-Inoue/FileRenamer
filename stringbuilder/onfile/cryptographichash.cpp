@@ -84,7 +84,7 @@ QString CryptographicHash::toHtmlString() const
         return Html::rightAligned(QStringLiteral("<b>%1</b> &gt;&gt;").arg(algorithmName));
 
     return Html::leftAligned(
-                QStringLiteral("__%1 <b>%2</b>").arg(insertPosition()).arg(algorithmName));
+                QStringLiteral("__%1__ <b>%2</b>").arg(insertPosition()).arg(algorithmName));
 }
 
 AbstractWidget *CryptographicHash::settingsWidget()

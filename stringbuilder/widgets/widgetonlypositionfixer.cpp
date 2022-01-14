@@ -33,7 +33,6 @@ WidgetOnlyPositionFixer::WidgetOnlyPositionFixer(int insertPos, QWidget *parent)
 {
     ui->setupUi(this);
 
-    ui->labelTitle->setText(windowTitle());
     ui->widgetPositionFixer->setValue(insertPos);
 
     connect(ui->widgetPositionFixer, &WidgetPositionFixer::changeStarted,
@@ -43,16 +42,6 @@ WidgetOnlyPositionFixer::WidgetOnlyPositionFixer(int insertPos, QWidget *parent)
 WidgetOnlyPositionFixer::~WidgetOnlyPositionFixer()
 {
     delete ui;
-}
-
-void WidgetOnlyPositionFixer::loadSettings(QSharedPointer<QSettings> qSettings)
-{
-    ui->widgetPositionFixer->loadSettings(qSettings);
-}
-
-void WidgetOnlyPositionFixer::saveSettings(QSharedPointer<QSettings> qSettings) const
-{
-    ui->widgetPositionFixer->saveSettings(qSettings);
 }
 
 bool WidgetOnlyPositionFixer::isLeftMost() const
@@ -77,7 +66,6 @@ void WidgetOnlyPositionFixer::setPositionToInsert(int pos)
 
 void WidgetOnlyPositionFixer::setTitle(QStringView title)
 {
-    ui->labelTitle->setText(title.toString());
     setWindowTitle(title.toString());
 }
 

@@ -38,8 +38,8 @@ public:
     ~WidgetReplaceSetting() override;
 
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
-    void loadSettings(QSharedPointer<QSettings>) override;
-    void saveSettings(QSharedPointer<QSettings>) const override;
+    void loadSettings() override;
+    void saveSettings() const override;
 
     QString findString() const;
     QString replaceString() const;

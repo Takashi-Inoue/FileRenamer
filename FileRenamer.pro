@@ -42,6 +42,7 @@ SOURCES += \
     stringbuilder/stringbuilderfactory.cpp \
     stringbuilder/stringbuildersettingsmodel.cpp \
     stringbuilder/stringbuildersmodel.cpp \
+    stringbuilder/widgets/abstractstringbuilderwidget.cpp \
     stringbuilder/widgets/dialogbuildersettings.cpp \
     stringbuilder/widgets/widgetfilehashsetting.cpp \
     stringbuilder/widgets/widgetimagehashsetting.cpp \

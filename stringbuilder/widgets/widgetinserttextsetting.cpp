@@ -41,15 +41,14 @@ WidgetInsertTextSetting::WidgetInsertTextSetting(QStringView text, int insertPos
 
     setWindowTitle(tr("Insert Text"));
 
+    loadSettings();
+
     ui->combox->setValidator(new FileNameVlidator(this));
     ui->combox->setCurrentText(text.toString());
     ui->widgetPositionFixer->setValue(insertPos);
 
-    connect(ui->widgetPositionFixer, &WidgetPositionFixer::changeStarted,
-            this, &AbstractWidget::changeStarted);
-
-    connect(ui->combox, &QComboBox::currentTextChanged,
-            this, &AbstractWidget::changeStarted);
+    connect(ui->widgetPositionFixer, SIGNAL(changeStarted()), this, SIGNAL(changeStarted()));
+    connect(ui->combox, SIGNAL(currentTextChanged(QString)), this, SIGNAL(changeStarted()));
 }
 
 WidgetInsertTextSetting::~WidgetInsertTextSetting()
@@ -63,27 +62,23 @@ QSharedPointer<AbstractStringBuilder> WidgetInsertTextSetting::stringBuilder() c
                 ui->widgetPositionFixer->value(), ui->combox->currentText());
 }
 
-void WidgetInsertTextSetting::loadSettings(QSharedPointer<QSettings> qSettings)
+void WidgetInsertTextSetting::loadSettings()
 {
-    qSettings->beginGroup(settingsGroupName);
+    QSettings *qSet = qSettings();
 
+    qSet->beginGroup(settingsGroupName);
     ui->combox->clear();
-    ui->combox->loadSettings(qSettings, settingsKeyText);
-    ui->combox->setEditText(qSettings->value(settingsKeyText).toString());
-    ui->widgetPositionFixer->loadSettings(qSettings);
-
-    qSettings->endGroup();
+    ui->combox->loadSettings(qSet, settingsKeyText);
+    qSet->endGroup();
 }
 
-void WidgetInsertTextSetting::saveSettings(QSharedPointer<QSettings> qSettings) const
+void WidgetInsertTextSetting::saveSettings() const
 {
-    qSettings->beginGroup(settingsGroupName);
+    QSettings *qSet = qSettings();
 
-    qSettings->setValue(settingsKeyText, ui->combox->currentText());
-    ui->combox->saveSettings(qSettings, settingsKeyText);
-    ui->widgetPositionFixer->saveSettings(qSettings);
-
-    qSettings->endGroup();
+    qSet->beginGroup(settingsGroupName);
+    ui->combox->saveSettings(qSet, settingsKeyText);
+    qSet->endGroup();
 }
 
 QString WidgetInsertTextSetting::insertText() const

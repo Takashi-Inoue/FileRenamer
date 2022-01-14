@@ -228,7 +228,7 @@
     <string>Clear</string>
    </property>
    <property name="toolTip">
-    <string>Clear list (Ctrl+K, Ctrl+Del)</string>
+    <string>Clear file/dir list (Ctrl+K, Ctrl+Del)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+K, Ctrl+Del</string>
@@ -246,7 +246,7 @@
     <string>Dark mode</string>
    </property>
    <property name="toolTip">
-    <string>Dark mode</string>
+    <string>Dark mode (Ctrl+D)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+D</string>

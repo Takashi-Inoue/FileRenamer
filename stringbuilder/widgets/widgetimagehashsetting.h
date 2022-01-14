@@ -31,8 +31,6 @@ public:
     WidgetImageHashSetting(int insertPos, QWidget *parent = nullptr);
 
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
-    void loadSettings(QSharedPointer<QSettings>) override;
-    void saveSettings(QSharedPointer<QSettings>) const override;
 };
 
 } // StringBuilder

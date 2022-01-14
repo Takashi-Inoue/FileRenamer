@@ -35,9 +35,6 @@ public:
     WidgetOnlyPositionFixer(int insertPos, QWidget *parent = nullptr);
     ~WidgetOnlyPositionFixer() override;
 
-    void loadSettings(QSharedPointer<QSettings>) override;
-    void saveSettings(QSharedPointer<QSettings>) const override;
-
     bool isLeftMost() const;
     bool isRightMost() const;
 

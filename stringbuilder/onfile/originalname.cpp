@@ -49,7 +49,7 @@ QString OriginalName::toHtmlString() const
     if (isRightMost())
         return Html::rightAligned(tr("<b>Original Name</b> &gt;&gt;"));
 
-    return Html::leftAligned(tr("__%1 <b>Original Name</b>").arg(insertPosition()));
+    return Html::leftAligned(tr("__%1__ <b>Original Name</b>").arg(insertPosition()));
 }
 
 AbstractWidget *OriginalName::settingsWidget()

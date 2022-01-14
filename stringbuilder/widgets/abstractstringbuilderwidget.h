@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include <QSharedPointer>
 #include <QWidget>
 
 class QSettings;
@@ -32,20 +31,22 @@ class AbstractWidget : public QWidget
 {
     Q_OBJECT
 public:
-    using QWidget::QWidget;
+    AbstractWidget(QWidget* parent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
 
-    void accept()
-    {
-        emit accepted();
-    }
+    void accept();
+    QSettings *qSettings() const;
+    void setQSettings(const QSharedPointer<QSettings> &qSet);
 
     virtual QSharedPointer<AbstractStringBuilder> stringBuilder() const = 0;
-    virtual void loadSettings(QSharedPointer<QSettings>) = 0;
-    virtual void saveSettings(QSharedPointer<QSettings>) const = 0;
+    virtual void loadSettings() {}
+    virtual void saveSettings() const {}
 
 signals:
     void accepted();
     void changeStarted();
+
+private:
+    QSharedPointer<QSettings> m_qSet;
 };
 
 } // StringBuilder

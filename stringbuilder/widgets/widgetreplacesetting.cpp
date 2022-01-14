@@ -33,8 +33,6 @@ namespace {
 constexpr char settingsGroupName[] = "TextReplace";
 constexpr char settingsKeyReplace[]  = "Replace";
 constexpr char settingsKeySearch[] = "Search";
-constexpr char settingsKeyUseRegexp[] = "UseRegexp";
-constexpr char settingsKeyCaseSensitive[] = "CaseSensitive";
 } // anonymous
 
 WidgetReplaceSetting::WidgetReplaceSetting(QWidget *parent)
@@ -48,6 +46,8 @@ WidgetReplaceSetting::WidgetReplaceSetting(QStringView find, QStringView replace
     ui->setupUi(this);
 
     setWindowTitle(tr("Replace"));
+
+    loadSettings();
 
     ui->comboxReplace->setValidator(new FileNameVlidator(this));
     ui->comboxSearch->setCurrentText(find.toString());
@@ -83,36 +83,30 @@ QSharedPointer<AbstractStringBuilder> WidgetReplaceSetting::stringBuilder() cons
     return QSharedPointer<ReplaceString>::create(search, replace, isUseRegExp, isCaseSensitive);
 }
 
-void WidgetReplaceSetting::loadSettings(QSharedPointer<QSettings> qSettings)
+void WidgetReplaceSetting::loadSettings()
 {
-    qSettings->beginGroup(settingsGroupName);
+    QSettings *qSet = qSettings();
+
+    qSet->beginGroup(settingsGroupName);
 
     ui->comboxReplace->clear();
     ui->comboxSearch->clear();
-    ui->comboxReplace->loadSettings(qSettings, settingsKeyReplace);
-    ui->comboxSearch->loadSettings(qSettings, settingsKeySearch);
-    ui->comboxReplace->setEditText(qSettings->value(settingsKeyReplace).toString());
-    ui->comboxSearch->setEditText(qSettings->value(settingsKeySearch).toString());
+    ui->comboxReplace->loadSettings(qSet, settingsKeyReplace);
+    ui->comboxSearch->loadSettings(qSet, settingsKeySearch);
 
-    ui->checkBoxUseRegex->setChecked(qSettings->value(settingsKeyUseRegexp).toBool());
-    ui->checkBoxCaseSensitive->setChecked(qSettings->value(settingsKeyCaseSensitive, true).toBool());
-
-    qSettings->endGroup();
+    qSet->endGroup();
 }
 
-void WidgetReplaceSetting::saveSettings(QSharedPointer<QSettings> qSettings) const
+void WidgetReplaceSetting::saveSettings() const
 {
-    qSettings->beginGroup(settingsGroupName);
+    QSettings *qSet = qSettings();
 
-    qSettings->setValue(settingsKeyReplace, ui->comboxReplace->currentText());
-    qSettings->setValue(settingsKeySearch, ui->comboxSearch->currentText());
-    qSettings->setValue(settingsKeyUseRegexp, ui->checkBoxUseRegex->isChecked());
-    qSettings->setValue(settingsKeyCaseSensitive, ui->checkBoxCaseSensitive->isChecked());
+    qSet->beginGroup(settingsGroupName);
 
-    ui->comboxReplace->saveSettings(qSettings, settingsKeyReplace);
-    ui->comboxSearch->saveSettings(qSettings, settingsKeySearch);
+    ui->comboxReplace->saveSettings(qSet, settingsKeyReplace);
+    ui->comboxSearch->saveSettings(qSet, settingsKeySearch);
 
-    qSettings->endGroup();
+    qSet->endGroup();
 }
 
 QString WidgetReplaceSetting::findString() const

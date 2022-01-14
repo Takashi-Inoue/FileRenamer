@@ -20,12 +20,23 @@
 #include "dialogbuildersettings.h"
 #include "ui_dialogbuildersettings.h"
 
+#include "application.h"
 #include "abstractstringbuilderwidget.h"
 
 #include <QDialogButtonBox>
 #include <QTimer>
 
 namespace StringBuilder {
+
+inline SharedBuilderChainOnFile createBuilderChainOnWidgets(const QList<AbstractWidget *> &widgets)
+{
+    auto builderChain = SharedBuilderChainOnFile::create();
+
+    for (AbstractWidget *widget : widgets)
+        builderChain->addBuilder(widget->stringBuilder());
+
+    return builderChain;
+}
 
 DialogBuilderSettings::DialogBuilderSettings(QList<AbstractWidget *> widgets,
                                              QList<int> showIndexes, QWidget *parent)
@@ -40,8 +51,8 @@ DialogBuilderSettings::DialogBuilderSettings(QList<AbstractWidget *> widgets,
         if (showIndexes.contains(i)) {
             ui->tabWidget->addTab(widget, widget->windowTitle());
 
-            connect(widget, &AbstractWidget::changeStarted,
-                    this, &DialogBuilderSettings::notifyStartChanging);
+            connect(widget, SIGNAL(changeStarted()), m_timer, SLOT(start()));
+            connect(widget, SIGNAL(changeStarted()), this, SIGNAL(changeStarted()));
         }
         ++i;
     }
@@ -50,34 +61,18 @@ DialogBuilderSettings::DialogBuilderSettings(QList<AbstractWidget *> widgets,
     m_timer->setInterval(QApplication::keyboardInputInterval());
 
     connect(m_timer, &QTimer::timeout, this, [this]() {
-        auto builderChain = SharedBuilderChainOnFile::create();
-
-        for (AbstractWidget *widget : m_widgets)
-            builderChain->addBuilder(widget->stringBuilder());
-
-        emit settingsChanged(builderChain);
+        emit settingsChanged(createBuilderChainOnWidgets(m_widgets));
     });
 
-    connect(ui->buttonBox, &QDialogButtonBox::accepted,
-            this, &DialogBuilderSettings::acceptSettingsWidgets);
+    connect(ui->buttonBox, &QDialogButtonBox::accepted, this, [this]() {
+        for (AbstractWidget *widget : m_widgets)
+            widget->accept();
+    });
 }
 
 DialogBuilderSettings::~DialogBuilderSettings()
 {
     delete ui;
-}
-
-void DialogBuilderSettings::acceptSettingsWidgets()
-{
-    for (AbstractWidget *widget : m_widgets)
-        widget->accept();
-}
-
-void DialogBuilderSettings::notifyStartChanging()
-{
-    m_timer->start();
-
-    emit changeStarted();
 }
 
 } // namespace StringBuilder

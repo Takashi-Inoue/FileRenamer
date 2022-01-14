@@ -25,10 +25,6 @@
 
 namespace StringBuilder {
 
-namespace {
-constexpr char settingsGroupName[] = "ImageHash";
-}
-
 WidgetImageHashSetting::WidgetImageHashSetting(QWidget *parent)
     : WidgetImageHashSetting(0, parent)
 {
@@ -43,20 +39,6 @@ WidgetImageHashSetting::WidgetImageHashSetting(int insertPos, QWidget *parent)
 QSharedPointer<AbstractStringBuilder> WidgetImageHashSetting::stringBuilder() const
 {
     return QSharedPointer<OnFile::ImageHash>::create(insertPosition());
-}
-
-void WidgetImageHashSetting::loadSettings(QSharedPointer<QSettings> qSettings)
-{
-    qSettings->beginGroup(settingsGroupName);
-    WidgetOnlyPositionFixer::loadSettings(qSettings);
-    qSettings->endGroup();
-}
-
-void WidgetImageHashSetting::saveSettings(QSharedPointer<QSettings> qSettings) const
-{
-    qSettings->beginGroup(settingsGroupName);
-    WidgetOnlyPositionFixer::saveSettings(qSettings);
-    qSettings->endGroup();
 }
 
 } // StringBuilder

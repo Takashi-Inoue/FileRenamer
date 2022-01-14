@@ -27,9 +27,6 @@ namespace StringBuilder {
 
 namespace {
 constexpr char settingsGroupName[] = "Number";
-constexpr char settingsKeyStart[] = "Start";
-constexpr char settingsKeyIncremental[] = "Incremental";
-constexpr char settingsKeyDigit[] = "Digit";
 constexpr char settingsKeyPrefix[] = "Prefix";
 constexpr char settingsKeySuffix[] = "Suffix";
 } // anonymous
@@ -46,6 +43,8 @@ WidgetNumberSetting::WidgetNumberSetting(int start, int incremental, int digits,
     ui->setupUi(this);
 
     setWindowTitle(tr("Number"));
+
+    loadSettings();
 
     auto fileNameValidator = new FileNameVlidator{this};
 
@@ -90,40 +89,30 @@ QSharedPointer<AbstractStringBuilder> WidgetNumberSetting::stringBuilder() const
                 ui->comboxPrefix->currentText(), ui->comboxSuffix->currentText());
 }
 
-void WidgetNumberSetting::loadSettings(QSharedPointer<QSettings> qSettings)
+void WidgetNumberSetting::loadSettings()
 {
-    qSettings->beginGroup(settingsGroupName);
+    QSettings *qSet = qSettings();
+
+    qSet->beginGroup(settingsGroupName);
 
     ui->comboxPrefix->clear();
     ui->comboxSuffix->clear();
-    ui->comboxPrefix->loadSettings(qSettings, settingsKeyPrefix);
-    ui->comboxSuffix->loadSettings(qSettings, settingsKeySuffix);
-    ui->comboxPrefix->setEditText(qSettings->value(settingsKeyPrefix).toString());
-    ui->comboxSuffix->setEditText(qSettings->value(settingsKeySuffix).toString());
+    ui->comboxPrefix->loadSettings(qSet, settingsKeyPrefix);
+    ui->comboxSuffix->loadSettings(qSet, settingsKeySuffix);
 
-    ui->spinBoxStart->setValue(qSettings->value(settingsKeyStart, 0).toInt());
-    ui->spinBoxStep->setValue(qSettings->value(settingsKeyIncremental, 1).toInt());
-    ui->spinBoxDigit->setValue(qSettings->value(settingsKeyDigit, 0).toInt());
-    ui->widgetPositionFixer->loadSettings(qSettings);
-
-    qSettings->endGroup();
+    qSet->endGroup();
 }
 
-void WidgetNumberSetting::saveSettings(QSharedPointer<QSettings> qSettings) const
+void WidgetNumberSetting::saveSettings() const
 {
-    qSettings->beginGroup(settingsGroupName);
+    QSettings *qSet = qSettings();
 
-    qSettings->setValue(settingsKeyStart, ui->spinBoxStart->value());
-    qSettings->setValue(settingsKeyIncremental, ui->spinBoxStep->value());
-    qSettings->setValue(settingsKeyDigit, ui->spinBoxDigit->value());
-    qSettings->setValue(settingsKeyPrefix, ui->comboxPrefix->currentText());
-    qSettings->setValue(settingsKeySuffix, ui->comboxSuffix->currentText());
-    ui->widgetPositionFixer->saveSettings(qSettings);
+    qSet->beginGroup(settingsGroupName);
 
-    ui->comboxPrefix->saveSettings(qSettings, settingsKeyPrefix);
-    ui->comboxSuffix->saveSettings(qSettings, settingsKeySuffix);
+    ui->comboxPrefix->saveSettings(qSet, settingsKeyPrefix);
+    ui->comboxSuffix->saveSettings(qSet, settingsKeySuffix);
 
-    qSettings->endGroup();
+    qSet->endGroup();
 }
 
 int WidgetNumberSetting::startNumber() const
@@ -131,7 +120,7 @@ int WidgetNumberSetting::startNumber() const
     return ui->spinBoxStart->value();
 }
 
-int WidgetNumberSetting::incrementalNumber() const
+int WidgetNumberSetting::step() const
 {
     return ui->spinBoxStep->value();
 }

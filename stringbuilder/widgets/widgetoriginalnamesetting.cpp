@@ -25,10 +25,6 @@
 
 namespace StringBuilder {
 
-namespace {
-constexpr char settingsGroupName[] = "OriginalName";
-}
-
 WidgetOriginalNameSetting::WidgetOriginalNameSetting(QWidget *parent)
     : WidgetOriginalNameSetting(0, parent)
 {
@@ -43,20 +39,6 @@ WidgetOriginalNameSetting::WidgetOriginalNameSetting(int insertPos, QWidget *par
 QSharedPointer<AbstractStringBuilder> WidgetOriginalNameSetting::stringBuilder() const
 {
     return QSharedPointer<OnFile::OriginalName>::create(insertPosition());
-}
-
-void WidgetOriginalNameSetting::loadSettings(QSharedPointer<QSettings> qSettings)
-{
-    qSettings->beginGroup(settingsGroupName);
-    WidgetOnlyPositionFixer::loadSettings(qSettings);
-    qSettings->endGroup();
-}
-
-void WidgetOriginalNameSetting::saveSettings(QSharedPointer<QSettings> qSettings) const
-{
-    qSettings->beginGroup(settingsGroupName);
-    WidgetOnlyPositionFixer::saveSettings(qSettings);
-    qSettings->endGroup();
 }
 
 } // StringBuilder

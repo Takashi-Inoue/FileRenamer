@@ -15,19 +15,6 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
-     <property name="font">
-      <font>
-       <pointsize>10</pointsize>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="text">
-      <string>Text insertion</string>
-     </property>
-    </widget>
-   </item>
-   <item>
     <widget class="HistoryComboBox" name="combox">
      <property name="editable">
       <bool>true</bool>
@@ -43,7 +30,7 @@
    <item>
     <widget class="StringBuilder::WidgetPositionFixer" name="widgetPositionFixer">
      <property name="frameShape">
-      <enum>QFrame::Box</enum>
+      <enum>QFrame::NoFrame</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>

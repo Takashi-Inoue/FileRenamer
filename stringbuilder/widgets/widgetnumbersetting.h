@@ -38,11 +38,11 @@ public:
     ~WidgetNumberSetting() override;
 
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
-    void loadSettings(QSharedPointer<QSettings>) override;
-    void saveSettings(QSharedPointer<QSettings>) const override;
+    void loadSettings() override;
+    void saveSettings() const override;
 
     int startNumber() const;
-    int incrementalNumber() const;
+    int step() const;
     int digits() const;
     QString prefixString() const;
     QString suffixString() const;

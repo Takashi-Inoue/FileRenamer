@@ -36,14 +36,16 @@ public:
     WidgetInsertTextSetting(QStringView text, int insertPos, QWidget *parent = nullptr);
     ~WidgetInsertTextSetting() override;
 
+    // AbstractWidget interface
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
-    void loadSettings(QSharedPointer<QSettings>) override;
-    void saveSettings(QSharedPointer<QSettings>) const override;
+    void loadSettings() override;
+    void saveSettings() const override;
 
 public:
     QString insertText() const;
     int insertPosition() const;
 
+    // QWidget interface
 protected:
     void changeEvent(QEvent *event) override;
 

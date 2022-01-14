@@ -28,7 +28,7 @@ namespace StringBuilder {
 namespace Settings {
 constexpr char groupName[] = "Number";
 constexpr char keyStart[] = "Start";
-constexpr char keyIncrement[] = "Increment";
+constexpr char keyStep[] = "Step";
 constexpr char keyDigits[] = "Digits";
 constexpr char keyPrefix[] = "Preifx";
 constexpr char keySuffix[] = "Suffix";
@@ -65,7 +65,7 @@ void Number::build(QString &result)
 
 QString Number::toHtmlString() const
 {
-    const QString baseText = tr("<b>Number</b> <i>%1%2%3</i>&nbsp;&nbsp;[Increment:%4]")
+    const QString baseText = tr("<b>Number</b> <i>%1%2%3</i>&nbsp;&nbsp;[Step:%4]")
                              .arg(m_prefix)
                              .arg(m_start, m_digit, 10, QLatin1Char('0'))
                              .arg(m_suffix)
@@ -77,7 +77,7 @@ QString Number::toHtmlString() const
     if (isRightMost())
         return Html::rightAligned(QStringLiteral("%1 &gt;&gt;").arg(baseText));
 
-    return Html::leftAligned(QStringLiteral("__%1 %2").arg(insertPosition()).arg(baseText));
+    return Html::leftAligned(QStringLiteral("__%1__ %2").arg(insertPosition()).arg(baseText));
 }
 
 void Number::reset()
@@ -93,7 +93,7 @@ AbstractWidget *Number::settingsWidget()
         auto settingsWidget = qobject_cast<WidgetNumberSetting *>(sender());
 
         m_start = settingsWidget->startNumber();
-        m_step = settingsWidget->incrementalNumber();
+        m_step = settingsWidget->step();
         m_digit = settingsWidget->digits();
         m_prefix = settingsWidget->prefixString();
         m_suffix = settingsWidget->suffixString();
@@ -109,7 +109,7 @@ void Number::loadSettings(QSettings *qSet)
     qSet->beginGroup(Settings::groupName);
 
     m_start = qSet->value(Settings::keyStart, 0).toInt();
-    m_step = qSet->value(Settings::keyIncrement, 1).toInt();
+    m_step = qSet->value(Settings::keyStep, 1).toInt();
     m_digit = qSet->value(Settings::keyDigits, 0).toInt();
     m_prefix = qSet->value(Settings::keyPrefix, QString{}).toString();
     m_suffix = qSet->value(Settings::keySuffix, QString{}).toString();
@@ -123,7 +123,7 @@ void Number::saveSettings(QSettings *qSet) const
     qSet->beginGroup(Settings::groupName);
 
     qSet->setValue(Settings::keyStart, m_start);
-    qSet->setValue(Settings::keyIncrement, m_step);
+    qSet->setValue(Settings::keyStep, m_step);
     qSet->setValue(Settings::keyDigits, m_digit);
     qSet->setValue(Settings::keyPrefix, m_prefix);
     qSet->setValue(Settings::keySuffix, m_suffix);

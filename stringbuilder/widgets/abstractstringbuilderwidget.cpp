@@ -17,42 +17,36 @@
  * along with APPNAME.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once
+#include "abstractstringbuilderwidget.h"
+#include "application.h"
 
-#include "usingstringbuilder.h"
-#include "stringbuilder/onfile/builderchainonfile.h"
-
-#include <QDialog>
-
-class QTimer;
+#include <QSettings>
+#include <QSharedPointer>
 
 namespace StringBuilder {
 
-class AbstractWidget;
-
-namespace Ui {
-class DialogBuilderSettings;
+AbstractWidget::AbstractWidget(QWidget *parent, Qt::WindowFlags flags)
+    : QWidget(parent, flags),
+      m_qSet(Application::mainQSettings())
+{
 }
 
-class DialogBuilderSettings : public QDialog
+void AbstractWidget::accept()
 {
-    Q_OBJECT
+    saveSettings();
 
-public:
-    DialogBuilderSettings(QList<AbstractWidget *> widgets, QList<int> showIndexes,
-                          QWidget *parent = nullptr);
-    ~DialogBuilderSettings();
+    emit accepted();
+}
 
-signals:
-    void changeStarted();
-    void settingsChanged(SharedBuilderChainOnFile);
+QSettings *AbstractWidget::qSettings() const
+{
+    return m_qSet.get();
+}
 
-private:
-    Ui::DialogBuilderSettings *ui;
+void AbstractWidget::setQSettings(const QSharedPointer<QSettings> &qSet)
+{
+    if (m_qSet != qSet)
+        m_qSet = qSet;
+}
 
-    QTimer *m_timer;
-    QList<AbstractWidget *> m_widgets;
-};
-
-
-} // namespace StringBuilder
+} // StringBuilder

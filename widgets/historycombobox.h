@@ -34,9 +34,9 @@ public:
     void addCurrentTextToItem();
     void insertCurrentTextToItem(int index);
 
-    void loadSettings(QSharedPointer<QSettings>, QString key);
-    void saveSettings(QSharedPointer<QSettings>, QString key);
+    void loadSettings(QSettings *, QString key);
+    void saveSettings(QSettings *, QString key);
 
-    void loadSettings(QSharedPointer<QSettings>, QString subGroup, QString key);
-    void saveSettings(QSharedPointer<QSettings>, QString subGroup, QString key);
+    void loadSettings(QSettings *, QString subGroup, QString key);
+    void saveSettings(QSettings *, QString subGroup, QString key);
 };

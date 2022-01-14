@@ -57,7 +57,7 @@ QString ImageHash::toHtmlString() const
     if (isRightMost())
         return Html::rightAligned(tr("<b>Image Hash</b> &gt;&gt;"));
 
-    return Html::leftAligned(tr("__%1 <b>Image Hash</b>").arg(insertPosition()));
+    return Html::leftAligned(tr("__%1__ <b>Image Hash</b>").arg(insertPosition()));
 }
 
 AbstractWidget *ImageHash::settingsWidget()

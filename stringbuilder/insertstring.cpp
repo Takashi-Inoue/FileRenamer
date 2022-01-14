@@ -58,7 +58,7 @@ QString InsertString::toHtmlString() const
     if (isRightMost())
         return Html::rightAligned(QStringLiteral("%1 &gt;&gt;").arg(text));
 
-    return Html::leftAligned(QStringLiteral("__%1 %2").arg(insertPosition()).arg(text));
+    return Html::leftAligned(QStringLiteral("__%1__ %2").arg(insertPosition()).arg(text));
 }
 
 AbstractWidget *InsertString::settingsWidget()

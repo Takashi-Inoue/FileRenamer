@@ -35,9 +35,6 @@ public:
     explicit WidgetPositionFixer(QWidget *parent = nullptr);
     ~WidgetPositionFixer() override;
 
-    void loadSettings(QSharedPointer<QSettings>);
-    void saveSettings(QSharedPointer<QSettings>) const;
-
     void setValue(int value);
     int value() const;
 
