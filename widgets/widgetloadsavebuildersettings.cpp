@@ -119,6 +119,11 @@ WidgetLoadSaveBuilderSettings::~WidgetLoadSaveBuilderSettings()
     delete ui;
 }
 
+QWidget *WidgetLoadSaveBuilderSettings::lastTabOrderWidget() const
+{
+    return ui->buttonConfig;
+}
+
 void WidgetLoadSaveBuilderSettings::saveLatestSettings() const
 {
     m_settingsModel->saveSettings(m_settingsListModel->qSettingsForLastUsed().get());

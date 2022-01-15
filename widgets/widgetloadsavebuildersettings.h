@@ -37,6 +37,7 @@ public:
                                            QWidget *parent = nullptr);
     ~WidgetLoadSaveBuilderSettings();
 
+    QWidget *lastTabOrderWidget() const;
     void saveLatestSettings() const;
 
 private slots:

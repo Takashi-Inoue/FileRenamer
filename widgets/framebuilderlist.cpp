@@ -78,6 +78,10 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
     // Init m_widgetLoadSaver after finished connecting.
     m_widgetLoadSaver = new WidgetLoadSaveBuilderSettings{m_settingsModel, this};
     ui->hLayoutLoadSaver->addWidget(m_widgetLoadSaver);
+
+    setTabOrder(m_widgetLoadSaver->lastTabOrderWidget(), ui->tableViewSettings);
+    setTabOrder(ui->tableViewSettings, ui->buttonAdd);
+    setTabOrder(ui->buttonAdd, ui->tableViewBuilders);
 }
 
 FrameBuilderList::~FrameBuilderList()
