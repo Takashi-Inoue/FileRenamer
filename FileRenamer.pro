@@ -59,8 +59,6 @@ SOURCES += \
     mainwindow.cpp \
     widgets/counterlabel.cpp \
     widgets/dialogdroppeddir.cpp \
-    widgets/dialogloadrenamesettings.cpp \
-    widgets/dialogsaverenamesettings.cpp \
     widgets/dialogsettingslistconfigurator.cpp \
     widgets/elidelabel.cpp \
     widgets/framebuilderlist.cpp \
@@ -128,8 +126,6 @@ HEADERS += \
     utilitysmvc.h \
     widgets/counterlabel.h \
     widgets/dialogdroppeddir.h \
-    widgets/dialogloadrenamesettings.h \
-    widgets/dialogsaverenamesettings.h \
     widgets/dialogsettingslistconfigurator.h \
     widgets/elidelabel.h \
     widgets/framebuilderlist.h \
@@ -148,8 +144,6 @@ FORMS += \
     stringbuilder/widgets/widgetpositionfixer.ui \
     stringbuilder/widgets/widgetreplacesetting.ui \
     widgets/dialogdroppeddir.ui \
-    widgets/dialogloadrenamesettings.ui \
-    widgets/dialogsaverenamesettings.ui \
     widgets/dialogsettingslistconfigurator.ui \
     widgets/framebuilderlist.ui \
     widgets/widgetapplicationlogs.ui \

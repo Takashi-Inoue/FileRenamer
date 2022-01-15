@@ -27,8 +27,6 @@
 #include "stringbuilder/onfile/builderchainonfile.h"
 #include "widgets/counterlabel.h"
 #include "widgets/dialogdroppeddir.h"
-#include "widgets/dialogloadrenamesettings.h"
-#include "widgets/dialogsaverenamesettings.h"
 #include "widgets/elidelabel.h"
 
 #include <QAbstractButton>
@@ -150,34 +148,6 @@ void MainWindow::onSortingBroken()
     QHeaderView *header = ui->tableView->horizontalHeader();
 
     header->setSortIndicatorShown(false);
-}
-
-void MainWindow::onButtonLoadSettingsClicked()
-{
-    DialogLoadRenameSettings dlg(this);
-
-    if (dlg.exec() != QDialog::Accepted)
-        return;
-
-    auto qSettings = QSharedPointer<QSettings>::create(dlg.settingFullPath(), QSettings::IniFormat);
-
-//    ui->formStringBuilderChain->loadBuilderSettings(qSettings);
-}
-
-void MainWindow::onButtonSaveSettingsClicked()
-{
-    DialogSaveRenameSettings dlg(this);
-
-    if (dlg.exec() != QDialog::Accepted)
-        return;
-
-    const QString newSettingPath = dlg.newSettingFullpath();
-
-    auto qSettings = QSharedPointer<QSettings>::create(newSettingPath, QSettings::IniFormat);
-
-    qSettings->clear();
-
-//    ui->formStringBuilderChain->saveCurrentBuilderSettings(qSettings);
 }
 
 void MainWindow::onActionDarkModeTriggered(bool checked)

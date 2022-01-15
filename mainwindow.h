@@ -45,9 +45,6 @@ private slots:
     void startCreatingNewNames();
     void onSortingBroken();
 
-    void onButtonLoadSettingsClicked();
-    void onButtonSaveSettingsClicked();
-
     void onActionDarkModeTriggered(bool checked);
 
     void adaptorToChangeState();
