@@ -176,12 +176,12 @@ bool PathModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*action*/
 {
     const int targetRow = parent.row();
 
-    if ((targetRow == -1) || !data->hasFormat(mimeTypeModelDataList))
+    if ((targetRow == -1) || !data->hasFormat(MVC::mimeTypeModelDataList))
         return false;
 
     const QWeakPointer<Path::ParentDir> targetParent = m_dataRoot->entity(targetRow)->parent();
 
-    for (int sourceRow : rowsFromMimeData(data)) {
+    for (int sourceRow : MVC::rowsFromMimeData(data)) {
         if (m_dataRoot->entity(sourceRow)->parent() != targetParent)
             return false;
     }
@@ -196,7 +196,7 @@ bool PathModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*/
 
     beginResetModel();
 
-    m_dataRoot->move(rowsFromMimeData(data), parent.row());
+    m_dataRoot->move(MVC::rowsFromMimeData(data), parent.row());
 
     endResetModel();
 

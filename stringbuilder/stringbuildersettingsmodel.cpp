@@ -97,7 +97,7 @@ bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*acti
     if (data->hasFormat(mimeTypeBuilderType))
         return true;
 
-    if (data->hasFormat(mimeTypeModelDataList))
+    if (data->hasFormat(MVC::mimeTypeModelDataList))
         return true;
 
     return false;
@@ -109,18 +109,18 @@ bool SettingsModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*
     int targetRow = (row != -1) ? row : parent.row();
 
     if (targetRow == -1) {
-//        if (data->hasFormat(mimeTypeModelDataList))
+//        if (data->hasFormat(MVC::mimeTypeModelDataList))
 //            return false;
 
         targetRow = m_builders.size();
     }
 
-    if (data->hasFormat(mimeTypeModelDataList)) {
+    if (data->hasFormat(MVC::mimeTypeModelDataList)) {
         beginResetModel();
-        moveItems(m_builders, rowsFromMimeData(data), targetRow);
+        moveItems(m_builders, MVC::rowsFromMimeData(data), targetRow);
         endResetModel();
     } else if (data->hasFormat(mimeTypeBuilderType)) {
-        QList<int> typeNumbers = intListFromMimeData(data, mimeTypeBuilderType);
+        QList<int> typeNumbers = MVC::intListFromMimeData(data, mimeTypeBuilderType);
 
         std::sort(typeNumbers.begin(), typeNumbers.end(), std::greater<int>());
 

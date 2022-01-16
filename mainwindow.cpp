@@ -38,9 +38,43 @@
 #include <QDebug>
 
 namespace {
-    constexpr char settingsGroupName[] = "Main";
-    constexpr char settingsKeyDarkMode[] = "DarkMode";
+constexpr char settingsGroupName[] = "Main";
+constexpr char settingsKeyWindowGeometry[] = "WindowGeometry";
+constexpr char settingsKeyWindowState[] = "WindowState";
+
+void loadMainGeometry(MainWindow *window, Ui::MainWindow *ui)
+{
+    QSharedPointer<QSettings> qSettings = Application::mainQSettings();
+    qSettings->beginGroup(settingsGroupName);
+
+    auto geometryArray = qSettings->value(settingsKeyWindowGeometry, QVariant{}).toByteArray();
+
+    if (!geometryArray.isEmpty())
+        window->restoreGeometry(geometryArray);
+
+    auto stateArray = qSettings->value(settingsKeyWindowState, QVariant{}).toByteArray();
+
+    if (!stateArray.isEmpty()) {
+        window->restoreState(stateArray);
+    } else {
+        ui->dockWidgetLogs->setVisible(false);
+        ui->splitter->setSizes({400, 300});
+    }
+
+    qSettings->endGroup();
 }
+
+void saveMainGeometry(MainWindow *window)
+{
+    QSharedPointer<QSettings> qSettings = Application::mainQSettings();
+
+    qSettings->beginGroup(settingsGroupName);
+    qSettings->setValue(settingsKeyWindowGeometry, window->saveGeometry());
+    qSettings->setValue(settingsKeyWindowState, window->saveState());
+    qSettings->endGroup();
+}
+
+} // anonymous
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow{parent},
@@ -54,9 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     hSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     ui->toolBar->insertWidget(ui->actionClearItems, hSpacer);
 
-    ui->dockWidgetLogs->setVisible(false);
-    ui->splitter->setSizes({400, 300});
-
+    loadMainGeometry(this, ui);
     initStatusBar();
 
     ui->actionDarkMode->setChecked(Application::isDarkMode());
@@ -113,11 +145,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     if (!event->isAccepted())
         return;
 
-    QSharedPointer<QSettings> qSettings = Application::mainQSettings();
-
-    qSettings->beginGroup(settingsGroupName);
-    qSettings->setValue(settingsKeyDarkMode, ui->actionDarkMode->isChecked());
-    qSettings->endGroup();
+    saveMainGeometry(this);
 
 //    ui->formStringBuilderChain->saveCurrentBuilderSettings(qSettings);
 }

@@ -23,51 +23,11 @@
 #include <QList>
 #include <QMimeData>
 
-namespace {
+namespace MVC {
 
 constexpr char mimeTypeModelDataList[] = "application/x-qabstractitemmodeldatalist";
 
-QList<int> rowsFromMimeData(const QMimeData *mimeData)
-{
-    if (!mimeData->hasFormat(mimeTypeModelDataList))
-        return {};
+QList<int> rowsFromMimeData(const QMimeData *mimeData);
+QList<int> intListFromMimeData(const QMimeData *mimeData, const QString &mimeType);
 
-    QList<int> rows;
-    QByteArray encodedData = mimeData->data(mimeTypeModelDataList);
-    QDataStream stream(&encodedData, QIODeviceBase::ReadOnly);
-
-    while (!stream.atEnd()) {
-        int row;
-        int col;
-        QMap<int, QVariant> roleDataMap;
-
-        stream >> row >> col >> roleDataMap;
-
-        if (col == 0)
-            rows << row;
-    }
-
-    std::sort(rows.begin(), rows.end());
-
-    return rows;
-}
-
-QList<int> intListFromMimeData(const QMimeData *mimeData, const QString &mimeType)
-{
-    if (!mimeData->hasFormat(mimeType))
-        return {};
-
-    QList<int> nums;
-    int num;
-    QByteArray encodedData = mimeData->data(mimeType);
-    QDataStream stream(&encodedData, QIODeviceBase::ReadOnly);
-
-    while (!stream.atEnd()) {
-        stream >> num;
-        nums.append(num);
-    }
-
-    return nums;
-}
-
-} // anonymous
+} // MVC

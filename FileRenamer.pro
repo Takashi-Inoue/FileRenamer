@@ -57,6 +57,7 @@ SOURCES += \
     threadundorenaming.cpp \
     main.cpp \
     mainwindow.cpp \
+    utilitysmvc.cpp \
     widgets/counterlabel.cpp \
     widgets/dialogdroppeddir.cpp \
     widgets/dialogsettingslistconfigurator.cpp \
