@@ -52,10 +52,7 @@ signals:
 
 private slots:
     void appendSelectedBuildersToSettings();
-    void deleteSelectedSettings();
-
-    void showSettingDialog(const QModelIndex &index);
-    void showPopMenuForSettingsView(const QPoint &pos);
+    void showSettingDialog();
 
 private:
     void notifyStartChanging();

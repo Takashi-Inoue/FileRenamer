@@ -44,6 +44,12 @@
    </item>
    <item>
     <widget class="QToolButton" name="buttonConfig">
+     <property name="minimumSize">
+      <size>
+       <width>28</width>
+       <height>27</height>
+      </size>
+     </property>
      <property name="toolTip">
       <string>Configure settings list</string>
      </property>

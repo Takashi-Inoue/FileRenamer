@@ -34,6 +34,26 @@
 #include <QSettings>
 #include <QTimer>
 
+namespace {
+
+void initSettingsTableView(FrameBuilderList *builderList, Ui::FrameBuilderList *ui,
+                           StringBuilder::SettingsModel *model)
+{
+    ui->tableViewSettings->setModel(model);
+    ui->tableViewSettings->setItemDelegate(new HtmlTextDelegate{ui->tableViewSettings});
+
+    ui->tableViewSettings->addActions({ui->actionEdit, ui->actionDelete});
+    ui->tableViewSettings->setContextMenuPolicy(Qt::ActionsContextMenu);
+
+    ui->actionEdit->connect(ui->tableViewSettings, SIGNAL(activated(QModelIndex)), SLOT(trigger()));
+
+    builderList->connect(model, SIGNAL(settingsChanged(SharedBuilderChainOnFile)),
+                         SIGNAL(settingsChanged(SharedBuilderChainOnFile)));
+}
+
+} // anonymous
+
+//--------------------------------------------------------------------------------------------------
 FrameBuilderList::FrameBuilderList(QWidget *parent)
     : QFrame(parent),
       ui(new Ui::FrameBuilderList),
@@ -44,29 +64,26 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
     ui->setupUi(this);
 
     ui->tableViewBuilders->setModel(m_buildersModel);
-    ui->tableViewSettings->setModel(m_settingsModel);
-    ui->tableViewSettings->setItemDelegate(new HtmlTextDelegate{this});
 
-    auto deleteAction = GenericActions::createDeleteAction(QIcon{QStringLiteral(":/x.svg")}, this);
+    initSettingsTableView(this, ui, m_settingsModel);
 
-    ui->tableViewSettings->addAction(deleteAction);
-    ui->tableViewSettings->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(ui->tableViewSettings->selectionModel(), &QItemSelectionModel::selectionChanged, this,
+            [this]() {
+        bool hasSelection = ui->tableViewSettings->selectionModel()->hasSelection();
+        ui->actionDelete->setEnabled(hasSelection);
+        ui->actionEdit->setEnabled(hasSelection);
+    });
 
-    connect(deleteAction, &QAction::triggered, this, &FrameBuilderList::deleteSelectedSettings);
+    connect(ui->actionEdit, SIGNAL(triggered(bool)), this, SLOT(showSettingDialog()));
+    connect(ui->actionDelete, &QAction::triggered, this, [this]() {
+        m_settingsModel->removeSpecifiedRows(ui->tableViewSettings->selectionModel()->selectedRows());
+    });
 
-    connect(ui->tableViewSettings, &QWidget::customContextMenuRequested,
-            this, &FrameBuilderList::showPopMenuForSettingsView);
-
-    connect(ui->tableViewSettings, &QAbstractItemView::activated,
-            this, &FrameBuilderList::showSettingDialog);
-
-    connect(ui->buttonAdd, &QPushButton::clicked,
-            this, &FrameBuilderList::appendSelectedBuildersToSettings);
-    connect(ui->tableViewBuilders, &QAbstractItemView::activated,
+    connect(ui->actionAddBuilders, &QAction::triggered,
             this, &FrameBuilderList::appendSelectedBuildersToSettings);
 
-    connect(m_settingsModel, &StringBuilder::SettingsModel::settingsChanged,
-            this, &FrameBuilderList::settingsChanged);
+    connect(ui->buttonAdd, &QPushButton::clicked, ui->actionAddBuilders, &QAction::trigger);
+    connect(ui->tableViewBuilders, &QTableView::activated, ui->actionAddBuilders, &QAction::trigger);
 
     m_timer->setSingleShot(true);
     m_timer->setInterval(QApplication::keyboardInputInterval());
@@ -109,12 +126,7 @@ void FrameBuilderList::appendSelectedBuildersToSettings()
     notifyStartChanging();
 }
 
-void FrameBuilderList::deleteSelectedSettings()
-{
-    m_settingsModel->removeSpecifiedRows(ui->tableViewSettings->selectionModel()->selectedRows());
-}
-
-void FrameBuilderList::showSettingDialog(const QModelIndex &/*index*/)
+void FrameBuilderList::showSettingDialog()
 {
     QList<int> rows;
 
@@ -133,21 +145,6 @@ void FrameBuilderList::showSettingDialog(const QModelIndex &/*index*/)
         ui->tableViewSettings->update(index);
 
     notifyStartChanging();
-}
-
-void FrameBuilderList::showPopMenuForSettingsView(const QPoint &/*pos*/)
-{
-    if (!ui->tableViewSettings->selectionModel()->hasSelection())
-        return;
-
-    auto menu = new QMenu{this};
-
-    connect(menu, &QMenu::aboutToHide, this, [this]() {
-        sender()->deleteLater();
-    });
-
-    menu->addActions(ui->tableViewSettings->actions());
-    menu->popup(QCursor::pos());
 }
 
 void FrameBuilderList::notifyStartChanging()

@@ -46,6 +46,7 @@ public:
     bool dropMimeData(const QMimeData *data, Qt::DropAction action,
                       int row, int column, const QModelIndex &parent) override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
+    Qt::DropActions supportedDropActions() const override;
 
 signals:
     void settingsChanged(SharedBuilderChainOnFile);

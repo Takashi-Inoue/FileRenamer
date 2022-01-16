@@ -94,8 +94,8 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
                                     int /*row*/, int /*column*/, const QModelIndex &parent) const
 {
-    if (!parent.isValid())
-        return false;
+//    if (!parent.isValid())
+//        return false;
 
     if (data->hasFormat(mimeTypeBuilderType))
         return true;
@@ -107,7 +107,7 @@ bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*acti
 }
 
 bool SettingsModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
-                                 int /*row*/, int /*column*/, const QModelIndex &parent)
+                                 int row, int /*column*/, const QModelIndex &parent)
 {
     const int targetRow = parent.row();
 
@@ -129,11 +129,17 @@ bool SettingsModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*
 
 Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
 {
-    if (!index.isValid())
-        return {};
+    Qt::ItemFlags defaultFlags = QAbstractTableModel::flags(index);
 
-    return Qt::ItemIsSelectable | Qt::ItemIsDragEnabled
-            | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren | Qt::ItemIsDropEnabled;
+    if (!index.isValid())
+        return defaultFlags | Qt::ItemIsDropEnabled;
+
+    return defaultFlags | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
+}
+
+Qt::DropActions SettingsModel::supportedDropActions() const
+{
+    return Qt::CopyAction | Qt::MoveAction;
 }
 
 void SettingsModel::appendBuilders(StringBuilderList &&builders)
@@ -198,6 +204,7 @@ DialogBuilderSettings *SettingsModel::settingsDialog(QList<int> showIndexes, QWi
 
     auto dlg = new DialogBuilderSettings(widgets, showIndexes, parent);
 
+    dlg->setWindowFlag(Qt::MSWindowsFixedSizeDialogHint);
     dlg->deleteLater();
 
     return dlg;
