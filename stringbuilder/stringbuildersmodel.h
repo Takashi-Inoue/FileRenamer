@@ -41,8 +41,6 @@ public:
 
 public:
     StringBuilderList createBuilders(const QModelIndexList &indexes) const;
-
-private:
 };
 
 } // namespace StringBuilder

@@ -52,4 +52,22 @@ QList<int> rowsFromMimeData(const QMimeData *mimeData)
     return rows;
 }
 
+QList<int> intListFromMimeData(const QMimeData *mimeData, const QString &mimeType)
+{
+    if (!mimeData->hasFormat(mimeType))
+        return {};
+
+    QList<int> nums;
+    int num;
+    QByteArray encodedData = mimeData->data(mimeType);
+    QDataStream stream(&encodedData, QIODeviceBase::ReadOnly);
+
+    while (!stream.atEnd()) {
+        stream >> num;
+        nums.append(num);
+    }
+
+    return nums;
+}
+
 } // anonymous

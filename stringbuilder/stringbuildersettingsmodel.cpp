@@ -92,11 +92,8 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
 }
 
 bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
-                                    int /*row*/, int /*column*/, const QModelIndex &parent) const
+                                    int /*row*/, int /*column*/, const QModelIndex &/*parent*/) const
 {
-//    if (!parent.isValid())
-//        return false;
-
     if (data->hasFormat(mimeTypeBuilderType))
         return true;
 
@@ -109,15 +106,30 @@ bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*acti
 bool SettingsModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
                                  int row, int /*column*/, const QModelIndex &parent)
 {
-    const int targetRow = parent.row();
+    int targetRow = (row != -1) ? row : parent.row();
 
-    if (targetRow == -1)
-        return false;
+    if (targetRow == -1) {
+//        if (data->hasFormat(mimeTypeModelDataList))
+//            return false;
+
+        targetRow = m_builders.size();
+    }
 
     if (data->hasFormat(mimeTypeModelDataList)) {
         beginResetModel();
         moveItems(m_builders, rowsFromMimeData(data), targetRow);
         endResetModel();
+    } else if (data->hasFormat(mimeTypeBuilderType)) {
+        QList<int> typeNumbers = intListFromMimeData(data, mimeTypeBuilderType);
+
+        std::sort(typeNumbers.begin(), typeNumbers.end(), std::greater<int>());
+
+        beginInsertRows(QModelIndex{}, targetRow, targetRow + typeNumbers.size() - 1);
+
+        for (int typeNumber : typeNumbers)
+            m_builders.insert(targetRow, BuilderFactory::createBuilder(BuilderType(typeNumber)));
+
+        endInsertRows();
     } else {
         return false;
     }

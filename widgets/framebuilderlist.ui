@@ -95,7 +95,7 @@
    <item row="2" column="2">
     <widget class="QLabel" name="label">
      <property name="text">
-      <string>Activate or Push add button to add settings.</string>
+      <string>Activate, Drag&amp;Drop or Push Add button to add settings.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
