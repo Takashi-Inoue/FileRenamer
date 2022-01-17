@@ -20,10 +20,10 @@
 #include "dialogsettingslistconfigurator.h"
 #include "ui_dialogsettingslistconfigurator.h"
 
-#include "renamesettingsmodel.h"
+#include "savedsettingsmodel.h"
 
 DialogSettingsListConfigurator::DialogSettingsListConfigurator(
-        RenameSettingsModel *model, QWidget *parent)
+        SavedSettingsModel *model, QWidget *parent)
     : QDialog(parent),
       ui(new Ui::DialogSettingsListConfigurator)
 {
@@ -56,7 +56,7 @@ DialogSettingsListConfigurator::~DialogSettingsListConfigurator()
 
 void DialogSettingsListConfigurator::hideNotEditableSettings()
 {
-    auto model = qobject_cast<RenameSettingsModel *>(ui->tableView->model());
+    auto model = qobject_cast<SavedSettingsModel *>(ui->tableView->model());
 
     if (model == nullptr)
         return;

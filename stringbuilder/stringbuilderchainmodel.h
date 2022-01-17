@@ -30,11 +30,11 @@ namespace StringBuilder {
 class AbstractWidget;
 class DialogBuilderSettings;
 
-class SettingsModel : public QAbstractTableModel
+class BuilderChainModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    explicit SettingsModel(QObject *parent = nullptr);
+    explicit BuilderChainModel(QObject *parent = nullptr);
 
     // QAbstractItemModel interface
 public:

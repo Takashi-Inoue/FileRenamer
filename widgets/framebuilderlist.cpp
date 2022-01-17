@@ -23,7 +23,7 @@
 #include "application.h"
 #include "genericactions.h"
 #include "htmltextdelegate.h"
-#include "stringbuilder/stringbuildersettingsmodel.h"
+#include "stringbuilder/stringbuilderchainmodel.h"
 #include "stringbuilder/stringbuildersmodel.h"
 #include "stringbuilder/widgets/dialogbuildersettings.h"
 #include "usingstringbuilder.h"
@@ -37,7 +37,7 @@
 namespace {
 
 void initSettingsTableView(FrameBuilderList *builderList, Ui::FrameBuilderList *ui,
-                           StringBuilder::SettingsModel *model)
+                           StringBuilder::BuilderChainModel *model)
 {
     ui->tableViewSettings->setModel(model);
     ui->tableViewSettings->setItemDelegate(new HtmlTextDelegate{ui->tableViewSettings});
@@ -59,7 +59,7 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
       ui(new Ui::FrameBuilderList),
       m_timer(new QTimer{this}),
       m_buildersModel(new StringBuilder::BuildersModel{this}),
-      m_settingsModel(new StringBuilder::SettingsModel{this})
+      m_settingsModel(new StringBuilder::BuilderChainModel{this})
 {
     ui->setupUi(this);
 

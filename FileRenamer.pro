@@ -27,8 +27,8 @@ SOURCES += \
     path/pathtableview.cpp \
     path/pathtableviewmenu.cpp \
     pathsanalyzer.cpp \
-    renamesettingsmodel.cpp \
     renamestate/renamestateinitial.cpp \
+    savedsettingsmodel.cpp \
     searchindirs.cpp \
     stringbuilder/abstractinsertstring.cpp \
     stringbuilder/builderchain.cpp \
@@ -39,8 +39,8 @@ SOURCES += \
     stringbuilder/onfile/imagehash.cpp \
     stringbuilder/onfile/originalname.cpp \
     stringbuilder/replacestring.cpp \
+    stringbuilder/stringbuilderchainmodel.cpp \
     stringbuilder/stringbuilderfactory.cpp \
-    stringbuilder/stringbuildersettingsmodel.cpp \
     stringbuilder/stringbuildersmodel.cpp \
     stringbuilder/widgets/abstractstringbuilderwidget.cpp \
     stringbuilder/widgets/dialogbuildersettings.cpp \
@@ -88,9 +88,9 @@ HEADERS += \
     path/pathtableviewmenu.h \
     path/usingpathentity.h \
     pathsanalyzer.h \
-    renamesettingsmodel.h \
     renamestate/renamestateistate.h \
     renamestate/renamestateinitial.h \
+    savedsettingsmodel.h \
     searchindirs.h \
     stringbuilder/abstractinsertstring.h \
     stringbuilder/abstractstringbuilder.h \
@@ -105,8 +105,8 @@ HEADERS += \
     stringbuilder/onfile/imagehash.h \
     stringbuilder/onfile/originalname.h \
     stringbuilder/replacestring.h \
+    stringbuilder/stringbuilderchainmodel.h \
     stringbuilder/stringbuilderfactory.h \
-    stringbuilder/stringbuildersettingsmodel.h \
     stringbuilder/stringbuildersmodel.h \
     stringbuilder/widgets/abstractstringbuilderwidget.h \
     stringbuilder/widgets/dialogbuildersettings.h \
@@ -158,7 +158,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 RESOURCES += \
     images.qrc
 
-VERSION = 1.3.0.0
+VERSION = 1.4.0.0
 RC_ICONS = res/images/appicon.ico
 QMAKE_TARGET_PRODUCT = FileRenamer
 QMAKE_TARGET_COPYRIGHT = "Copyright 2021-2022 Takashi Inoue"

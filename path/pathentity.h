@@ -22,7 +22,6 @@
 #include <QCryptographicHash>
 #include <QHash>
 #include <QIcon>
-#include <QReadWriteLock>
 #include <QSharedPointer>
 
 namespace Path {
@@ -75,8 +74,6 @@ private:
     State state() const;
 
     void findErrorCause();
-
-    mutable QReadWriteLock m_lock;
 
     const bool m_isDir;
 

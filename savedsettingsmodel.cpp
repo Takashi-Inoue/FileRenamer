@@ -17,10 +17,10 @@
  * along with APPNAME.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "renamesettingsmodel.h"
+#include "savedsettingsmodel.h"
 
 #include "application.h"
-#include "stringbuilder/stringbuildersettingsmodel.h"
+#include "stringbuilder/stringbuilderchainmodel.h"
 
 #include <QDir>
 #include <QFile>
@@ -46,13 +46,13 @@ QString completeIniName(QStringView baseName){
 
 //--------------------------------------------------------------------------------------------------
 
-RenameSettingsModel::RenameSettingsModel(QObject *parent)
+SavedSettingsModel::SavedSettingsModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
     load();
 }
 
-int RenameSettingsModel::rowCount(const QModelIndex &parent) const
+int SavedSettingsModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
@@ -60,7 +60,7 @@ int RenameSettingsModel::rowCount(const QModelIndex &parent) const
     return m_iniBaseNames.size();
 }
 
-int RenameSettingsModel::columnCount(const QModelIndex &parent) const
+int SavedSettingsModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
@@ -68,7 +68,7 @@ int RenameSettingsModel::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
-QVariant RenameSettingsModel::data(const QModelIndex &index, int role) const
+QVariant SavedSettingsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -82,7 +82,7 @@ QVariant RenameSettingsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant RenameSettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant SavedSettingsModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation != Qt::Horizontal || section != 0)
         return QVariant{};
@@ -91,12 +91,12 @@ QVariant RenameSettingsModel::headerData(int section, Qt::Orientation orientatio
         return Qt::AlignCenter;
 
     if (role == Qt::DisplayRole)
-        return tr("Rename Settings");
+        return tr("Saved Settings");
 
     return QVariant{};
 }
 
-bool RenameSettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool SavedSettingsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return false;
@@ -120,7 +120,7 @@ bool RenameSettingsModel::setData(const QModelIndex &index, const QVariant &valu
     return false;
 }
 
-Qt::ItemFlags RenameSettingsModel::flags(const QModelIndex &index) const
+Qt::ItemFlags SavedSettingsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
@@ -128,7 +128,7 @@ Qt::ItemFlags RenameSettingsModel::flags(const QModelIndex &index) const
     return Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
 }
 
-bool RenameSettingsModel::removeRows(int row, int count, const QModelIndex &parent)
+bool SavedSettingsModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     if (parent.isValid())
         return false;
@@ -148,12 +148,12 @@ bool RenameSettingsModel::removeRows(int row, int count, const QModelIndex &pare
     return true;
 }
 
-bool RenameSettingsModel::existsLastTimeSettings() const
+bool SavedSettingsModel::existsLastTimeSettings() const
 {
     return m_iniBaseNames.contains(lastTimeBaseName());
 }
 
-int RenameSettingsModel::insertNewSettings(QStringView settingsName)
+int SavedSettingsModel::insertNewSettings(QStringView settingsName)
 {
     int notEditableCount = 0;
 
@@ -174,7 +174,7 @@ int RenameSettingsModel::insertNewSettings(QStringView settingsName)
     return insertIndex;
 }
 
-bool RenameSettingsModel::isEditable(int row)
+bool SavedSettingsModel::isEditable(int row)
 {
     if (row == 0)
         return false;
@@ -188,17 +188,17 @@ bool RenameSettingsModel::isEditable(int row)
     return true;
 }
 
-bool RenameSettingsModel::isNewSettings(QStringView baseName) const
+bool SavedSettingsModel::isNewSettings(QStringView baseName) const
 {
     return baseName == newSettingsName();
 }
 
-int RenameSettingsModel::rowForLastTimeSetting() const
+int SavedSettingsModel::rowForLastTimeSetting() const
 {
     return m_iniBaseNames.indexOf(lastTimeBaseName());
 }
 
-QList<int> RenameSettingsModel::notEditableRows() const
+QList<int> SavedSettingsModel::notEditableRows() const
 {
     QList<int> rows = {0};
 
@@ -211,7 +211,7 @@ QList<int> RenameSettingsModel::notEditableRows() const
     return rows;
 }
 
-void RenameSettingsModel::saveAsLastUsed(StringBuilder::SettingsModel *builderChainModel)
+void SavedSettingsModel::saveAsLastUsed(StringBuilder::BuilderChainModel *builderChainModel)
 {
     const QString iniPath{Application::settingsIniPath(QString{lastUsedFileName})};
     QSettings qSet{iniPath, QSettings::IniFormat};
@@ -227,7 +227,7 @@ void RenameSettingsModel::saveAsLastUsed(StringBuilder::SettingsModel *builderCh
     }
 }
 
-void RenameSettingsModel::saveAsLastTime(StringBuilder::SettingsModel *builderChainModel)
+void SavedSettingsModel::saveAsLastTime(StringBuilder::BuilderChainModel *builderChainModel)
 {
     const QString iniPath{Application::settingsIniPath(QString{lastTimeFileName})};
     QSettings qSet{iniPath, QSettings::IniFormat};
@@ -235,7 +235,7 @@ void RenameSettingsModel::saveAsLastTime(StringBuilder::SettingsModel *builderCh
     builderChainModel->saveSettings(&qSet);
 }
 
-QSharedPointer<QSettings> RenameSettingsModel::qSettings(int row) const
+QSharedPointer<QSettings> SavedSettingsModel::qSettings(int row) const
 {
     Q_ASSERT(row > 0 && row < m_iniBaseNames.count());
 
@@ -244,7 +244,7 @@ QSharedPointer<QSettings> RenameSettingsModel::qSettings(int row) const
     return QSharedPointer<QSettings>::create(iniPath, QSettings::IniFormat);
 }
 
-void RenameSettingsModel::load()
+void SavedSettingsModel::load()
 {
     beginResetModel();
 

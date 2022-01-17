@@ -17,7 +17,8 @@
  * along with APPNAME.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "stringbuildersettingsmodel.h"
+#include "stringbuilderchainmodel.h"
+
 #include "abstractstringbuilder.h"
 #include "onfile/builderchainonfile.h"
 #include "stringbuilder/widgets/dialogbuildersettings.h"
@@ -59,12 +60,12 @@ void moveItems(StringBuilderList &builders, QList<int> rows, int targetRow)
 
 } // anonymous
 
-SettingsModel::SettingsModel(QObject *parent)
+BuilderChainModel::BuilderChainModel(QObject *parent)
     : QAbstractTableModel{parent}
 {
 }
 
-int SettingsModel::rowCount(const QModelIndex &parent) const
+int BuilderChainModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
@@ -72,7 +73,7 @@ int SettingsModel::rowCount(const QModelIndex &parent) const
     return m_builders.size();
 }
 
-int SettingsModel::columnCount(const QModelIndex &parent) const
+int BuilderChainModel::columnCount(const QModelIndex &parent) const
 {
     if (parent.isValid())
         return 0;
@@ -80,7 +81,7 @@ int SettingsModel::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
-QVariant SettingsModel::data(const QModelIndex &index, int role) const
+QVariant BuilderChainModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -91,7 +92,7 @@ QVariant SettingsModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
+bool BuilderChainModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
                                     int /*row*/, int /*column*/, const QModelIndex &/*parent*/) const
 {
     if (data->hasFormat(mimeTypeBuilderType))
@@ -103,7 +104,7 @@ bool SettingsModel::canDropMimeData(const QMimeData *data, Qt::DropAction /*acti
     return false;
 }
 
-bool SettingsModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
+bool BuilderChainModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*/,
                                  int row, int /*column*/, const QModelIndex &parent)
 {
     int targetRow = (row != -1) ? row : parent.row();
@@ -139,7 +140,7 @@ bool SettingsModel::dropMimeData(const QMimeData *data, Qt::DropAction /*action*
     return true;
 }
 
-Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
+Qt::ItemFlags BuilderChainModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags defaultFlags = QAbstractTableModel::flags(index);
 
@@ -149,12 +150,12 @@ Qt::ItemFlags SettingsModel::flags(const QModelIndex &index) const
     return defaultFlags | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled;
 }
 
-Qt::DropActions SettingsModel::supportedDropActions() const
+Qt::DropActions BuilderChainModel::supportedDropActions() const
 {
     return Qt::CopyAction | Qt::MoveAction;
 }
 
-void SettingsModel::appendBuilders(StringBuilderList &&builders)
+void BuilderChainModel::appendBuilders(StringBuilderList &&builders)
 {
     if (builders.isEmpty())
         return;
@@ -169,7 +170,7 @@ void SettingsModel::appendBuilders(StringBuilderList &&builders)
     endInsertRows();
 }
 
-SharedBuilderChainOnFile SettingsModel::builderChain() const
+SharedBuilderChainOnFile BuilderChainModel::builderChain() const
 {
     auto builderChain = SharedBuilderChainOnFile::create();
 
@@ -181,7 +182,7 @@ SharedBuilderChainOnFile SettingsModel::builderChain() const
     return builderChain;
 }
 
-StringBuilderList SettingsModel::builders(const QModelIndexList &indexes) const
+StringBuilderList BuilderChainModel::builders(const QModelIndexList &indexes) const
 {
     StringBuilderList builders;
 
@@ -193,7 +194,7 @@ StringBuilderList SettingsModel::builders(const QModelIndexList &indexes) const
     return builders;
 }
 
-void SettingsModel::clearSettings()
+void BuilderChainModel::clearSettings()
 {
     beginResetModel();
     m_builders.clear();
@@ -202,12 +203,12 @@ void SettingsModel::clearSettings()
     emit settingsChanged(builderChain());
 }
 
-bool SettingsModel::isEmpty() const
+bool BuilderChainModel::isEmpty() const
 {
     return m_builders.isEmpty();
 }
 
-DialogBuilderSettings *SettingsModel::settingsDialog(QList<int> showIndexes, QWidget *parent) const
+DialogBuilderSettings *BuilderChainModel::settingsDialog(QList<int> showIndexes, QWidget *parent) const
 {
     QList<AbstractWidget *> widgets;
 
@@ -222,7 +223,7 @@ DialogBuilderSettings *SettingsModel::settingsDialog(QList<int> showIndexes, QWi
     return dlg;
 }
 
-void SettingsModel::removeSpecifiedRows(QModelIndexList &&indexes)
+void BuilderChainModel::removeSpecifiedRows(QModelIndexList &&indexes)
 {
     std::sort(indexes.begin(), indexes.end(), [](const QModelIndex &lhs, const QModelIndex &rhs) {
         return rhs.row() < lhs.row();
@@ -238,7 +239,7 @@ void SettingsModel::removeSpecifiedRows(QModelIndexList &&indexes)
     emit settingsChanged(builderChain());
 }
 
-void SettingsModel::loadSettings(QSettings *qSet)
+void BuilderChainModel::loadSettings(QSettings *qSet)
 {
     beginResetModel();
 
@@ -268,7 +269,7 @@ void SettingsModel::loadSettings(QSettings *qSet)
     emit settingsChanged(builderChain());
 }
 
-void SettingsModel::saveSettings(QSettings *qSet) const
+void BuilderChainModel::saveSettings(QSettings *qSet) const
 {
     qSet->beginGroup(Settings::groupName);
     qSet->remove("");

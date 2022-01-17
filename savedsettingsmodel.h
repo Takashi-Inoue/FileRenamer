@@ -24,14 +24,14 @@
 
 class QSettings;
 
-namespace StringBuilder { class SettingsModel; }
+namespace StringBuilder { class BuilderChainModel; }
 
-class RenameSettingsModel : public QAbstractTableModel
+class SavedSettingsModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    explicit RenameSettingsModel(QObject *parent = nullptr);
+    explicit SavedSettingsModel(QObject *parent = nullptr);
 
 public: // QAbstractItemModel interface
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -51,8 +51,8 @@ public:
     bool isNewSettings(QStringView baseName) const;
     int rowForLastTimeSetting() const;
     QList<int> notEditableRows() const;
-    void saveAsLastUsed(StringBuilder::SettingsModel *builderChainModel);
-    void saveAsLastTime(StringBuilder::SettingsModel *builderChainModel);
+    void saveAsLastUsed(StringBuilder::BuilderChainModel *builderChainModel);
+    void saveAsLastTime(StringBuilder::BuilderChainModel *builderChainModel);
     QSharedPointer<QSettings> qSettings(int row) const;
 
 signals:

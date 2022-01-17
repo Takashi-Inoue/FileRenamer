@@ -21,9 +21,9 @@
 
 #include <QWidget>
 
-namespace StringBuilder { class SettingsModel; }
+namespace StringBuilder { class BuilderChainModel; }
 
-class RenameSettingsModel;
+class SavedSettingsModel;
 
 class QMenu;
 
@@ -33,7 +33,7 @@ class WidgetLoadSaveBuilderSettings : public QWidget
 {
     Q_OBJECT
 public:
-    explicit WidgetLoadSaveBuilderSettings(StringBuilder::SettingsModel *settingsModel,
+    explicit WidgetLoadSaveBuilderSettings(StringBuilder::BuilderChainModel *builderChainModel,
                                            QWidget *parent = nullptr);
     ~WidgetLoadSaveBuilderSettings();
 
@@ -48,8 +48,8 @@ private slots:
 private:
     Ui::WidgetLoadSaveBuilderSettings *ui;
 
-    StringBuilder::SettingsModel *m_settingsModel;
-    RenameSettingsModel *m_settingsListModel;
+    StringBuilder::BuilderChainModel *m_settingsModel;
+    SavedSettingsModel *m_settingsListModel;
     QAction *m_actionSave = nullptr;
 };
 

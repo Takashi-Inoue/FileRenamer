@@ -21,8 +21,6 @@
 
 #include "usingpathentity.h"
 
-#include <QReadWriteLock>
-
 namespace Path {
 
 class ParentDir
@@ -43,8 +41,6 @@ public:
     void sort(QCollator &collator, Qt::SortOrder order);
 
 private:
-    mutable QReadWriteLock m_lock;
-
     const QString m_path;
     EntityList m_children;
 };

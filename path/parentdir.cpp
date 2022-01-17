@@ -21,8 +21,13 @@
 #include "pathentity.h"
 
 #include <QCollator>
+#include <QReadWriteLock>
 
 namespace Path {
+
+namespace {
+Q_GLOBAL_STATIC(QReadWriteLock, rwLock)
+} // anonymous
 
 ParentDir::ParentDir(QStringView path)
     : m_path(path.toString())
@@ -32,28 +37,28 @@ ParentDir::ParentDir(QStringView path)
 
 void ParentDir::addEntity(const SharedEntity &entity)
 {
-    QWriteLocker locker(&m_lock);
+    QWriteLocker locker(rwLock);
 
     m_children << entity;
 }
 
 void ParentDir::clear()
 {
-    QWriteLocker locker(&m_lock);
+    QWriteLocker locker(rwLock);
 
     m_children.clear();
 }
 
 void ParentDir::removeEntity(WeakEntity entity)
 {
-    QWriteLocker locker(&m_lock);
+    QWriteLocker locker(rwLock);
 
     m_children.removeOne(entity);
 }
 
 void ParentDir::replaceEntities(const EntityList &entities)
 {
-    QWriteLocker locker(&m_lock);
+    QWriteLocker locker(rwLock);
 
     Q_ASSERT(m_children.size() == entities.size());
 
@@ -84,14 +89,17 @@ QString ParentDir::path() const
 
 void ParentDir::sort(QCollator &collator, Qt::SortOrder order)
 {
-    QWriteLocker locker(&m_lock);
+    QWriteLocker locker(rwLock);
 
     using SharedEntity = QSharedPointer<PathEntity>;
 
+    auto comparer = (order == Qt::AscendingOrder)
+                    ? (std::function<bool(int&&, int&&)>{std::less()})
+                    : (std::function<bool(int&&, int&&)>{std::greater()});
+
     std::sort(m_children.begin(), m_children.end(),
               [&](const SharedEntity &lhs, const SharedEntity &rhs) {
-        return order == Qt::AscendingOrder ? collator.compare(lhs->name(), rhs->name()) < 0
-                                           : collator.compare(lhs->name(), rhs->name()) > 0;
+        return comparer(collator.compare(lhs->name(), rhs->name()), 0);
     });
 }
 

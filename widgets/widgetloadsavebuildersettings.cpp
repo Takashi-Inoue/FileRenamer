@@ -23,8 +23,8 @@
 #include "application.h"
 #include "dialogsettingslistconfigurator.h"
 #include "filenamevalidator.h"
-#include "renamesettingsmodel.h"
-#include "stringbuilder/stringbuildersettingsmodel.h"
+#include "savedsettingsmodel.h"
+#include "stringbuilder/stringbuilderchainmodel.h"
 
 #include <QDir>
 #include <QInputDialog>
@@ -62,13 +62,13 @@ QString requestNewIniName()
 //--------------------------------------------------------------------------------------------------
 
 WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
-        StringBuilder::SettingsModel *settingsModel, QWidget *parent)
+        StringBuilder::BuilderChainModel *builderChainModel, QWidget *parent)
     : QWidget(parent),
       ui(new Ui::WidgetLoadSaveBuilderSettings),
-      m_settingsModel(settingsModel),
-      m_settingsListModel(new RenameSettingsModel{this})
+      m_settingsModel(builderChainModel),
+      m_settingsListModel(new SavedSettingsModel{this})
 {
-    Q_CHECK_PTR(settingsModel);
+    Q_CHECK_PTR(builderChainModel);
 
     ui->setupUi(this);
 

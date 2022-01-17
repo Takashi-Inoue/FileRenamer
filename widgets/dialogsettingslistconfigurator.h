@@ -21,7 +21,7 @@
 
 #include <QDialog>
 
-class RenameSettingsModel;
+class SavedSettingsModel;
 
 namespace Ui { class DialogSettingsListConfigurator; }
 
@@ -30,7 +30,7 @@ class DialogSettingsListConfigurator : public QDialog
     Q_OBJECT
 
 public:
-    explicit DialogSettingsListConfigurator(RenameSettingsModel *model, QWidget *parent = nullptr);
+    explicit DialogSettingsListConfigurator(SavedSettingsModel *model, QWidget *parent = nullptr);
     ~DialogSettingsListConfigurator();
 
 private slots:

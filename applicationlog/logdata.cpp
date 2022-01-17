@@ -45,7 +45,7 @@ QString LogData::log() const
 
 void LogData::write(QFile &file) const
 {
-    QString line = QStringLiteral("[%1] %2\t:\t%3")
+    QString line = QStringLiteral("[%1] <%2>:%3")
                    .arg(time(QStringLiteral("yyyy-MM-dd hh:mm:ss.zzz")), m_group, m_log);
     file.write(line.toUtf8());
     file.write("\r\n");

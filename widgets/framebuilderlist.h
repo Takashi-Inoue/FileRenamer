@@ -26,7 +26,7 @@
 
 namespace StringBuilder {
 class BuildersModel;
-class SettingsModel;
+class BuilderChainModel;
 } // StringBuilder
 
 class WidgetLoadSaveBuilderSettings;
@@ -64,7 +64,7 @@ private:
 
     QTimer *m_timer;
     StringBuilder::BuildersModel *m_buildersModel;
-    StringBuilder::SettingsModel *m_settingsModel;
+    StringBuilder::BuilderChainModel *m_settingsModel;
     WidgetLoadSaveBuilderSettings *m_widgetLoadSaver = nullptr;
 };
 

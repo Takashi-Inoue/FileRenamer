@@ -24,8 +24,13 @@
 
 #include <QDir>
 #include <QFileIconProvider>
+#include <QReadWriteLock>
 
 namespace Path {
+
+namespace {
+Q_GLOBAL_STATIC(QReadWriteLock, rwLock)
+} // anonymous
 
 PathEntity::PathEntity(QWeakPointer<ParentDir> parent, QStringView name, bool isDir)
     : m_isDir(isDir),
@@ -47,7 +52,7 @@ bool PathEntity::isDir() const
 
 QString PathEntity::fullPath() const
 {
-    QReadLocker locker(&m_lock);
+    QReadLocker locker(rwLock);
 
     return QStringLiteral("%1%2").arg(m_parent.lock()->path(), m_name);
 }
@@ -59,14 +64,14 @@ QString PathEntity::parentPath() const
 
 QString PathEntity::name() const
 {
-    QReadLocker locker(&m_lock);
+    QReadLocker locker(rwLock);
 
     return m_name;
 }
 
 QString PathEntity::newName() const
 {
-    QReadLocker locker(&m_lock);
+    QReadLocker locker(rwLock);
 
     return m_newName;
 }
@@ -98,7 +103,7 @@ void PathEntity::setImageHash(QStringView imageHash)
 
 void PathEntity::setNewName(QStringView newName)
 {
-    QWriteLocker locker(&m_lock);
+    QWriteLocker locker(rwLock);
 
     m_newName = m_isDir ? newName.toString()
                         : QStringLiteral("%1%2").arg(newName, m_name.mid(m_name.indexOf('.')));
@@ -157,7 +162,7 @@ QIcon PathEntity::stateIcon() const
         {int(State::Failure),     QIcon(QStringLiteral(":/res/images/failure.svg"))},
     };
 
-    QReadLocker locker(&m_lock);
+    QReadLocker locker(rwLock);
 
     return icons[int(m_state)];
 }
@@ -172,7 +177,7 @@ QString PathEntity::stateText() const
         {int(State::Failure),     QObject::tr("Failed")},
     };
 
-    QReadLocker locker(&m_lock);
+    QReadLocker locker(rwLock);
 
     return texts[int(m_state)];
 }
@@ -219,7 +224,7 @@ bool PathEntity::rename()
     if (state() != State::Ready)
         return false;
 
-    m_lock.lockForRead();
+    rwLock->lockForRead();
 
     QDir dir(m_parent.lock()->path());
 
@@ -228,11 +233,11 @@ bool PathEntity::rename()
     QString result = isOk ? QObject::tr("SUCCEEDED")
                           : QObject::tr("---FAILED");
 
-    QString log = QStringLiteral("%1 - %2/%3 -> %4").arg(result, dir.absolutePath(), m_name, m_newName);
+    QString log = QStringLiteral("%1|%2/%3 -> %4").arg(result, dir.absolutePath(), m_name, m_newName);
 
     ApplicationLog::instance().log(log, QStringLiteral("Rename"));
 
-    m_lock.unlock();
+    rwLock->unlock();
 
     if (isOk) {
         setState(State::Success);
@@ -254,7 +259,7 @@ bool PathEntity::undoRename()
     if (state() != State::Success)
         return false;
 
-    m_lock.lockForRead();
+    rwLock->lockForRead();
 
     QDir dir(m_parent.lock()->path());
 
@@ -263,11 +268,11 @@ bool PathEntity::undoRename()
     QString result = isOk ? QObject::tr("SUCCEEDED")
                           : QObject::tr("---FAILED");
 
-    QString log = QStringLiteral("%1 - %2/%3 -> %4").arg(result, dir.absolutePath(), m_newName, m_name);
+    QString log = QStringLiteral("%1|%2/%3 -> %4").arg(result, dir.absolutePath(), m_newName, m_name);
 
     ApplicationLog::instance().log(log, QStringLiteral("Undo"));
 
-    m_lock.unlock();
+    rwLock->unlock();
 
     isOk ? setState(State::Ready)
          : setState(State::Success);
@@ -277,14 +282,14 @@ bool PathEntity::undoRename()
 
 void PathEntity::setState(PathEntity::State state)
 {
-    QWriteLocker locker(&m_lock);
+    QWriteLocker locker(rwLock);
 
     m_state = state;
 }
 
 PathEntity::State PathEntity::state() const
 {
-    QReadLocker locker(&m_lock);
+    QReadLocker locker(rwLock);
 
     return m_state;
 }
@@ -300,7 +305,7 @@ void PathEntity::findErrorCause()
     else if (QFileInfo::exists(QStringLiteral("%1%2").arg(parentPath(), newName())))
         errorCode = ErrorCode::AlreadyExist;
 
-    QWriteLocker locker(&m_lock);
+    QWriteLocker locker(rwLock);
 
     m_errorCode = errorCode;
 }
