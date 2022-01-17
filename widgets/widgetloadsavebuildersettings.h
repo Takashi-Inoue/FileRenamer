@@ -38,10 +38,10 @@ public:
     ~WidgetLoadSaveBuilderSettings();
 
     QWidget *lastTabOrderWidget() const;
-    void saveLatestSettings() const;
+    void saveLastUsedSettings() const;
+    void saveLastTimeSettings() const;
 
 private slots:
-    void loadSettings(int comboBoxIndex);
     void saveOverwrite() const;
     void saveNewSettings() const;
 

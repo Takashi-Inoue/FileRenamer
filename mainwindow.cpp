@@ -107,10 +107,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->frameBuilderList, &FrameBuilderList::settingsChanged,
             m_pathModel, &PathModel::startCreateNewNames);
 
-    connect(ui->frameBuilderList, &FrameBuilderList::changeStarted,
-            this, &MainWindow::adaptorToChangeState);
-    connect(ui->frameBuilderList, &FrameBuilderList::builderCleared,
-            this, &MainWindow::adaptorToChangeState);
+    connect(ui->frameBuilderList, SIGNAL(changeStarted()), this, SLOT(adaptorToChangeState()));
+    connect(ui->frameBuilderList, SIGNAL(builderCleared()), this, SLOT(adaptorToChangeState()));
 
     connect(m_pathModel, &PathModel::itemCleared,    this, &MainWindow::adaptorToChangeState);
     connect(m_pathModel, &PathModel::readyToRename,  this, &MainWindow::adaptorToChangeState);
@@ -127,8 +125,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionUndo,       &QAction::triggered, m_pathModel, &PathModel::undoRename);
     connect(ui->actionClearItems, &QAction::triggered, m_pathModel, &PathModel::clear);
 
-//    connect(ui->actionRename, &QAction::triggered,
-//            ui->formStringBuilderChain, &FormStringBuilderChain::saveLatestSettings);
+    connect(ui->actionRename, &QAction::triggered,
+            ui->frameBuilderList, &FrameBuilderList::saveLastUsedSettings);
 
     startCreatingNewNames();
 }
@@ -146,8 +144,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
         return;
 
     saveMainGeometry(this);
-
-//    ui->formStringBuilderChain->saveCurrentBuilderSettings(qSettings);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)

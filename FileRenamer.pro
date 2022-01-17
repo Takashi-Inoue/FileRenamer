@@ -159,6 +159,6 @@ RESOURCES += \
     images.qrc
 
 VERSION = 1.3.0.0
-RC_ICONS = res/images/filerenamer.ico
+RC_ICONS = res/images/appicon.ico
 QMAKE_TARGET_PRODUCT = FileRenamer
 QMAKE_TARGET_COPYRIGHT = "Copyright 2021-2022 Takashi Inoue"

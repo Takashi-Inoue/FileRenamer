@@ -45,6 +45,9 @@ public:
 
     SharedBuilderChainOnFile builderChain() const;
 
+public slots:
+    void saveLastUsedSettings() const;
+
 signals:
     void builderCleared();
     void changeStarted();

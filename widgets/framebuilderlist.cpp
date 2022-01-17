@@ -103,7 +103,7 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
 
 FrameBuilderList::~FrameBuilderList()
 {
-    m_widgetLoadSaver->saveLatestSettings();
+    m_widgetLoadSaver->saveLastTimeSettings();
 
     delete ui;
 }
@@ -111,6 +111,11 @@ FrameBuilderList::~FrameBuilderList()
 SharedBuilderChainOnFile FrameBuilderList::builderChain() const
 {
     return m_settingsModel->builderChain();
+}
+
+void FrameBuilderList::saveLastUsedSettings() const
+{
+    m_widgetLoadSaver->saveLastUsedSettings();
 }
 
 void FrameBuilderList::appendSelectedBuildersToSettings()

@@ -20,6 +20,7 @@
 #include "renamesettingsmodel.h"
 
 #include "application.h"
+#include "stringbuilder/stringbuildersettingsmodel.h"
 
 #include <QDir>
 #include <QFile>
@@ -27,7 +28,12 @@
 #include <QDebug>
 
 namespace {
-constexpr char lastSettingsFileName[] = "Last used.ini";
+constexpr char lastUsedFileName[] = "Last used.ini";
+constexpr char lastTimeFileName[] = "Last time.ini";
+
+QString newSettingsName() { return QObject::tr("New settings"); }
+QString lastUsedBaseName() { return QString{lastUsedFileName}.chopped(4); }
+QString lastTimeBaseName() { return QString{lastTimeFileName}.chopped(4); }
 
 QString completeIniName(QStringView baseName){
     if (baseName.right(4) == QStringLiteral(".ini"))
@@ -142,14 +148,23 @@ bool RenameSettingsModel::removeRows(int row, int count, const QModelIndex &pare
     return true;
 }
 
-bool RenameSettingsModel::existsLastUsedSettings() const
+bool RenameSettingsModel::existsLastTimeSettings() const
 {
-    return (m_iniBaseNames.last() == QString{lastSettingsFileName}.chopped(4));
+    return m_iniBaseNames.contains(lastTimeBaseName());
 }
 
 int RenameSettingsModel::insertNewSettings(QStringView settingsName)
 {
-    auto itr = std::upper_bound(++m_iniBaseNames.cbegin(), --m_iniBaseNames.cend(), settingsName);
+    int notEditableCount = 0;
+
+    if (m_iniBaseNames.contains(lastUsedBaseName()))
+        ++notEditableCount;
+
+    if (m_iniBaseNames.contains(lastTimeBaseName()))
+        ++notEditableCount;
+
+    auto itr = std::upper_bound(++m_iniBaseNames.cbegin(), m_iniBaseNames.cend() - notEditableCount,
+                                settingsName);
     const int insertIndex = std::distance(m_iniBaseNames.cbegin(), itr);
 
     beginInsertRows(QModelIndex{}, insertIndex, insertIndex);
@@ -157,6 +172,67 @@ int RenameSettingsModel::insertNewSettings(QStringView settingsName)
     endInsertRows();
 
     return insertIndex;
+}
+
+bool RenameSettingsModel::isEditable(int row)
+{
+    if (row == 0)
+        return false;
+
+    if (row == m_iniBaseNames.indexOf(lastUsedBaseName()))
+        return false;
+
+    if (row == m_iniBaseNames.indexOf(lastTimeBaseName()))
+        return false;
+
+    return true;
+}
+
+bool RenameSettingsModel::isNewSettings(QStringView baseName) const
+{
+    return baseName == newSettingsName();
+}
+
+int RenameSettingsModel::rowForLastTimeSetting() const
+{
+    return m_iniBaseNames.indexOf(lastTimeBaseName());
+}
+
+QList<int> RenameSettingsModel::notEditableRows() const
+{
+    QList<int> rows = {0};
+
+    if (qsizetype index = m_iniBaseNames.indexOf(lastUsedBaseName()); index != -1)
+        rows.append(index);
+
+    if (qsizetype index = m_iniBaseNames.indexOf(lastTimeBaseName()); index != -1)
+        rows.append(index);
+
+    return rows;
+}
+
+void RenameSettingsModel::saveAsLastUsed(StringBuilder::SettingsModel *builderChainModel)
+{
+    const QString iniPath{Application::settingsIniPath(QString{lastUsedFileName})};
+    QSettings qSet{iniPath, QSettings::IniFormat};
+
+    builderChainModel->saveSettings(&qSet);
+
+    if (!m_iniBaseNames.contains(lastUsedBaseName())) {
+        const int insertIndex = m_iniBaseNames.contains(lastTimeBaseName())
+                                ? m_iniBaseNames.size() - 1 : m_iniBaseNames.size();
+        beginInsertRows(QModelIndex{}, insertIndex, insertIndex);
+        m_iniBaseNames.insert(insertIndex, lastUsedBaseName());
+        endInsertRows();
+    }
+}
+
+void RenameSettingsModel::saveAsLastTime(StringBuilder::SettingsModel *builderChainModel)
+{
+    const QString iniPath{Application::settingsIniPath(QString{lastTimeFileName})};
+    QSettings qSet{iniPath, QSettings::IniFormat};
+
+    builderChainModel->saveSettings(&qSet);
 }
 
 QSharedPointer<QSettings> RenameSettingsModel::qSettings(int row) const
@@ -168,18 +244,11 @@ QSharedPointer<QSettings> RenameSettingsModel::qSettings(int row) const
     return QSharedPointer<QSettings>::create(iniPath, QSettings::IniFormat);
 }
 
-QSharedPointer<QSettings> RenameSettingsModel::qSettingsForLastUsed() const
-{
-    QString iniPath{Application::settingsIniPath(QString{lastSettingsFileName})};
-
-    return QSharedPointer<QSettings>::create(iniPath, QSettings::IniFormat);
-}
-
 void RenameSettingsModel::load()
 {
     beginResetModel();
 
-    m_iniBaseNames = {tr("New settings")};
+    m_iniBaseNames = {newSettingsName()};
 
     QDir dir{Application::settingsDirPath()};
 
@@ -189,16 +258,24 @@ void RenameSettingsModel::load()
     }
 
     QStringList completeNames = dir.entryList({"*.ini"}, QDir::Files, QDir::Name);
-    qsizetype indexLastUsed = completeNames.indexOf(QString{lastSettingsFileName});
+    qsizetype indexLastUsed = completeNames.indexOf(QString{lastUsedFileName});
 
     if (indexLastUsed != -1)
         completeNames.removeAt(indexLastUsed);
+
+    qsizetype indexLastTime = completeNames.indexOf(QString{lastTimeFileName});
+
+    if (indexLastTime != -1)
+        completeNames.removeAt(indexLastTime);
 
     for (QStringView completeName : completeNames)
         m_iniBaseNames.append(completeName.chopped(4).toString());
 
     if (indexLastUsed != -1)
-        m_iniBaseNames.append(QString{lastSettingsFileName}.chopped(4));
+        m_iniBaseNames.append(lastUsedBaseName());
+
+    if (indexLastTime != -1)
+        m_iniBaseNames.append(lastTimeBaseName());
 
     endResetModel();
 

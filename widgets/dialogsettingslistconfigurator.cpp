@@ -56,8 +56,13 @@ DialogSettingsListConfigurator::~DialogSettingsListConfigurator()
 
 void DialogSettingsListConfigurator::hideNotEditableSettings()
 {
-    ui->tableView->hideRow(0);
-    ui->tableView->hideRow(ui->tableView->model()->rowCount() - 1);
+    auto model = qobject_cast<RenameSettingsModel *>(ui->tableView->model());
+
+    if (model == nullptr)
+        return;
+
+    for (int row : model->notEditableRows())
+        ui->tableView->hideRow(row);
 }
 
 void DialogSettingsListConfigurator::removeSelectedSettings()

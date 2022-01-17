@@ -24,6 +24,8 @@
 
 class QSettings;
 
+namespace StringBuilder { class SettingsModel; }
+
 class RenameSettingsModel : public QAbstractTableModel
 {
     Q_OBJECT
@@ -43,10 +45,15 @@ public: // QAbstractItemModel interface
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex()) override;
 
 public:
-    bool existsLastUsedSettings() const;
+    bool existsLastTimeSettings() const;
     int insertNewSettings(QStringView settingsName);
+    bool isEditable(int row);
+    bool isNewSettings(QStringView baseName) const;
+    int rowForLastTimeSetting() const;
+    QList<int> notEditableRows() const;
+    void saveAsLastUsed(StringBuilder::SettingsModel *builderChainModel);
+    void saveAsLastTime(StringBuilder::SettingsModel *builderChainModel);
     QSharedPointer<QSettings> qSettings(int row) const;
-    QSharedPointer<QSettings> qSettingsForLastUsed() const;
 
 signals:
     void loaded();

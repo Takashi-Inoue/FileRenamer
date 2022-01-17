@@ -74,25 +74,31 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
 
     auto configMenu = new QMenu{this};
 
-    m_actionSave = configMenu->addAction(
-                       tr("Save"), this, &WidgetLoadSaveBuilderSettings::saveOverwrite,
-                       QKeySequence{QKeySequence::Save});
-    QAction *actionSaveAs = configMenu->addAction(
-                                tr("Save As"), this, &WidgetLoadSaveBuilderSettings::saveNewSettings,
-                                QKeySequence{QStringLiteral("Ctrl+Shift+S")});
+    m_actionSave = configMenu->addAction(tr("Save"), this, SLOT(saveOverwrite()),
+                                         QKeySequence{QKeySequence::Save});
+    QAction *actionSaveAs = configMenu->addAction(tr("Save As"), this, SLOT(saveNewSettings()),
+                                                  QKeySequence{QStringLiteral("Ctrl+Shift+S")});
     configMenu->addSeparator();
     configMenu->addAction(tr("Edit List"), this, [this]() {
         DialogSettingsListConfigurator(m_settingsListModel, this).exec();
     });
 
-    addActions({m_actionSave, actionSaveAs}); // to enable shortcut
+    addActions({m_actionSave, actionSaveAs}); // to enable shortcuts
 
     ui->comboxSettings->setModel(m_settingsListModel);
 
-    connect(ui->comboxSettings, SIGNAL(currentIndexChanged(int)), this, SLOT(loadSettings(int)));
+    connect(ui->comboxSettings, &QComboBox::currentTextChanged, this, [this](const QString &text) {
+        if (m_settingsListModel->isNewSettings(text)) {
+            m_settingsModel->clearSettings();
+            return;
+        }
+
+        const int index = ui->comboxSettings->currentIndex();
+
+        m_settingsModel->loadSettings(m_settingsListModel->qSettings(index).get());
+    });
     connect(ui->comboxSettings, &QComboBox::currentIndexChanged, this, [this](int index) {
-        bool isEnabled = (index > 0) && (index < ui->comboxSettings->count() - 1);
-        m_actionSave->setEnabled(isEnabled);
+        m_actionSave->setEnabled(m_settingsListModel->isEditable(index));
     });
 
     connect(m_settingsListModel, &QAbstractItemModel::modelAboutToBeReset, this, [this]() {
@@ -106,10 +112,10 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
         }
     });
 
-    const int lastIndex = ui->comboxSettings->count() - 1;
+    const int rowOfLastTime = m_settingsListModel->rowForLastTimeSetting();
 
-    m_settingsListModel->existsLastUsedSettings() ? ui->comboxSettings->setCurrentIndex(lastIndex)
-                                                  : ui->comboxSettings->setCurrentIndex(0);
+    (rowOfLastTime != -1) ? ui->comboxSettings->setCurrentIndex(rowOfLastTime)
+                          : ui->comboxSettings->setCurrentIndex(0);
 
     ui->buttonConfig->setMenu(configMenu);
 }
@@ -124,19 +130,14 @@ QWidget *WidgetLoadSaveBuilderSettings::lastTabOrderWidget() const
     return ui->buttonConfig;
 }
 
-void WidgetLoadSaveBuilderSettings::saveLatestSettings() const
+void WidgetLoadSaveBuilderSettings::saveLastUsedSettings() const
 {
-    m_settingsModel->saveSettings(m_settingsListModel->qSettingsForLastUsed().get());
+    m_settingsListModel->saveAsLastUsed(m_settingsModel);
 }
 
-void WidgetLoadSaveBuilderSettings::loadSettings(int comboBoxIndex)
+void WidgetLoadSaveBuilderSettings::saveLastTimeSettings() const
 {
-    if (comboBoxIndex == 0) {
-        m_settingsModel->clearSettings();
-        return;
-    }
-
-    m_settingsModel->loadSettings(m_settingsListModel->qSettings(comboBoxIndex).get());
+    m_settingsListModel->saveAsLastTime(m_settingsModel);
 }
 
 void WidgetLoadSaveBuilderSettings::saveOverwrite() const
@@ -173,4 +174,5 @@ void WidgetLoadSaveBuilderSettings::saveNewSettings() const
     ui->comboxSettings->blockSignals(false);
 
     ui->comboxSettings->setCurrentIndex(insertedIndex);
+    m_actionSave->setEnabled(true);
 }
