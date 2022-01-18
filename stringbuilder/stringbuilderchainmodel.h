@@ -49,6 +49,7 @@ public:
     Qt::DropActions supportedDropActions() const override;
 
 signals:
+    void requestToSelect(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void settingsChanged(SharedBuilderChainOnFile);
 
 public:

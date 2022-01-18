@@ -59,13 +59,22 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
       ui(new Ui::FrameBuilderList),
       m_timer(new QTimer{this}),
       m_buildersModel(new StringBuilder::BuildersModel{this}),
-      m_settingsModel(new StringBuilder::BuilderChainModel{this})
+      m_builderChainModel(new StringBuilder::BuilderChainModel{this})
 {
     ui->setupUi(this);
 
     ui->tableViewBuilders->setModel(m_buildersModel);
 
-    initSettingsTableView(this, ui, m_settingsModel);
+    initSettingsTableView(this, ui, m_builderChainModel);
+
+    connect(m_builderChainModel, &StringBuilder::BuilderChainModel::requestToSelect, this,
+            [this](const QModelIndex &topLeft, const QModelIndex &bottomRight) {
+        ui->tableViewSettings->setFocus();
+        ui->tableViewSettings->setCurrentIndex(topLeft);
+        ui->tableViewSettings->selectionModel()->select(
+                    QItemSelection{topLeft, bottomRight},
+                    QItemSelectionModel::Select | QItemSelectionModel::Rows);
+    });
 
     connect(ui->tableViewSettings->selectionModel(), &QItemSelectionModel::selectionChanged, this,
             [this]() {
@@ -76,7 +85,7 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
 
     connect(ui->actionEdit, SIGNAL(triggered(bool)), this, SLOT(showSettingDialog()));
     connect(ui->actionDelete, &QAction::triggered, this, [this]() {
-        m_settingsModel->removeSpecifiedRows(ui->tableViewSettings->selectionModel()->selectedRows());
+        m_builderChainModel->removeSpecifiedRows(ui->tableViewSettings->selectionModel()->selectedRows());
     });
 
     connect(ui->actionAddBuilders, &QAction::triggered,
@@ -93,7 +102,7 @@ FrameBuilderList::FrameBuilderList(QWidget *parent)
     });
 
     // Init m_widgetLoadSaver after finished connecting.
-    m_widgetLoadSaver = new WidgetLoadSaveBuilderSettings{m_settingsModel, this};
+    m_widgetLoadSaver = new WidgetLoadSaveBuilderSettings{m_builderChainModel, this};
     ui->hLayoutLoadSaver->addWidget(m_widgetLoadSaver);
 
     setTabOrder(m_widgetLoadSaver->lastTabOrderWidget(), ui->tableViewSettings);
@@ -110,7 +119,7 @@ FrameBuilderList::~FrameBuilderList()
 
 SharedBuilderChainOnFile FrameBuilderList::builderChain() const
 {
-    return m_settingsModel->builderChain();
+    return m_builderChainModel->builderChain();
 }
 
 void FrameBuilderList::saveLastUsedSettings() const
@@ -126,7 +135,7 @@ void FrameBuilderList::appendSelectedBuildersToSettings()
         return lhs.row() < rhs.row();
     });
 
-    m_settingsModel->appendBuilders(m_buildersModel->createBuilders(indexes));
+    m_builderChainModel->appendBuilders(m_buildersModel->createBuilders(indexes));
 
     notifyStartChanging();
 }
@@ -139,7 +148,7 @@ void FrameBuilderList::showSettingDialog()
         rows.append(index.row());
 
     using DialogSettings = StringBuilder::DialogBuilderSettings;
-    DialogSettings *dlg = m_settingsModel->settingsDialog(rows, this);
+    DialogSettings *dlg = m_builderChainModel->settingsDialog(rows, this);
 
     connect(dlg, &DialogSettings::changeStarted, this, &FrameBuilderList::changeStarted);
     connect(dlg, &DialogSettings::settingsChanged, this, &FrameBuilderList::settingsChanged);
@@ -154,7 +163,7 @@ void FrameBuilderList::showSettingDialog()
 
 void FrameBuilderList::notifyStartChanging()
 {
-    if (m_settingsModel->isEmpty())
+    if (m_builderChainModel->isEmpty())
         emit builderCleared();
 
     m_timer->start();

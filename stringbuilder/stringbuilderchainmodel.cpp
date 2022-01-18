@@ -38,10 +38,11 @@ constexpr char keyTypeList[] = "Types";
 
 namespace {
 
-void moveItems(StringBuilderList &builders, QList<int> rows, int targetRow)
+// return {target row, number of moved items}
+std::pair<int, int> moveItems(StringBuilderList &builders, QList<int> rows, int targetRow)
 {
     if (rows.isEmpty())
-        return;
+        return {-1, 0};
 
     StringBuilderList removedItems;
 
@@ -56,6 +57,8 @@ void moveItems(StringBuilderList &builders, QList<int> rows, int targetRow)
 
     for (const SharedStringBuilder &builder : removedItems)
         builders.insert(targetRow, builder);
+
+    return {targetRow, removedItems.size()};
 }
 
 } // anonymous
@@ -118,8 +121,10 @@ bool BuilderChainModel::dropMimeData(const QMimeData *data, Qt::DropAction /*act
 
     if (data->hasFormat(MVC::mimeTypeModelDataList)) {
         beginResetModel();
-        moveItems(m_builders, MVC::rowsFromMimeData(data), targetRow);
+        auto [insertedRow, count] = moveItems(m_builders, MVC::rowsFromMimeData(data), targetRow);
         endResetModel();
+
+        emit requestToSelect(createIndex(insertedRow, 0), createIndex(insertedRow + count - 1, 0));
     } else if (data->hasFormat(mimeTypeBuilderType)) {
         QList<int> typeNumbers = MVC::intListFromMimeData(data, mimeTypeBuilderType);
 
@@ -131,6 +136,9 @@ bool BuilderChainModel::dropMimeData(const QMimeData *data, Qt::DropAction /*act
             m_builders.insert(targetRow, BuilderFactory::createBuilder(BuilderType(typeNumber)));
 
         endInsertRows();
+
+        emit requestToSelect(createIndex(targetRow, 0),
+                             createIndex(targetRow + typeNumbers.size() - 1, 0));
     } else {
         return false;
     }

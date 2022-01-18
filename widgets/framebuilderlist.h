@@ -64,7 +64,7 @@ private:
 
     QTimer *m_timer;
     StringBuilder::BuildersModel *m_buildersModel;
-    StringBuilder::BuilderChainModel *m_settingsModel;
+    StringBuilder::BuilderChainModel *m_builderChainModel;
     WidgetLoadSaveBuilderSettings *m_widgetLoadSaver = nullptr;
 };
 
