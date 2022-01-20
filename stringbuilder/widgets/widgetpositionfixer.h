@@ -41,6 +41,8 @@ public:
     bool isLeftMost() const;
     bool isRightMost() const;
 
+    void setFocusToFirstWidget();
+
 signals:
     void changeStarted();
 

@@ -35,6 +35,8 @@ public:
     WidgetOnlyPositionFixer(int insertPos, QWidget *parent = nullptr);
     ~WidgetOnlyPositionFixer() override;
 
+    void setFocusToFirstWidget() override;
+
     bool isLeftMost() const;
     bool isRightMost() const;
 

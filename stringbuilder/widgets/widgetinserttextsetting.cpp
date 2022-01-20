@@ -41,7 +41,7 @@ WidgetInsertTextSetting::WidgetInsertTextSetting(QStringView text, int insertPos
 
     setWindowTitle(tr("Insert Text"));
 
-    loadSettings();
+    WidgetInsertTextSetting::loadSettings();
 
     ui->combox->setValidator(new FileNameVlidator(this));
     ui->combox->setCurrentText(text.toString());
@@ -79,6 +79,11 @@ void WidgetInsertTextSetting::saveSettings() const
     qSet->beginGroup(settingsGroupName);
     ui->combox->saveSettings(qSet, settingsKeyText);
     qSet->endGroup();
+}
+
+void WidgetInsertTextSetting::setFocusToFirstWidget()
+{
+    ui->combox->setFocus();
 }
 
 QString WidgetInsertTextSetting::insertText() const

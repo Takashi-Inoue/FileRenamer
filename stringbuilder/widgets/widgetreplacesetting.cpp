@@ -47,7 +47,7 @@ WidgetReplaceSetting::WidgetReplaceSetting(QStringView find, QStringView replace
 
     setWindowTitle(tr("Replace"));
 
-    loadSettings();
+    WidgetReplaceSetting::loadSettings();
 
     ui->comboxReplace->setValidator(new FileNameVlidator(this));
     ui->comboxSearch->setCurrentText(find.toString());
@@ -107,6 +107,11 @@ void WidgetReplaceSetting::saveSettings() const
     ui->comboxSearch->saveSettings(qSet, settingsKeySearch);
 
     qSet->endGroup();
+}
+
+void WidgetReplaceSetting::setFocusToFirstWidget()
+{
+    ui->comboxSearch->setFocus();
 }
 
 QString WidgetReplaceSetting::findString() const

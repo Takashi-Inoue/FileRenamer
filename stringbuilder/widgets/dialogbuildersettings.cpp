@@ -57,6 +57,9 @@ DialogBuilderSettings::DialogBuilderSettings(QList<AbstractWidget *> widgets,
         ++i;
     }
 
+    if (ui->tabWidget->count() > 0)
+        static_cast<AbstractWidget *>(ui->tabWidget->widget(0))->setFocusToFirstWidget();
+
     m_timer->setSingleShot(true);
     m_timer->setInterval(QApplication::keyboardInputInterval());
 

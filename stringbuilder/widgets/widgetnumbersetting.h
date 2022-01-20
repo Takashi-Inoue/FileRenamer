@@ -40,6 +40,7 @@ public:
     QSharedPointer<AbstractStringBuilder> stringBuilder() const override;
     void loadSettings() override;
     void saveSettings() const override;
+    void setFocusToFirstWidget() override;
 
     int startNumber() const;
     int step() const;

@@ -40,6 +40,7 @@ public:
     virtual QSharedPointer<AbstractStringBuilder> stringBuilder() const = 0;
     virtual void loadSettings() {}
     virtual void saveSettings() const {}
+    virtual void setFocusToFirstWidget() = 0;
 
 signals:
     void accepted();

@@ -44,6 +44,11 @@ WidgetOnlyPositionFixer::~WidgetOnlyPositionFixer()
     delete ui;
 }
 
+void WidgetOnlyPositionFixer::setFocusToFirstWidget()
+{
+    return ui->widgetPositionFixer->setFocusToFirstWidget();
+}
+
 bool WidgetOnlyPositionFixer::isLeftMost() const
 {
     return ui->widgetPositionFixer->isLeftMost();

@@ -44,7 +44,7 @@ WidgetNumberSetting::WidgetNumberSetting(int start, int incremental, int digits,
 
     setWindowTitle(tr("Number"));
 
-    loadSettings();
+    WidgetNumberSetting::loadSettings();
 
     auto fileNameValidator = new FileNameVlidator{this};
 
@@ -113,6 +113,11 @@ void WidgetNumberSetting::saveSettings() const
     ui->comboxSuffix->saveSettings(qSet, settingsKeySuffix);
 
     qSet->endGroup();
+}
+
+void WidgetNumberSetting::setFocusToFirstWidget()
+{
+    ui->spinBoxStart->setFocus();
 }
 
 int WidgetNumberSetting::startNumber() const

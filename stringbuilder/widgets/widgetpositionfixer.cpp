@@ -73,6 +73,12 @@ bool WidgetPositionFixer::isRightMost() const
     return ui->buttonRightmost->isChecked();
 }
 
+void WidgetPositionFixer::setFocusToFirstWidget()
+{
+    (!isLeftMost() && !isRightMost())
+            ? ui->spinBox->setFocus() : ui->buttonLeftmost->setFocus();
+}
+
 void WidgetPositionFixer::onPushButtonClicked(bool checked)
 {
     if (checked) {

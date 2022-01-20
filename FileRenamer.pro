@@ -64,7 +64,6 @@ SOURCES += \
     widgets/elidelabel.cpp \
     widgets/framebuilderlist.cpp \
     widgets/historycombobox.cpp \
-    widgets/savedsettingslistwidget.cpp \
     widgets/widgetapplicationlogs.cpp \
     widgets/widgetloadsavebuildersettings.cpp
 
@@ -131,7 +130,6 @@ HEADERS += \
     widgets/elidelabel.h \
     widgets/framebuilderlist.h \
     widgets/historycombobox.h \
-    widgets/savedsettingslistwidget.h \
     widgets/widgetapplicationlogs.h \
     widgets/widgetloadsavebuildersettings.h
 

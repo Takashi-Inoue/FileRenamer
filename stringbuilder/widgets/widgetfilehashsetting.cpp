@@ -76,6 +76,11 @@ QSharedPointer<AbstractStringBuilder> WidgetFileHashSetting::stringBuilder() con
                 algorithm, ui->widgetPositionFixer->value());
 }
 
+void WidgetFileHashSetting::setFocusToFirstWidget()
+{
+    ui->comboBoxHashType->setFocus();
+}
+
 QCryptographicHash::Algorithm WidgetFileHashSetting::algorithm() const
 {
     return QCryptographicHash::Algorithm(ui->comboBoxHashType->currentData().toInt());
