@@ -21,10 +21,12 @@
 #include "ui_widgetloadsavebuildersettings.h"
 
 #include "application.h"
+#include "comboboxselectionkeeper.h"
 #include "dialogsettingslistconfigurator.h"
 #include "filenamevalidator.h"
 #include "savedsettingsmodel.h"
 #include "stringbuilder/stringbuilderchainmodel.h"
+#include "stringbuilder/onfile/builderchainonfile.h"
 
 #include <QDir>
 #include <QInputDialog>
@@ -34,7 +36,7 @@
 
 namespace {
 
-constexpr char propertyCurrentText[] = "propertyCurrentText";
+constexpr char settingsKeyToLoad[] = "LoadFirst";
 
 QString requestNewIniName()
 {
@@ -57,6 +59,21 @@ QString requestNewIniName()
     return QStringLiteral("%1.ini").arg(dlg.textValue());
 }
 
+void loadSettingsToInit(QComboBox *comboxSettings, SavedSettingsModel *savedSettingsModel)
+{
+    const QString iniBaseName = Application::mainQSettings()->value(
+                              settingsKeyToLoad, QString{}).toString();
+
+    if (iniBaseName.isEmpty() || comboxSettings->findText(iniBaseName) == -1) {
+        const int rowOfLastTime = savedSettingsModel->rowForLastTimeSetting();
+
+        (rowOfLastTime != -1) ? comboxSettings->setCurrentIndex(rowOfLastTime)
+                              : comboxSettings->setCurrentIndex(0);
+    } else {
+        comboxSettings->setCurrentText(iniBaseName);
+    }
+}
+
 } // anonymous
 
 //--------------------------------------------------------------------------------------------------
@@ -65,8 +82,8 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
         StringBuilder::BuilderChainModel *builderChainModel, QWidget *parent)
     : QWidget(parent),
       ui(new Ui::WidgetLoadSaveBuilderSettings),
-      m_settingsModel(builderChainModel),
-      m_settingsListModel(new SavedSettingsModel{this})
+      m_builderChainModel(builderChainModel),
+      m_savedSettingsModel(new SavedSettingsModel{this})
 {
     Q_CHECK_PTR(builderChainModel);
 
@@ -80,48 +97,36 @@ WidgetLoadSaveBuilderSettings::WidgetLoadSaveBuilderSettings(
                                                   QKeySequence{QStringLiteral("Ctrl+Shift+S")});
     configMenu->addSeparator();
     configMenu->addAction(tr("Edit List"), this, [this]() {
-        DialogSettingsListConfigurator(m_settingsListModel, this).exec();
+        DialogSettingsListConfigurator(m_savedSettingsModel, this).exec();
     });
-
-    addActions({m_actionSave, actionSaveAs}); // to enable shortcuts
-
-    ui->comboxSettings->setModel(m_settingsListModel);
-
-    connect(ui->comboxSettings, &QComboBox::currentTextChanged, this, [this](const QString &text) {
-        if (m_settingsListModel->isNewSettings(text)) {
-            m_settingsModel->clearSettings();
-            return;
-        }
-
-        const int index = ui->comboxSettings->currentIndex();
-
-        m_settingsModel->loadSettings(m_settingsListModel->qSettings(index).get());
-    });
-    connect(ui->comboxSettings, &QComboBox::currentIndexChanged, this, [this](int index) {
-        m_actionSave->setEnabled(m_settingsListModel->isEditable(index));
-    });
-
-    connect(m_settingsListModel, &QAbstractItemModel::modelAboutToBeReset, this, [this]() {
-        ui->comboxSettings->setProperty(propertyCurrentText, ui->comboxSettings->currentText());
-    });
-    connect(m_settingsListModel, &QAbstractItemModel::modelReset, this, [this]() {
-        QVariant value = ui->comboxSettings->property(propertyCurrentText);
-        if (value.isValid()) {
-            ui->comboxSettings->setCurrentText(value.toString());
-            ui->comboxSettings->setProperty(propertyCurrentText, QVariant{});
-        }
-    });
-
-    const int rowOfLastTime = m_settingsListModel->rowForLastTimeSetting();
-
-    (rowOfLastTime != -1) ? ui->comboxSettings->setCurrentIndex(rowOfLastTime)
-                          : ui->comboxSettings->setCurrentIndex(0);
 
     ui->buttonConfig->setMenu(configMenu);
+    addActions({m_actionSave, actionSaveAs}); // to enable shortcuts
+
+    ui->comboxSettings->setModel(m_savedSettingsModel);
+
+    connect(ui->comboxSettings, &QComboBox::currentTextChanged, this, [this](const QString &text) {
+        const int index = ui->comboxSettings->currentIndex();
+        const bool isEditable = m_savedSettingsModel->isEditable(index);
+
+        m_actionSave->setEnabled(isEditable);
+        m_builderChainModel->loadSettings(m_savedSettingsModel->qSettings(index).get());
+        m_iniBaseToLoadAtNextTime = isEditable ? text : QString{};
+    });
+    connect(m_builderChainModel, &StringBuilder::BuilderChainModel::settingsChanged, this, [this]() {
+        m_iniBaseToLoadAtNextTime.clear();
+    });
+
+    auto comboxSelectionKeeper = new ComboBoxSelectionKeeper(ui->comboxSettings);
+    comboxSelectionKeeper->setParent(this);
+
+    loadSettingsToInit(ui->comboxSettings, m_savedSettingsModel);
 }
 
 WidgetLoadSaveBuilderSettings::~WidgetLoadSaveBuilderSettings()
 {
+    Application::mainQSettings()->setValue(settingsKeyToLoad, m_iniBaseToLoadAtNextTime);
+
     delete ui;
 }
 
@@ -132,22 +137,24 @@ QWidget *WidgetLoadSaveBuilderSettings::lastTabOrderWidget() const
 
 void WidgetLoadSaveBuilderSettings::saveLastUsedSettings() const
 {
-    m_settingsListModel->saveAsLastUsed(m_settingsModel);
+    m_savedSettingsModel->saveAsLastUsed(m_builderChainModel);
 }
 
 void WidgetLoadSaveBuilderSettings::saveLastTimeSettings() const
 {
-    m_settingsListModel->saveAsLastTime(m_settingsModel);
+    m_savedSettingsModel->saveAsLastTime(m_builderChainModel);
 }
 
-void WidgetLoadSaveBuilderSettings::saveOverwrite() const
+void WidgetLoadSaveBuilderSettings::saveOverwrite()
 {
     const int comboBoxIndex = ui->comboxSettings->currentIndex();
 
-    m_settingsModel->saveSettings(m_settingsListModel->qSettings(comboBoxIndex).get());
+    m_builderChainModel->saveSettings(m_savedSettingsModel->qSettings(comboBoxIndex).get());
+
+    m_iniBaseToLoadAtNextTime = ui->comboxSettings->currentText();
 }
 
-void WidgetLoadSaveBuilderSettings::saveNewSettings() const
+void WidgetLoadSaveBuilderSettings::saveNewSettings()
 {
     const QString iniFileName = requestNewIniName();
 
@@ -167,12 +174,15 @@ void WidgetLoadSaveBuilderSettings::saveNewSettings() const
 
     QSettings qSet{iniFilePath, QSettings::IniFormat};
 
-    m_settingsModel->saveSettings(&qSet);
+    m_builderChainModel->saveSettings(&qSet);
+    QStringView iniBaseName = iniFileName.chopped(4);
 
     ui->comboxSettings->blockSignals(true);
-    int insertedIndex = m_settingsListModel->insertNewSettings(iniFileName.chopped(4));
+    int insertedIndex = m_savedSettingsModel->insertNewSettings(iniBaseName);
+    ui->comboxSettings->setCurrentIndex(insertedIndex);
     ui->comboxSettings->blockSignals(false);
 
-    ui->comboxSettings->setCurrentIndex(insertedIndex);
     m_actionSave->setEnabled(true);
+
+    m_iniBaseToLoadAtNextTime = iniBaseName.toString();
 }

@@ -58,6 +58,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     utilitysmvc.cpp \
+    widgets/comboboxselectionkeeper.cpp \
     widgets/counterlabel.cpp \
     widgets/dialogdroppeddir.cpp \
     widgets/dialogsettingslistconfigurator.cpp \
@@ -124,6 +125,7 @@ HEADERS += \
     usingstringbuilderwidget.h \
     utilityshtml.h \
     utilitysmvc.h \
+    widgets/comboboxselectionkeeper.h \
     widgets/counterlabel.h \
     widgets/dialogdroppeddir.h \
     widgets/dialogsettingslistconfigurator.h \

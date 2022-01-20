@@ -42,14 +42,16 @@ public:
     void saveLastTimeSettings() const;
 
 private slots:
-    void saveOverwrite() const;
-    void saveNewSettings() const;
+    void saveOverwrite();
+    void saveNewSettings();
 
 private:
     Ui::WidgetLoadSaveBuilderSettings *ui;
 
-    StringBuilder::BuilderChainModel *m_settingsModel;
-    SavedSettingsModel *m_settingsListModel;
+    StringBuilder::BuilderChainModel *m_builderChainModel;
+    SavedSettingsModel *m_savedSettingsModel;
     QAction *m_actionSave = nullptr;
+
+    QString m_iniBaseToLoadAtNextTime;
 };
 
